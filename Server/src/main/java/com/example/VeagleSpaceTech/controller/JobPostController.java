@@ -6,7 +6,7 @@ import com.example.VeagleSpaceTech.DTO.response.JobApplicationResponseDTO;
 import com.example.VeagleSpaceTech.DTO.response.JobPostResponseDTO;
 import com.example.VeagleSpaceTech.DTO.response.PageResponse;
 import com.example.VeagleSpaceTech.entity.User;
-import com.example.VeagleSpaceTech.model.UserPrincipal;
+import com.example.VeagleSpaceTech.enums.JobStatus;
 import com.example.VeagleSpaceTech.service.JobPostService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -19,7 +19,6 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.List;
 
 @RestController
-@CrossOrigin(origins = "*")
 public class JobPostController {
 
     @Autowired
@@ -45,7 +44,7 @@ public class JobPostController {
 
 
     // Fetch All JobPosts and SearchBased on it
-    @GetMapping("/api/jobs")
+    @GetMapping("/api/v1/jobs")
     public ResponseEntity<List<JobPostResponseDTO>> getJobs(
             @RequestParam(required = false) String keyword
     ) {
@@ -54,22 +53,14 @@ public class JobPostController {
 
     // Add a Job in DB
     @PreAuthorize("hasRole('ADMIN')")
-    @PostMapping("/admin/jobs")
+    @PostMapping("/api/v1/admin/jobs")
     public ResponseEntity<JobPostResponseDTO> addJob(@RequestBody JobPostRequestDTO request) {
         return ResponseEntity.status(201).body(jobPostService.addJob(request));
     }
 
-    // Delete Job From DB
-    @PreAuthorize("hasRole('ADMIN')")
-    @DeleteMapping("/admin/jobs/{id}")
-    public ResponseEntity<String> delete(@PathVariable Long id) {
-        jobPostService.delete(id);
-        return ResponseEntity.ok("Job deleted successfully");
-    }
-
     // Update Job From DB
     @PreAuthorize("hasRole('ADMIN')")
-    @PutMapping("/admin/jobs/{id}")
+    @PutMapping("/api/v1/admin/jobs/{id}")
     public ResponseEntity<JobPostResponseDTO> update(
             @RequestBody JobPostRequestDTO request,
             @PathVariable Long id) {
@@ -77,33 +68,23 @@ public class JobPostController {
         return ResponseEntity.ok(jobPostService.update(request, id));
     }
 
-
-    // Apply to job (logged-in user required)
-    @PostMapping(value = "/careers/apply", consumes = "multipart/form-data")
-    public ResponseEntity<JobApplicationResponseDTO> apply(
-
-            @RequestParam String name,
-            @RequestParam String email,
-            @RequestParam String phone,
-            @RequestParam Long jobId,
-
-            @RequestParam("file") MultipartFile file,
-
-            @AuthenticationPrincipal UserPrincipal principal
-
+    @PreAuthorize("hasRole('ADMIN')")
+    @PatchMapping("/api/v1/admin/jobs/{id}/status")
+    public ResponseEntity<String> changeStatus(
+            @PathVariable Long id,
+            @RequestParam JobStatus status
     ) {
-        User user = principal != null ? principal.getUser() : null;
-
-        JobApplicationRequestDTO request =
-                new JobApplicationRequestDTO(name, email, phone, jobId);
-
-        return ResponseEntity.ok(
-                jobPostService.applyToJob(request, file, user)
-        );
+//        System.out.println("ID: " + id + " Status: " + status);
+        return ResponseEntity.ok(jobPostService.changeStatus(id,status));
     }
 
-
-
-
+    // Delete Job From DB
+    @PreAuthorize("hasRole('ADMIN')")
+    @DeleteMapping("/api/v1/admin/jobs/{id}")
+    public ResponseEntity<String> delete(@PathVariable Long id) {
+        jobPostService.delete(id);
+        return ResponseEntity.ok("Job deleted successfully");
+    }
 
 }
+

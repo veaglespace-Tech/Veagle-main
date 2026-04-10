@@ -33,8 +33,4 @@ public class UserPrincipal implements UserDetails {
         return user.getEmail();  //  MUST match JWT subject
     }
 
-    public User getUser() {
-        return user;
-    }
-
 }

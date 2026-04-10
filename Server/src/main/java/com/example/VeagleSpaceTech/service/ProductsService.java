@@ -18,8 +18,6 @@ import java.util.List;
 @Service
 public class ProductsService {
 
-    private final String baseUrl = "http://localhost:8080";
-
     @Autowired
     private ProductRepo productRepo;
 
@@ -76,6 +74,7 @@ private static final String UPLOAD_DIR = System.getProperty("user.dir") + "/uplo
         }
     }
 
+    private String baseUrl = "http://localhost:8080";
     // Gett All Products
     public List<ProductResponseDTO> getAllProducts() {
 
@@ -86,7 +85,7 @@ private static final String UPLOAD_DIR = System.getProperty("user.dir") + "/uplo
                         p.getId(),
                         p.getTitle(),
                         p.getDescription(),
-                        resolveImageUrl(p.getImageUrl()),
+                        baseUrl + p.getImageUrl(),
                         p.getCategory().getName(),
                         p.getIsActive()
                 ))
@@ -107,12 +106,12 @@ private static final String UPLOAD_DIR = System.getProperty("user.dir") + "/uplo
 // Delete Product
     public String deleteProduct(Long id) {
 
-        Product product = productRepo.findById(id)
-                .orElseThrow(() -> new RuntimeException("Product not found"));
+//        Product product = productRepo.findById(id)
+//                .orElseThrow(() -> new RuntimeException("Product not found"));
+//
+//        product.setIsActive(false); // ✅ soft delete
 
-        product.setIsActive(false); // ✅ soft delete
-
-        productRepo.save(product);
+        productRepo.deleteById(id);
 
         return "Product deactivated successfully";
     }
@@ -160,30 +159,11 @@ private static final String UPLOAD_DIR = System.getProperty("user.dir") + "/uplo
                 updated.getId(),
                 updated.getTitle(),
                 updated.getDescription(),
-                resolveImageUrl(updated.getImageUrl()),
+                updated.getImageUrl(),
                 updated.getCategory().getName(),
                 updated.getIsActive()
         );
     }
 
-    private String resolveImageUrl(String value) {
-        if (value == null || value.isBlank()) {
-            return null;
-        }
-
-        if (value.startsWith("http://") || value.startsWith("https://")) {
-            return value;
-        }
-
-        if (value.startsWith("/uploads/")) {
-            return baseUrl + value;
-        }
-
-        if (value.startsWith("/")) {
-            return value;
-        }
-
-        return baseUrl + "/uploads/products/" + value;
-    }
 
 }

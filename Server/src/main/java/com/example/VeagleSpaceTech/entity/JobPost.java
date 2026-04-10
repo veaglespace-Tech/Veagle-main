@@ -1,6 +1,7 @@
 package com.example.VeagleSpaceTech.entity;
 
 
+import com.example.VeagleSpaceTech.enums.JobStatus;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -31,6 +32,9 @@ public class JobPost {
     private String skills;
 
     private LocalDate createdAt;  // Posted Date
+
+    @Enumerated(EnumType.STRING)
+    private JobStatus status;
 
     @OneToMany(mappedBy = "job", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<JobApplication> applications;

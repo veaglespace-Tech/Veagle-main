@@ -5,7 +5,6 @@ import com.example.VeagleSpaceTech.enums.ApplicationStatus;
 import java.time.LocalDateTime;
 
 public record JobApplicationResponseDTO(
-
         Long id,
         String name,
         String email,
@@ -15,6 +14,4 @@ public record JobApplicationResponseDTO(
         LocalDateTime createdAt,
         Long jobId,
         String jobTitle
-
-
 ) {}

@@ -4,17 +4,15 @@ import com.example.VeagleSpaceTech.enums.ApplicationStatus;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 
+@Entity
+@Builder
 @Setter
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-@Entity
 public class JobApplication {
 
     @Id

@@ -1,7 +1,7 @@
 package com.example.VeagleSpaceTech.controller;
 
+import com.example.VeagleSpaceTech.DTO.request.OtpRequest;
 import com.example.VeagleSpaceTech.DTO.response.UserResponseDTO;
-import com.example.VeagleSpaceTech.DTO.request.AdminCreateRequest;
 import com.example.VeagleSpaceTech.DTO.request.UserRequestDTO;
 import com.example.VeagleSpaceTech.DTO.response.AuthResponse;
 import com.example.VeagleSpaceTech.DTO.request.LoginRequest;
@@ -31,21 +31,26 @@ public class AdminController {
 
     // Login Admin
     @PostMapping("/auth/login")
-    public ResponseEntity<AuthResponse> login(@Valid @RequestBody LoginRequest request) {
+    public ResponseEntity<String> login(@Valid @RequestBody LoginRequest request) {
         return ResponseEntity.ok(userService.login(request));
+    }
 
+    // 🔹 Step 2
+    @PostMapping("/api/verify-otp")
+    public ResponseEntity<AuthResponse> verifyOtp(@RequestBody OtpRequest request) {
+        return ResponseEntity.ok(userService.verifyOtpRequest(request));
     }
 
     //  Users Related Oprations
-
     @PreAuthorize("hasRole('ADMIN')")
-    @GetMapping("/admin/users")
+    @GetMapping("/api/v1/admin/users")
     public ResponseEntity<List<UserResponseDTO>> getAllUsers(){
         return ResponseEntity.ok().body(userService.getAllUsers());
     }
 
+    // Update Users
     @PreAuthorize("hasRole('ADMIN')")
-    @PutMapping("/admin/users/{id}")
+    @PutMapping("/api/v1/admin/users/{id}")
     public ResponseEntity<UserResponseDTO> updateUser(
             @PathVariable Long id,
             @RequestBody UserRequestDTO request
@@ -53,21 +58,23 @@ public class AdminController {
         return ResponseEntity.ok(userService.updateUser(id, request));
     }
 
+    // Delete User
     @PreAuthorize("hasRole('ADMIN')")
-    @DeleteMapping("/admin/users/{id}")
+    @DeleteMapping("/api/v1/admin/users/{id}")
     public ResponseEntity<String> deleteUser(@PathVariable Long id){
         return ResponseEntity.ok().body(userService.deleteUser(id));
     }
 
+    // Add Users
     @PreAuthorize("hasRole('ADMIN')")
-    @PostMapping("/admin/users")
+    @PostMapping("/api/v1/admin/users")
     public ResponseEntity<UserResponseDTO> addUser(@RequestBody UserRequestDTO userRequestDTO){
         return ResponseEntity.status(201).body(userService.addUserByAdmin(userRequestDTO));
     }
 
     // Status Updating
     @PreAuthorize("hasRole('ADMIN')")
-    @PutMapping("/admin/users/{id}/status")
+    @PatchMapping("/api/v1/admin/users/{id}/status")
     public ResponseEntity<UserResponseDTO> updateUserStatus(@PathVariable Long id) {
         return ResponseEntity.ok(userService.toggleUserStatus(id));
     }
@@ -75,12 +82,12 @@ public class AdminController {
 
     // Get User Or Admin
     @PreAuthorize("hasRole('SADMIN')")
-    @GetMapping("/admin/{id}")
+    @GetMapping("/api/v1/admin/users/{id}")
     public ResponseEntity<UserResponseDTO> getSuperAdmin(@PathVariable Long id){
         return ResponseEntity.status(200).body(userService.getAdminById(id));
     }
     //  Update Super Admin data
-    @PreAuthorize("hasRole('SADMIN')")
+    @PreAuthorize("SADMIN")
     @PutMapping("/sadmin/{id}")
     public ResponseEntity<UserResponseDTO> updateSAdmin(@PathVariable Long id,@RequestBody UserRequestDTO userRequestDTO){
         return ResponseEntity.status(200).body(userService.updateAdmin(id,userRequestDTO));

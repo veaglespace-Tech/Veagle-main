@@ -1,10 +1,9 @@
 package com.example.VeagleSpaceTech.service;
 
+import com.example.VeagleSpaceTech.DTO.OtpData;
+import com.example.VeagleSpaceTech.DTO.UpdateProfileDTO;
+import com.example.VeagleSpaceTech.DTO.request.*;
 import com.example.VeagleSpaceTech.DTO.response.UserResponseDTO;
-import com.example.VeagleSpaceTech.DTO.request.AdminCreateRequest;
-import com.example.VeagleSpaceTech.DTO.request.LoginRequest;
-import com.example.VeagleSpaceTech.DTO.request.RegisterRequest;
-import com.example.VeagleSpaceTech.DTO.request.UserRequestDTO;
 import com.example.VeagleSpaceTech.DTO.response.AuthResponse;
 import com.example.VeagleSpaceTech.entity.User;
 import com.example.VeagleSpaceTech.enums.UserStatus;
@@ -15,11 +14,17 @@ import com.example.VeagleSpaceTech.repo.UserRepo;
 import org.jspecify.annotations.Nullable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Random;
 
 @Service
 public class UserService {
@@ -28,10 +33,16 @@ public class UserService {
     private UserRepo repo;
 
     @Autowired
+    private EmailService emailService; // for send Email
+
+    @Autowired
     private PasswordEncoder passwordEncoder;
 
     @Autowired
     private JwtService jwtService;
+
+    @Autowired
+    private OtpService otpService;
 
     private BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(12);
 
@@ -58,7 +69,7 @@ public class UserService {
 
         User saved = repo.save(user);
 
-        return new com.example.VeagleSpaceTech.DTO.response.UserResponseDTO(
+        return new UserResponseDTO(
                 saved.getId(),
                 saved.getUsername(),
                 saved.getEmail(),
@@ -69,45 +80,67 @@ public class UserService {
     }
 
  // User Admin Login
-    public AuthResponse login(LoginRequest request) {
+     public String login(LoginRequest request) {
 
-        User user = repo.findByEmail(request.email())
-                .orElseThrow(() -> new ResourceNotFoundException("Email not found"));
+     User user = repo.findByEmail(request.email())
+             .orElseThrow(() -> new ResourceNotFoundException("Email not found"));
 
-        if (!passwordEncoder.matches(request.password(), user.getPassword())) {
-            throw new InvalidCredentialsException("Invalid password");
-        }
+     if (!passwordEncoder.matches(request.password(), user.getPassword())) {
+         throw new InvalidCredentialsException("Invalid password");
+     }
+     if (user.getStatus().equals("BLOCKED")) {
+         throw new RuntimeException("You Are Blocked...");
+     }
+     // generate OTP
+     String otp = String.valueOf(new Random().nextInt(900000) + 100000);
 
-        String token = jwtService.generateToken(user.getEmail(), user.getRole());
+     otpService.saveOtp(user.getEmail(), otp);
 
-        return new AuthResponse(
-                user.getId(),
-                token,
-                user.getRole(),
-                user.getEmail(),
-                user.getUsername(),
-                user.getContact()
-        );
-    }
+     emailService.sendOtp(user.getEmail(), otp);
 
-    // Admin Registration
+     return "OTP sent successfully";
+ }
 
+
+  // Verify Otp
+  public AuthResponse verifyOtpRequest(OtpRequest request) {
+
+      boolean isValid = otpService.verifyOtp(request.email(), request.otp());
+
+      if (!isValid) {
+          throw new RuntimeException("Invalid or Expired OTP");
+      }
+
+      User user = repo.findByEmail(request.email())
+              .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+
+      String token = jwtService.generateToken(user.getEmail(), user.getRole());
+
+      return new AuthResponse(
+              user.getId(),
+              token,
+              user.getRole(),   // Role
+              user.getEmail()
+      );
+  }
+
+  // Admin Registration
     @Value("${admin.secret}")
     private String ADMIN_SECRET;
 
     public UserResponseDTO createAdmin(AdminCreateRequest request, String adminKey) {
 
-//        System.out.println("\n from server  "+ADMIN_SECRET+"\t"+" From Frontend    "+adminKey+"\n");
+        //    System.out.println("\n from server  "+ADMIN_SECRET+"\t"+" From Frontend    "+adminKey+"\n");
         // Validate secret
         if (!ADMIN_SECRET.equals(adminKey)) {
             throw new RuntimeException("Unauthorized admin creation");
         }
 
         //  Limit admins
-        long count = repo.countByRole("ADMIN");
-        if (count >= 2) {
-            throw new RuntimeException("Only 2 admins allowed");
-        }
+//        long count = repo.countByRole("ADMIN");
+//        if (count >= 2) {
+//            throw new RuntimeException("Only 2 admins allowed");
+//        }
 
         if (repo.existsByEmail(request.email())) {
             throw new UserAlreadyExistsException("Email already exists");
@@ -223,19 +256,35 @@ public class UserService {
         );
     }
 
+
+    // Update Status
     public UserResponseDTO toggleUserStatus(Long id) {
 
-        User user = repo.findById(id)
+        User targetUser = repo.findById(id)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
-        // 🔥 TOGGLE LOGIC
-        if (user.getStatus() == UserStatus.ACTIVE) {
-            user.setStatus(UserStatus.BLOCKED);
-        } else {
-            user.setStatus(UserStatus.ACTIVE);
+        // 🔐 Get current logged-in user
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        String currentUsername = auth.getName();
+
+        User currentUser = repo.findByEmail(currentUsername)
+                .orElseThrow(() -> new RuntimeException("Logged in user not found"));
+
+        // 🚫 ADMIN cannot block SADMIN
+        if (targetUser.getRole().equalsIgnoreCase("SADMIN") &&
+                !currentUser.getRole().equalsIgnoreCase("SADMIN")) {
+
+            throw new RuntimeException("You cannot block Super Admin");
         }
 
-        User updated = repo.save(user);
+        // 🔄 TOGGLE LOGIC
+        if (targetUser.getStatus() == UserStatus.ACTIVE) {
+            targetUser.setStatus(UserStatus.BLOCKED);
+        } else {
+            targetUser.setStatus(UserStatus.ACTIVE);
+        }
+
+        User updated = repo.save(targetUser);
 
         return new UserResponseDTO(
                 updated.getId(),
@@ -246,7 +295,6 @@ public class UserService {
                 updated.getStatus()
         );
     }
-
     // Get Admin By Id
     public @Nullable UserResponseDTO getAdminById(Long id) {
 
@@ -284,6 +332,139 @@ public class UserService {
                 user.getRole(),
                 user.getStatus()
                 );
+    }
+
+    // ✅ GET PROFILE
+    public UserResponseDTO getProfile() {
+
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        String email = auth.getName();
+
+        User user = repo.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        return new UserResponseDTO(
+                user.getId(),
+                user.getUsername(),
+                user.getEmail(),
+                user.getContact(),
+                user.getRole(),
+                user.getStatus()
+        );
+    }
+
+    //  PROFILE
+    public UserResponseDTO updateProfile(UpdateProfileDTO dto) {
+
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        String email = auth.getName();
+
+        User user = repo.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        if (dto.username() != null) {
+            user.setUsername(dto.username());
+        }
+
+        if (dto.contact() != null) {
+
+            if (repo.existsByContact(dto.contact())
+                    && !user.getContact().equals(dto.contact())) {
+                throw new RuntimeException("Contact already exists");
+            }
+
+            user.setContact(dto.contact());
+        }
+
+        repo.save(user);
+
+        return new UserResponseDTO(
+                user.getId(),
+                user.getUsername(),
+                user.getEmail(),
+                user.getContact(),
+                user.getRole(),
+                user.getStatus()
+        );
+
+    }
+
+
+
+    // Send Otp To Email
+    private final Map<String, OtpData> otpStore = new HashMap<>();
+
+    public void sendOtp() {
+
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        String email = auth.getName();
+
+        String otp = String.valueOf(new Random().nextInt(900000) + 100000);
+        LocalDateTime expiry = LocalDateTime.now().plusMinutes(2);
+
+        otpStore.put(email, new OtpData(otp, expiry, false));
+
+        String message = "Dear User,\n\n"
+                + "Your One-Time Password (OTP) for verification is: " + otp + "\n\n"
+                + "This OTP is valid for 2 minutes.\n"
+                + "Please do not share this OTP with anyone.\n\n"
+                + "If you did not request this, please ignore this email.\n\n"
+                + "Regards,\n"
+                + "VeagleSpace Team";
+
+        emailService.sendEmail(email, "OTP Verification - VeagleSpace", message);
+    }
+
+    //verify Otp
+    public void verifyOtp(String inputOtp) {
+
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        String email = auth.getName();
+
+        OtpData data = otpStore.get(email);
+
+        if (data == null) {
+            throw new RuntimeException("OTP not found");
+        }
+
+        if (data.expiryTime().isBefore(LocalDateTime.now())) {
+            otpStore.remove(email);
+            throw new RuntimeException("OTP expired");
+        }
+
+        if (!data.otp().equals(inputOtp)) {
+            throw new RuntimeException("Invalid OTP");
+        }
+
+        // ✅ Replace object (because record is immutable)
+        OtpData updatedData = new OtpData(
+                data.otp(),
+                data.expiryTime(),
+                true
+        );
+
+        otpStore.put(email, updatedData);
+    }
+    // Change PAssword
+    public void changePassword(String newPassword) {
+
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        String email = auth.getName();
+
+        OtpData data = otpStore.get(email);
+
+        if (data == null || !data.verified()) {
+            throw new RuntimeException("OTP not verified");
+        }
+
+        User user = repo.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        user.setPassword(passwordEncoder.encode(newPassword));
+        repo.save(user);
+
+        // ✅ remove OTP after use
+        otpStore.remove(email);
     }
 
 

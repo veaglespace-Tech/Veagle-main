@@ -12,40 +12,38 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-//@RequestMapping("/categories")
 @RequiredArgsConstructor // if we use this then no need of @Autowire
 public class CategoryController {
 
     private final CategoryService categoryService;
 
-    // CREATE
-    @PreAuthorize("hasRole('ADMIN')")
-    @PostMapping("/admin/categories")
-    public ResponseEntity<CategoryResponseDTO> create(@RequestBody CategoryRequestDTO categoryRequestDTO) {
-        return ResponseEntity.ok(categoryService.createCategory(categoryRequestDTO));
-    }
-
     // GET ALL
-    @GetMapping("/api/categories")
+    @GetMapping("/api/v1/categories")
     public ResponseEntity<List<CategoryResponseDTO>> getAll() {
         return ResponseEntity.ok(categoryService.getAllCategories());
     }
 
     // GET BY ID
-    @PreAuthorize("hasRole('ADMIN')")
-    @GetMapping("/admin/categories/{id}")
+    @GetMapping("/api/v1/categories/{id}")
     public ResponseEntity<CategoryResponseDTO> getById(@PathVariable Long id) {
         return ResponseEntity.ok(categoryService.getCategoryById(id));
     }
 
+    // CREATE
+    @PreAuthorize("hasRole('ADMIN')")
+    @PostMapping("/api/v1/admin/categories")
+    public ResponseEntity<CategoryResponseDTO> create(@RequestBody CategoryRequestDTO categoryRequestDTO) {
+        return ResponseEntity.ok(categoryService.createCategory(categoryRequestDTO));
+    }
+
     // UPDATE
     @PreAuthorize("hasRole('ADMIN')")
-    @PutMapping("/admin/categories/{id}")
+    @PutMapping("/api/v1/admin/categories/{id}")
     public ResponseEntity<CategoryResponseDTO> update(
             @PathVariable Long id,
             @RequestBody CategoryRequestDTO categoryRequestDTO
     ) {
-//        System.out.println("Update Category.....");
+        System.out.println("\nUpdate Category.....Name: "+categoryRequestDTO.name()+"  Discription: "+categoryRequestDTO.description());
         return ResponseEntity.ok(
                 categoryService.updateCategory(id, categoryRequestDTO)
         );
@@ -53,7 +51,7 @@ public class CategoryController {
 
     // DELETE
     @PreAuthorize("hasRole('ADMIN')")
-    @DeleteMapping("/admin/categories/{id}")
+    @DeleteMapping("/api/v1/admin/categories/{id}")
     public ResponseEntity<String> delete(@PathVariable Long id) {
         categoryService.deleteCategory(id);
         return ResponseEntity.ok("Category deleted");

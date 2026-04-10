@@ -7,9 +7,12 @@ import com.example.VeagleSpaceTech.DTO.response.JobPostResponseDTO;
 import com.example.VeagleSpaceTech.entity.JobApplication;
 import com.example.VeagleSpaceTech.entity.User;
 import com.example.VeagleSpaceTech.enums.ApplicationStatus;
+import com.example.VeagleSpaceTech.enums.JobStatus;
+import com.example.VeagleSpaceTech.enums.UserStatus;
 import com.example.VeagleSpaceTech.repo.JobApplicationRepo;
 import com.example.VeagleSpaceTech.repo.JobPostRepo;
 import com.example.VeagleSpaceTech.entity.JobPost;
+import com.example.VeagleSpaceTech.repo.UserRepo;
 import org.jspecify.annotations.Nullable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -26,6 +29,14 @@ public class JobPostService {
     @Autowired
     private JobPostRepo jobPostRepo;
 
+    @Autowired
+    private UserRepo userRepo;
+
+    // For Storing Files (Resume)
+    @Autowired
+    private FileService fileService;
+
+
     public JobPostResponseDTO addJob(JobPostRequestDTO request) {
 
         JobPost jobPost = new JobPost();
@@ -33,7 +44,7 @@ public class JobPostService {
         jobPost.setDescription(request.description());
         jobPost.setLocation(request.location());
         jobPost.setSkills(request.skills());
-//        jobPost.setCreatedAt();
+        jobPost.setStatus(JobStatus.ACTIVE);
 
         JobPost jp = jobPostRepo.save(jobPost);
 
@@ -43,6 +54,7 @@ public class JobPostService {
                 jp.getDescription(),
                 jp.getLocation(),
                 jp.getSkills(),
+                jp.getStatus(),
                 jp.getCreatedAt()
         );
     }
@@ -65,6 +77,7 @@ public class JobPostService {
                         job.getDescription(),
                         job.getLocation(),
                         job.getSkills(),
+                        job.getStatus(),
                         job.getCreatedAt()
                 ))
                 .toList();
@@ -127,6 +140,7 @@ public class JobPostService {
         existing.setDescription(request.description());
         existing.setLocation(request.location());
         existing.setSkills(request.skills());
+        existing.setStatus(request.status());
 
         JobPost jb = jobPostRepo.save(existing);
 
@@ -136,66 +150,16 @@ public class JobPostService {
                 jb.getDescription(),
                 jb.getLocation(),
                 jb.getSkills(),
+                jb.getStatus(),
                 jb.getCreatedAt()
         );
     }
 
+    public String changeStatus(Long id, JobStatus status) {
 
-    // Make Changes Regarding JobApplications
-    @Autowired
-    private JobApplicationRepo jobApplicationRepo;
-
-    // For Storing Files (Resume)
-    @Autowired
-    private FileService fileService;
-
-    // Applied To Job
-    public JobApplicationResponseDTO applyToJob(JobApplicationRequestDTO request,MultipartFile file,
-            User user // can be null
-    ) {
-
-        // 1️⃣ Get Job
-        JobPost job = jobPostRepo.findById(request.jobId())
-                .orElseThrow(() -> new RuntimeException("Job not found"));
-
-        // 2️⃣ Upload Resume
-        String resumePath = fileService.upload(file,"resumes");
-
-        // 3️⃣ Create Application
-        JobApplication app = new JobApplication();
-
-        // Snapshot data (always from request)
-        app.setName(request.name());
-        app.setEmail(request.email());
-        app.setPhone(request.phone());
-
-        app.setResumeUrl(resumePath);
-        app.setStatus(ApplicationStatus.APPLIED);
-        app.setJob(job);
-
-        // 4️⃣ Handle user (IMPORTANT)
-        app.setUser(user); // null = guest, object = logged-in
-
-        // 5️⃣ Save
-        JobApplication saved = jobApplicationRepo.save(app);
-
-//        System.out.println("\n "+saved);
-//        System.out.println("\n "+saved.getJob()+"\n "+ saved.getJob().getId());
-
-        // 6️⃣ Return response
-        return new JobApplicationResponseDTO(
-                saved.getId(),
-                saved.getName(),
-                saved.getEmail(),
-                saved.getPhone(),
-                saved.getResumeUrl(),
-                saved.getStatus(),
-                saved.getCreatedAt(),
-                saved.getJob().getId(),
-                saved.getJob().getTitle()
-        );
+        JobPost job = jobPostRepo.findById(id).orElseThrow(()-> new RuntimeException("Job Not Found..."));
+        job.setStatus(status);
+        jobPostRepo.save(job);
+        return "Status Changed...";
     }
-
-
-
 }

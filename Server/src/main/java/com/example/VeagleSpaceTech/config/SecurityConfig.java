@@ -21,24 +21,37 @@ public class SecurityConfig {
     @Autowired
     private JwtFilter jwtFilter;
 
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
-        http.cors(cors -> {});
+        http.cors(cors -> {}); // ✅ IMPORTANT
         http.csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(req ->
-                        req.requestMatchers(HttpMethod.POST, "/api/leads").hasRole("USER")
-                                .requestMatchers(HttpMethod.POST, "/careers/apply").hasRole("USER")
-                                .requestMatchers(
-                                        "/login", "/register", "/auth/**",
-                                        "/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html",
-                                        "/uploads/**"
+//                        req.requestMatchers(
+//                                        "/login", "/register", "/auth/**",
+//                                        "/api/**",
+//                                        "/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html",
+//                                        "/uploads/**"
+//                                ).permitAll()
+//                                .requestMatchers(HttpMethod.GET, "/categories/**").permitAll()
+//                                .requestMatchers("/admin/**").hasAnyRole("ADMIN", "SADMIN")
+//                                .requestMatchers("/sadmin/**").hasRole("SADMIN")
+//                                .requestMatchers("/user/**").hasRole("USER")
+
+                                req.requestMatchers(
+                                        "/api/v1/auth/**",
+                                        "/api/v1/categories/**",
+                                        "/api/v1/clients/**",
+                                        "/api/v1/jobs/**",
+                                        "/api/v1/services/**",
+                                        "/api/v1/portfolio/**",
+                                        "/api/v1/products/**",
+                                        "/api/v1/contacts"
                                 ).permitAll()
-                                .requestMatchers("/api/**").permitAll()
-                                .requestMatchers(HttpMethod.GET, "/categories/**").permitAll()
-                                .requestMatchers("/admin/**").hasAnyRole("ADMIN", "SADMIN")
-                                .requestMatchers("/sadmin/**").hasRole("SADMIN")
-                                .requestMatchers("/user/**").hasRole("USER")
+
+                                .requestMatchers("/api/v1/admin/**").hasAnyRole("ADMIN", "SADMIN")
+                                .requestMatchers("/api/v1/users/**").hasAnyRole("USER", "ADMIN", "SADMIN")
                                 .anyRequest().authenticated()
                 )
                 .sessionManagement(session ->
@@ -50,12 +63,13 @@ public class SecurityConfig {
     }
 
     @Bean
-    public PasswordEncoder passwordEncoder() {
+    public PasswordEncoder passwordEncoder(){
         return new BCryptPasswordEncoder(12);
     }
 
     @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration config)throws Exception{
         return config.getAuthenticationManager();
     }
+
 }

@@ -16,6 +16,9 @@ public class CategoryService {
 
     private final CategoryRepository categoryRepository;
 
+    private final ProductRepo productRepo;
+
+
     // CREATE
     public CategoryResponseDTO createCategory(CategoryRequestDTO categoryRequestDTO) {
 
@@ -68,8 +71,13 @@ public class CategoryService {
         Category category = categoryRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Category not found"));
 
-        category.setName(dto.name());
-        category.setDescription(dto.description());
+//        category.setId(id);
+        if(dto.name()!=null)
+            category.setName(dto.name());
+        if(dto.description()!=null){
+            category.setDescription(dto.description());
+        }
+
 
         Category updated = categoryRepository.save(category);
 
@@ -80,7 +88,7 @@ public class CategoryService {
         );
     }
 
-    private final ProductRepo productRepo;
+
     // DELETE
     public void deleteCategory(Long id) {
 
@@ -90,7 +98,7 @@ public class CategoryService {
         boolean hasProducts = productRepo.existsByCategoryId(id);
 
         if (hasProducts) {
-            throw new RuntimeException("Cannot delete category with products");
+            throw new IllegalStateException("Cannot delete category because it contains products");
         }
 
         categoryRepository.delete(category);

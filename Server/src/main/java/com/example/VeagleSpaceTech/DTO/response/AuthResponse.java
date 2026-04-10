@@ -5,7 +5,5 @@ public record AuthResponse(
         Long id,
         String token,
         String role,
-        String email,
-        String username,
-        String contact
+        String email
 ) {}

@@ -15,7 +15,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.List;
 
 @RestController
-@CrossOrigin(origins = "*")
 public class ORG_ServicesController {
 
     @Autowired
@@ -35,8 +34,22 @@ public class ORG_ServicesController {
 //                .body(orgServicesService.save(file, request));
 //    }
 
-    @PreAuthorize("hasRole('ADMIN')")
-    @PostMapping(value = "/admin/services", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+
+    // fetch Services
+    @GetMapping("/api/v1/services")
+    public ResponseEntity<List<ServicesResponseDTO>> getServices(
+            @RequestParam(required = false) String keyword
+    ) {
+        return ResponseEntity.ok(orgServicesService.getAllServices(keyword));
+    }
+
+    @GetMapping("/api/v1/services/{id}")
+    public ResponseEntity<ServicesResponseDTO> getSingleService(@PathVariable("id") Long id ){
+
+        return ResponseEntity.ok(orgServicesService.getServiceById(id));
+    }
+
+    @PostMapping(value = "/api/v1/admin/services", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<ServicesResponseDTO> addService(
             @RequestPart("file") MultipartFile file,
             @RequestParam("data") String request
@@ -44,7 +57,6 @@ public class ORG_ServicesController {
 
 //        System.out.println("\nfile  " + file);
 //        System.out.println("\nData  " + request);
-
 
         ObjectMapper mapper = new ObjectMapper();
 
@@ -57,7 +69,7 @@ public class ORG_ServicesController {
 
    //  Update Service From DB
    @PreAuthorize("hasRole('ADMIN')")
-   @PutMapping(value = "/admin/services/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+   @PutMapping(value = "/api/v1/admin/services/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
    public ResponseEntity<ServicesResponseDTO> updateService(
            @PathVariable Long id,
            @RequestPart(value = "file", required = false) MultipartFile file,
@@ -76,7 +88,7 @@ public class ORG_ServicesController {
 
     // Delete Service From DB
     @PreAuthorize("hasRole('ADMIN')")
-    @DeleteMapping("/admin/services/{id}")
+    @DeleteMapping("/api/v1/admin/services/{id}")
     public ResponseEntity<String> deletService(@PathVariable Long id){
         orgServicesService.deleted(id);
         return ResponseEntity.ok().body("Deleted...");
@@ -93,21 +105,6 @@ public class ORG_ServicesController {
 ////     System.out.println("\nKeywords "+keyword);
 //     return ResponseEntity.ok(orgServicesService.getServices(keyword, page, size));
 // }
-
-
-// fetch Services
-@GetMapping("/api/services")
-public ResponseEntity<List<ServicesResponseDTO>> getServices(
-        @RequestParam(required = false) String keyword
-) {
-    return ResponseEntity.ok(orgServicesService.getAllServices(keyword));
-}
-
- @GetMapping("/api/services/{id}")
-    public ResponseEntity<ServicesResponseDTO> getSingleService(@PathVariable Long id ){
-
-        return ResponseEntity.ok(orgServicesService.getServiceById(id));
- }
 
 
 

@@ -5,7 +5,7 @@ spring:
   datasource:
     url: jdbc:mysql://localhost:3306/veagleDB
     username: root
-    password: Veagle@123
+    password: root
     driver-class-name: com.mysql.cj.jdbc.Driver
 
   jpa:
@@ -16,7 +16,31 @@ spring:
 #      hibernate:
 #        dialect: org.hibernate.dialect.MySQL8Dialect
 
+
+  # Mail
+  mail: # ✅ MUST be inside spring
+    host: smtp.gmail.com
+    port: 587
+    username: singareakshay2004@gmail.com
+    password: rcckpmkrnkopufmv   # 🔐 IMPORTANT
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+          ssl:
+            trust: smtp.gmail.com
+
 jwt:
   secret: mySuperSecretKeyForJwt1234567890123456
+
+
+# OAuth2
+
+#Client Id: 735312629615-mbccjjmkgcp3ieirq161l3br2debdo23.apps.googleusercontent.com -> for Google OAuth2
+
+#Client Id: Ov23lilMP2caQRCkvUUR  -> for Github OAuth2
+# Secrest Key:  57db9503a3bae308fa6dc791ef32a4777c0e39a5 -> github
 
 admin.secret: VeagleSpace

@@ -1,5 +1,7 @@
 package com.example.VeagleSpaceTech.DTO.request;
 
+import com.example.VeagleSpaceTech.entity.JobPost;
+import com.example.VeagleSpaceTech.enums.JobStatus;
 import jakarta.validation.constraints.NotBlank;
 
 public record JobPostRequestDTO(
@@ -14,6 +16,8 @@ public record JobPostRequestDTO(
         String location,
 
 //        @NotBlank(message = "Skills are required")
-        String skills
+        String skills,
+
+        JobStatus status
 
 ) {}

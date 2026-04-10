@@ -15,20 +15,20 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@CrossOrigin("*")
 public class ProductController {
 
     @Autowired
     private ProductsService productsService;
 
     // Fetch All Products
-    @GetMapping("/api/products")
+    @GetMapping("/api/v1/products")
     public ResponseEntity<List<ProductResponseDTO>> getProducts() {
         return ResponseEntity.status(200).body(productsService.getAllProducts());
     }
 
     //Add Product
-    @PostMapping(value = "/admin/products", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PreAuthorize("hasRole('ADMIN')")
+    @PostMapping(value = "/api/v1/admin/products", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<ProductResponseDTO> addProduct(
             @RequestPart("request") String requestJson,
             @RequestPart("file") MultipartFile file
@@ -47,7 +47,7 @@ public class ProductController {
 
     // Update Product
     @PreAuthorize("hasRole('ADMIN')")
-    @PutMapping(value = "/admin/products/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PutMapping(value = "/api/v1/admin/products/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<ProductResponseDTO> updateProduct(
             @PathVariable Long id,
             @RequestPart("request") String requestJson,
@@ -68,7 +68,8 @@ public class ProductController {
     }
 
     // For only Status Updation
-    @PutMapping("/admin/products/status/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
+    @PatchMapping("/api/v1/admin/products/{id}/status")
     public ResponseEntity<String> updateProductStatus(
             @PathVariable Long id,
             @RequestBody Map<String, Boolean> request
@@ -81,7 +82,8 @@ public class ProductController {
     // Delete Product
     @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/admin/products/{id}")
-    public ResponseEntity<String> deleteProduct(@PathVariable Long id){
+    public ResponseEntity<String> deleteProduct(@PathVariable("id") Long id){
+//        System.out.println("\n ID: "+id);
         return ResponseEntity.ok(productsService.deleteProduct(id));
     }
 
