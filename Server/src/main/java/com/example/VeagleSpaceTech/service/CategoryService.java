@@ -6,6 +6,8 @@ import com.example.VeagleSpaceTech.entity.Category;
 import com.example.VeagleSpaceTech.repo.CategoryRepository;
 import com.example.VeagleSpaceTech.repo.ProductRepo;
 import lombok.RequiredArgsConstructor;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -14,9 +16,11 @@ import java.util.List;
 @RequiredArgsConstructor
 public class CategoryService {
 
-    private final CategoryRepository categoryRepository;
+	@Autowired
+    private  CategoryRepository categoryRepository;
 
-    private final ProductRepo productRepo;
+	@Autowired
+    private  ProductRepo productRepo;
 
 
     // CREATE

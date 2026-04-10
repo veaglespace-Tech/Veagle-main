@@ -3,6 +3,8 @@ package com.example.VeagleSpaceTech.service;
 import com.example.VeagleSpaceTech.mapper.PortfolioMapper;
 import com.example.VeagleSpaceTech.repo.PortfolioRepository;
 import lombok.AllArgsConstructor;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.example.VeagleSpaceTech.DTO.request.PortfolioRequestDTO;
 import com.example.VeagleSpaceTech.DTO.response.PortfolioResponseDTO;
@@ -16,7 +18,8 @@ import java.util.List;
 @AllArgsConstructor
 public class PortfolioService {
 
-    private final PortfolioRepository portfolioRepository;
+	@Autowired
+    private PortfolioRepository portfolioRepository;
 
     // ✅ CREATE
     public PortfolioResponseDTO createPortfolio(PortfolioRequestDTO dto, MultipartFile image) {

@@ -41,6 +41,7 @@ public class SecurityConfig {
 
                                 req.requestMatchers(
                                         "/api/v1/auth/**",
+                                        // "/api/auth/register",
                                         "/api/v1/categories/**",
                                         "/api/v1/clients/**",
                                         "/api/v1/jobs/**",

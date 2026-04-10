@@ -1,6 +1,8 @@
 package com.example.VeagleSpaceTech.service;
 
 import com.example.VeagleSpaceTech.repo.ClientRepository;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.example.VeagleSpaceTech.DTO.request.ClientRequestDTO;
@@ -16,7 +18,8 @@ import java.util.List;
 @AllArgsConstructor
 public class ClientService {
 
-    private final ClientRepository clientRepository;
+	@Autowired
+    private ClientRepository clientRepository;
 
     // ✅ CREATE
     public ClientResponseDTO createClient(ClientRequestDTO dto, MultipartFile logo) {

@@ -5,6 +5,8 @@ import com.example.VeagleSpaceTech.DTO.request.ContactRequestDTO;
 import com.example.VeagleSpaceTech.DTO.response.ContactResponseDTO;
 import com.example.VeagleSpaceTech.service.ContactMessageService;
 import lombok.AllArgsConstructor;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -15,7 +17,8 @@ import java.util.List;
 @AllArgsConstructor
 public class ContactMessageController {
 
-    private final ContactMessageService service;
+		@Autowired
+    private  ContactMessageService service;
 
 
     // Add Messages By Users

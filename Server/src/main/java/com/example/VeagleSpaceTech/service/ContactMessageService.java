@@ -5,6 +5,8 @@ import com.example.VeagleSpaceTech.DTO.response.ContactResponseDTO;
 import com.example.VeagleSpaceTech.entity.ContactMessage;
 import com.example.VeagleSpaceTech.repo.ContactMessageRepo;
 import lombok.AllArgsConstructor;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -13,7 +15,8 @@ import java.util.List;
 @AllArgsConstructor
 public class ContactMessageService {
 
-    private final ContactMessageRepo repo;
+	@Autowired
+    private ContactMessageRepo repo;
 
  // Get All Messages
     public  List<ContactResponseDTO> getContactMessages() {
