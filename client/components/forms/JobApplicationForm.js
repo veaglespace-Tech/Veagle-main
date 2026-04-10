@@ -126,14 +126,6 @@ export default function JobApplicationForm({
   async function handleSubmit(event) {
     event.preventDefault();
 
-    if (!userLocked) {
-      setStatus({
-        type: "error",
-        message: "User login or registration is required before applying for a job.",
-      });
-      return;
-    }
-
     const nextErrors = validate(form);
 
     if (Object.keys(nextErrors).length > 0) {
@@ -153,7 +145,7 @@ export default function JobApplicationForm({
         payload.append("jobId", form.jobId);
         payload.append("file", form.file);
 
-        await postJobApplication(payload, session.token);
+        await postJobApplication(payload, session?.token);
         setStatus({
           type: "success",
           message: `Application submitted for ${selectedJob?.title || "the selected role"}.`,
@@ -345,10 +337,10 @@ function AccessBanner({ session, loginHref, registerHref, onLogout }) {
   return (
     <div className="mb-6 rounded-2xl border border-amber-500/20 bg-amber-500/10 px-4 py-4 text-sm text-amber-100">
       <p className="font-semibold">
-        User login is required before applying for any job.
+        Login is optional, but it auto-fills your application details.
       </p>
       <p className="mt-2 text-xs leading-6 text-amber-100/85">
-        Register first, then your user profile will be used for job applications.
+        Apply as a guest, or sign in to reuse your saved profile.
       </p>
       <div className="mt-3 flex flex-wrap gap-3">
         <Link

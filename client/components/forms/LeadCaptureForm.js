@@ -21,6 +21,7 @@ import {
   selectClass,
   textareaClass,
 } from "@/components/site/UiBits";
+import { postContact } from "@/lib/backend";
 
 const initialState = {
   name: "",
@@ -146,14 +147,6 @@ export default function LeadCaptureForm({
   async function handleSubmit(event) {
     event.preventDefault();
 
-    if (!userLocked) {
-      setStatus({
-        type: "error",
-        message: "User login or registration is required before submitting the contact form.",
-      });
-      return;
-    }
-
     const nextErrors = validate(form);
 
     if (Object.keys(nextErrors).length > 0) {
@@ -166,41 +159,45 @@ export default function LeadCaptureForm({
 
     startTransition(async () => {
       try {
-        const response = await fetch("/api/cms/leads", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${session.token}`,
-          },
-          body: JSON.stringify(form),
+        const subject =
+          form.serviceInterest?.trim() || "General enquiry";
+        const details = [
+          form.company?.trim() ? `Company: ${form.company.trim()}` : null,
+          form.budget?.trim() ? `Budget: ${form.budget.trim()}` : null,
+          form.timeline?.trim() ? `Timeline: ${form.timeline.trim()}` : null,
+          form.phone?.trim() ? `Phone: ${form.phone.trim()}` : null,
+        ].filter(Boolean);
+        const message = [
+          form.message.trim(),
+          details.length ? "" : null,
+          ...details,
+        ]
+          .filter((item) => item !== null)
+          .join("\n");
+
+        await postContact({
+          name: form.name.trim(),
+          email: form.email.trim(),
+          contact: form.phone?.trim() || "",
+          subject,
+          message,
         });
-
-        const payload = await response.json();
-
-        if (!response.ok) {
-          setErrors(payload.errors || {});
-          setStatus({
-            type: "error",
-            message: payload.error || "We could not submit the form right now.",
-          });
-          return;
-        }
 
         setForm({
           ...initialState,
           serviceInterest: defaultService,
-          name: session.username || "",
-          email: session.email || "",
-          phone: session.contact || "",
+          name: session?.username || "",
+          email: session?.email || "",
+          phone: session?.contact || "",
         });
         setStatus({
           type: "success",
           message: "Requirement received. We will get back to you shortly.",
         });
-      } catch {
+      } catch (error) {
         setStatus({
           type: "error",
-          message: "Something went wrong while submitting the form.",
+          message: error?.message || "Something went wrong while submitting the form.",
         });
       } finally {
         setIsSubmitting(false);
@@ -665,10 +662,10 @@ function AccessBanner({ session, loginHref, registerHref, onLogout }) {
   return (
     <div className="mb-6 rounded-2xl border border-amber-500/20 bg-amber-500/10 px-4 py-4 text-sm text-amber-100">
       <p className="font-semibold">
-        User login is required before submitting the contact form.
+        Login is optional, but it auto-fills your details.
       </p>
       <p className="mt-2 text-xs leading-6 text-amber-100/85">
-        Register once, then your saved user profile will be used for contact requests.
+        You can submit as a guest, or sign in for faster form completion.
       </p>
       <div className="mt-3 flex flex-wrap gap-3">
         <Link

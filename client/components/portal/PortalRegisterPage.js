@@ -16,20 +16,18 @@ import {
 import {
   buildLoginHref,
   getSafeNextPath,
-  normalizeSessionPayload,
-  writeStoredSession,
 } from "@/lib/auth-session";
 import { COMPANY_NAME } from "@/lib/site";
 
 const leftPanelItems = [
   {
-    title: "Secure public access",
-    description: "Registration keeps contact requests and job applications connected to a real user profile.",
+    title: "Keep everything tracked",
+    description: "Registration is optional, but it keeps contact requests and job applications attached to one account.",
     icon: ShieldCheck,
   },
   {
     title: "Faster next steps",
-    description: "Once your account is active, you can continue directly to contact or job application flow.",
+    description: "Returning clients and applicants can reuse the same email flow with OTP-based sign-in.",
     icon: BarChart3,
   },
 ];
@@ -123,27 +121,10 @@ export default function PortalRegisterPage() {
         return;
       }
 
-      const loginResponse = await fetch("/api/auth/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          email: form.email.trim(),
-          password: form.password,
-        }),
-      });
-
-      const loginPayload = await loginResponse.json();
-
-      if (!loginResponse.ok) {
-        setSuccess("Account created successfully. Please sign in to continue.");
-        router.replace(loginHref);
-        return;
-      }
-
-      writeStoredSession(normalizeSessionPayload(loginPayload, true));
-      router.replace(nextPath);
+      setSuccess("Account created successfully. Redirecting you to OTP sign-in...");
+      router.replace(
+        `${loginHref}&email=${encodeURIComponent(form.email.trim())}&registered=1`
+      );
     } catch {
       setError("Registration is unavailable right now.");
     } finally {
@@ -196,7 +177,7 @@ export default function PortalRegisterPage() {
                 Create your user account.
               </h2>
               <p className="mt-4 font-light leading-relaxed text-[#c3c6d7]">
-                This registration unlocks contact submissions and job applications with your saved profile details.
+                Guest enquiry and job application flows already work, and this account simply keeps everything linked to your saved profile.
               </p>
             </div>
 
@@ -252,7 +233,7 @@ export default function PortalRegisterPage() {
                 Register to continue
               </h3>
               <p className="mt-1 text-sm text-[#c3c6d7]">
-                Your saved profile will be used when you contact the team or apply for a role.
+                Create an account if you want your future enquiries and applications tracked under one identity.
               </p>
             </div>
 

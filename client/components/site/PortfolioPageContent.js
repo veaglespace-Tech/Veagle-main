@@ -2,9 +2,10 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import { ArrowUpRight, Rocket } from "lucide-react";
 
+import { backendAssetUrl } from "@/lib/backend";
 import { pageArtwork } from "@/lib/visuals";
 
 const cardLayouts = [
@@ -91,35 +92,62 @@ function normalizeProject(project, index) {
     imageUrl: project?.imageUrl || pageArtwork.services,
     summary: project?.summary || "",
     tags,
+    linkUrl: project?.linkUrl || "",
+    linkLabel: project?.linkLabel || "",
   };
 }
 
-export default function PortfolioPageContent({ content }) {
+function normalizeBackendProject(project, index) {
+  const imageUrl = backendAssetUrl(project?.imageUrl) || pageArtwork.services;
+  const linkUrl = project?.projectUrl || project?.githubUrl || "";
+  const linkLabel = project?.projectUrl
+    ? "Open project"
+    : project?.githubUrl
+      ? "View code"
+      : "";
+
+  return {
+    id: project?.id || `portfolio-${index + 1}`,
+    title: project?.title || `Project ${index + 1}`,
+    subtitle: "",
+    result: "",
+    category: "PROJECT",
+    imageUrl,
+    summary: project?.description || "",
+    tags: [],
+    linkUrl,
+    linkLabel,
+  };
+}
+
+export default function PortfolioPageContent({ content, portfolioData = [] }) {
   const portfolio = content?.portfolio || {};
-  const projects = useMemo(
-    () =>
-      Array.isArray(portfolio?.projects)
-        ? portfolio.projects.map((project, index) => normalizeProject(project, index))
-        : [],
-    [portfolio?.projects]
-  );
-  const filters = useMemo(() => {
-    const categories = Array.from(
+  const normalizedBackendProjects = Array.isArray(portfolioData)
+    ? portfolioData.map((project, index) =>
+        normalizeBackendProject(project, index)
+      )
+    : [];
+  const projects = normalizedBackendProjects.length
+    ? normalizedBackendProjects
+    : Array.isArray(portfolio?.projects)
+      ? portfolio.projects.map((project, index) =>
+          normalizeProject(project, index)
+        )
+      : [];
+  const filters = [
+    "ALL",
+    ...Array.from(
       new Set(projects.map((project) => normalizeCategory(project.category)).filter(Boolean))
-    );
-    return ["ALL", ...categories];
-  }, [projects]);
+    ),
+  ];
   const [activeFilter, setActiveFilter] = useState("ALL");
 
-  const filteredProjects = useMemo(() => {
-    if (activeFilter === "ALL") {
-      return projects;
-    }
-
-    return projects.filter(
-      (project) => normalizeCategory(project.category) === activeFilter
-    );
-  }, [activeFilter, projects]);
+  const filteredProjects =
+    activeFilter === "ALL"
+      ? projects
+      : projects.filter(
+          (project) => normalizeCategory(project.category) === activeFilter
+        );
 
   return (
     <main className="overflow-hidden bg-[#131314] text-[#e4e2e2]">
@@ -256,10 +284,22 @@ export default function PortfolioPageContent({ content }) {
                   ) : null}
 
                   {isCompact ? (
-                    <div className="mt-4 inline-flex items-center gap-2 text-xs font-bold uppercase tracking-[0.18em] text-[#c9d7ff]">
-                      View Case Study
-                      <ArrowUpRight className="h-3.5 w-3.5" />
-                    </div>
+                    study.linkUrl ? (
+                      <a
+                        href={study.linkUrl}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="mt-4 inline-flex items-center gap-2 text-xs font-bold uppercase tracking-[0.18em] text-[#c9d7ff]"
+                      >
+                        {study.linkLabel || "View Case Study"}
+                        <ArrowUpRight className="h-3.5 w-3.5" />
+                      </a>
+                    ) : (
+                      <div className="mt-4 inline-flex items-center gap-2 text-xs font-bold uppercase tracking-[0.18em] text-[#c9d7ff]">
+                        View Case Study
+                        <ArrowUpRight className="h-3.5 w-3.5" />
+                      </div>
+                    )
                   ) : null}
 
                   {isWideStat ? (

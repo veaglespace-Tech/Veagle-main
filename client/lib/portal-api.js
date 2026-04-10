@@ -27,7 +27,7 @@ export function authHeaders(token, isJson = true) {
 }
 
 export async function fetchPortalDashboard(session) {
-  const [content, leads, tasks] = await Promise.all([
+  const primaryResults = await Promise.allSettled([
     requestJson("/api/cms/content", {
       headers: authHeaders(session.token, false),
     }),
@@ -39,24 +39,37 @@ export async function fetchPortalDashboard(session) {
     }),
   ]);
 
+  const [content, leads, tasks] = primaryResults.map((result, index) => {
+    if (result.status === "fulfilled") {
+      return result.value;
+    }
+
+    return [{}, [], []][index];
+  });
+
   const results = await Promise.allSettled([
-    requestJson(`${API_BASE_URL}/api/services`),
-    requestJson(`${API_BASE_URL}/api/products`),
-    requestJson(`${API_BASE_URL}/api/categories`),
-    requestJson(`${API_BASE_URL}/api/jobs`),
+    requestJson(`${API_BASE_URL}/api/v1/services`),
+    requestJson(`${API_BASE_URL}/api/v1/products`),
+    requestJson(`${API_BASE_URL}/api/v1/categories`),
+    requestJson(`${API_BASE_URL}/api/v1/jobs`),
+    requestJson(`${API_BASE_URL}/api/v1/clients`),
+    requestJson(`${API_BASE_URL}/api/v1/portfolio`),
+    requestJson(`${API_BASE_URL}/api/v1/admin/applications`, {
+      headers: authHeaders(session.token, false),
+    }),
     session.role === "SADMIN"
-      ? requestJson(`${API_BASE_URL}/admin/users`, {
+      ? requestJson(`${API_BASE_URL}/api/v1/admin/users`, {
           headers: authHeaders(session.token, false),
         })
       : Promise.resolve([]),
   ]);
 
-  const [services, products, categories, jobs, users] = results.map((result, index) => {
+  const [services, products, categories, jobs, clients, portfolio, applications, users] = results.map((result, index) => {
     if (result.status === "fulfilled") {
       return result.value;
     }
 
-    return [[], [], [], [], []][index];
+    return [[], [], [], [], [], [], [], []][index];
   });
 
   return {
@@ -67,7 +80,12 @@ export async function fetchPortalDashboard(session) {
     products,
     categories,
     jobs,
+    clients,
+    portfolio,
+    applications,
     users,
-    fallbackUsed: results.some((result) => result.status === "rejected"),
+    fallbackUsed:
+      primaryResults.some((result) => result.status === "rejected") ||
+      results.some((result) => result.status === "rejected"),
   };
 }

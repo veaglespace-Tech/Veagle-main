@@ -64,7 +64,7 @@ function mapProducts(products) {
 
 export async function getServices(keyword = "") {
   const query = keyword ? `?keyword=${encodeURIComponent(keyword)}` : "";
-  const services = await fetchJson(`/api/services${query}`, []);
+  const services = await fetchJson(`/api/v1/services${query}`, []);
   return mapServices(services);
 }
 
@@ -74,21 +74,50 @@ export async function getServiceBySlug(slug) {
 }
 
 export async function getProducts() {
-  const products = await fetchJson("/api/products", []);
+  const products = await fetchJson("/api/v1/products", []);
   return mapProducts(products);
 }
 
 export async function getCategories() {
-  return fetchJson("/api/categories", []);
+  return fetchJson("/api/v1/categories", []);
 }
 
 export async function getJobs(keyword = "") {
   const query = keyword ? `?keyword=${encodeURIComponent(keyword)}` : "";
-  return fetchJson(`/api/jobs${query}`, []);
+  return fetchJson(`/api/v1/jobs${query}`, []);
+}
+
+export async function getClients() {
+  return fetchJson("/api/v1/clients", []);
+}
+
+export async function getPortfolio() {
+  return fetchJson("/api/v1/portfolio", []);
+}
+
+export async function postContact(payload) {
+  const response = await fetch(`${API_BASE_URL}/api/v1/contacts`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(payload),
+  });
+
+  if (!response.ok) {
+    const message = await safeReadMessage(response);
+    throw new Error(message || "Unable to send your message right now.");
+  }
+
+  try {
+    return await response.json();
+  } catch {
+    return response.text();
+  }
 }
 
 export async function postJobApplication(formData, token) {
-  const response = await fetch(`${API_BASE_URL}/careers/apply`, {
+  const response = await fetch(`${API_BASE_URL}/api/v1/applications`, {
     method: "POST",
     headers: token
       ? {

@@ -38,7 +38,7 @@ export async function GET(request) {
     return access.response;
   }
 
-  const response = await fetch(`${API_BASE_URL}/admin/leads`, {
+  const response = await fetch(`${API_BASE_URL}/api/v1/admin/contacts`, {
     headers: {
       Authorization: `Bearer ${access.token}`,
     },
@@ -46,15 +46,22 @@ export async function GET(request) {
   });
 
   const payload = await readPayload(response);
-  return Response.json(payload, { status: response.status });
+  const mapped = Array.isArray(payload)
+    ? payload.map((item) => ({
+        id: item.id,
+        name: item.name,
+        email: item.email,
+        phone: item.contact || "",
+        serviceInterest: item.subject || "",
+        message: item.message,
+        status: item.isRead ? "contacted" : "new",
+        createdAt: item.createdAt,
+      }))
+    : payload;
+  return Response.json(mapped, { status: response.status });
 }
 
 export async function POST(request) {
-  const access = requirePortalRole(request, ["USER"]);
-  if (!access.ok) {
-    return access.response;
-  }
-
   const body = await request.json();
   const errors = validateLead(body);
 
@@ -62,22 +69,32 @@ export async function POST(request) {
     return Response.json({ errors }, { status: 422 });
   }
 
-  const response = await fetch(`${API_BASE_URL}/api/leads`, {
+  const subject = body.serviceInterest?.trim() || "General enquiry";
+  const details = [
+    body.company?.trim() ? `Company: ${body.company.trim()}` : null,
+    body.budget?.trim() ? `Budget: ${body.budget.trim()}` : null,
+    body.timeline?.trim() ? `Timeline: ${body.timeline.trim()}` : null,
+    body.phone?.trim() ? `Phone: ${body.phone.trim()}` : null,
+  ].filter(Boolean);
+  const message = [
+    body.message.trim(),
+    details.length ? "" : null,
+    ...details,
+  ]
+    .filter((item) => item !== null)
+    .join("\n");
+
+  const response = await fetch(`${API_BASE_URL}/api/v1/contacts`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      Authorization: `Bearer ${access.token}`,
     },
     body: JSON.stringify({
       name: body.name.trim(),
-      company: body.company?.trim() || "",
       email: body.email.trim(),
-      phone: body.phone?.trim() || "",
-      serviceInterest: body.serviceInterest?.trim() || "",
-      budget: body.budget?.trim() || "",
-      timeline: body.timeline?.trim() || "",
-      message: body.message.trim(),
-      source: "website",
+      contact: body.phone?.trim() || "",
+      subject,
+      message,
     }),
     cache: "no-store",
   });
@@ -97,16 +114,18 @@ export async function PATCH(request) {
     return Response.json({ error: "Lead id is required" }, { status: 400 });
   }
 
-  const response = await fetch(`${API_BASE_URL}/admin/leads/${id}`, {
-    method: "PATCH",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${access.token}`,
-    },
-    body: JSON.stringify(updates),
-    cache: "no-store",
-  });
+  if (updates.status && updates.status !== "new") {
+    const response = await fetch(`${API_BASE_URL}/api/v1/admin/contacts/${id}/read`, {
+      method: "PATCH",
+      headers: {
+        Authorization: `Bearer ${access.token}`,
+      },
+      cache: "no-store",
+    });
 
-  const payload = await readPayload(response);
-  return Response.json(payload, { status: response.status });
+    const payload = await readPayload(response);
+    return Response.json(payload, { status: response.status });
+  }
+
+  return Response.json({ ok: true });
 }

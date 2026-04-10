@@ -4,8 +4,11 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { startTransition, useCallback, useEffect, useMemo, useState } from "react";
 import {
+  Building2,
   BriefcaseBusiness,
   ClipboardList,
+  FileText,
+  FolderOpen,
   LayoutDashboard,
   LogOut,
   Mail,
@@ -18,11 +21,14 @@ import {
 } from "lucide-react";
 
 import {
+  ApplicationsPanel,
   CategoriesPanel,
+  ClientsPanel,
   ContentPanel,
   JobsPanel,
   LeadsPanel,
   OverviewPanel,
+  PortfolioPanel,
   ProductsPanel,
   ServicesPanel,
   TasksPanel,
@@ -111,7 +117,10 @@ const tabs = [
   { id: "products", label: "Products", icon: PackageSearch },
   { id: "categories", label: "Categories", icon: Tags },
   { id: "jobs", label: "Jobs", icon: BriefcaseBusiness },
+  { id: "clients", label: "Clients", icon: Building2 },
+  { id: "portfolio", label: "Portfolio", icon: FolderOpen },
   { id: "leads", label: "Leads", icon: Mail },
+  { id: "applications", label: "Applications", icon: FileText },
   { id: "tasks", label: "Allocations", icon: ClipboardList },
   { id: "team", label: "Team", icon: Users, superadminOnly: true },
 ];
@@ -123,7 +132,10 @@ const tabDescriptions = {
   products: "Organize the product showcase with better grouping and status control.",
   categories: "Keep product categories clean so the public catalog remains structured.",
   jobs: "Maintain career openings and hiring information for the public site.",
+  clients: "Manage client proof, brand logos and website links shown on the public clients page.",
+  portfolio: "Publish project case studies with live links and backend-hosted visuals.",
   leads: "Review, qualify and update enquiry flow from contact forms.",
+  applications: "Track job applications and move candidates through the shortlist pipeline.",
   tasks: "Assign website and content updates when superadmin or admins need to coordinate work.",
   team: "Control user access, roles and update responsibility inside the portal.",
 };
@@ -168,6 +180,24 @@ const initialJobForm = {
   skills: "",
 };
 
+const initialClientForm = {
+  id: "",
+  name: "",
+  websiteUrl: "",
+  description: "",
+  displayOrder: "",
+  file: null,
+};
+
+const initialPortfolioForm = {
+  id: "",
+  title: "",
+  description: "",
+  projectUrl: "",
+  githubUrl: "",
+  file: null,
+};
+
 const initialUserForm = {
   id: "",
   username: "",
@@ -193,6 +223,9 @@ export default function PortalApp() {
     products,
     categories,
     jobs,
+    clients,
+    portfolio,
+    applications,
     users,
     leads,
     tasks,
@@ -203,6 +236,8 @@ export default function PortalApp() {
   const [productForm, setProductForm] = useState(initialProductForm);
   const [categoryForm, setCategoryForm] = useState(initialCategoryForm);
   const [jobForm, setJobForm] = useState(initialJobForm);
+  const [clientForm, setClientForm] = useState(initialClientForm);
+  const [portfolioForm, setPortfolioForm] = useState(initialPortfolioForm);
   const [userForm, setUserForm] = useState(initialUserForm);
 
   const visibleTabs = useMemo(
@@ -226,10 +261,21 @@ export default function PortalApp() {
       { label: "Products", value: products.length },
       { label: "Categories", value: categories.length },
       { label: "Jobs", value: jobs.length },
+      { label: "Clients", value: clients.length },
+      { label: "Portfolio", value: portfolio.length },
       { label: "Leads", value: leads.length },
-      { label: "Tasks", value: visibleTasks.length },
+      { label: "Applications", value: applications.length },
     ],
-    [categories.length, jobs.length, leads.length, products.length, services.length, visibleTasks.length]
+    [
+      applications.length,
+      categories.length,
+      clients.length,
+      jobs.length,
+      leads.length,
+      portfolio.length,
+      products.length,
+      services.length,
+    ]
   );
 
   const activeTabMeta = useMemo(
@@ -244,8 +290,10 @@ export default function PortalApp() {
         value: leads.filter((lead) => lead.status === "new").length,
       },
       {
-        label: "Open Tasks",
-        value: visibleTasks.filter((task) => task.status !== "done").length,
+        label: "New Applications",
+        value: applications.filter(
+          (application) => String(application.status).toUpperCase() === "APPLIED"
+        ).length,
       },
       {
         label: "Live Jobs",
@@ -259,7 +307,7 @@ export default function PortalApp() {
             : session?.role || "ADMIN",
       },
     ],
-    [jobs.length, leads, session?.role, users, visibleTasks]
+    [applications, jobs.length, leads, session?.role, users]
   );
 
   const CurrentTabIcon = activeTabMeta?.icon || LayoutDashboard;
@@ -342,6 +390,8 @@ export default function PortalApp() {
     setProductForm(initialProductForm);
     setCategoryForm(initialCategoryForm);
     setJobForm(initialJobForm);
+    setClientForm(initialClientForm);
+    setPortfolioForm(initialPortfolioForm);
     setUserForm(initialUserForm);
   }
 
@@ -432,12 +482,16 @@ export default function PortalApp() {
     productForm,
     categoryForm,
     jobForm,
+    clientForm,
+    portfolioForm,
     userForm,
     taskForm,
     setServiceForm,
     setProductForm,
     setCategoryForm,
     setJobForm,
+    setClientForm,
+    setPortfolioForm,
     setUserForm,
     setTaskForm,
     setActiveTab,
@@ -457,7 +511,7 @@ export default function PortalApp() {
             Preparing your dashboard
           </h1>
           <p className="mt-4 text-sm leading-7 text-[color:var(--text-secondary)]">
-            Loading admin session, CMS content and connected backend data.
+            Loading admin session, CMS content, live backend entities and hiring activity.
           </p>
         </div>
       </main>
@@ -635,7 +689,10 @@ export default function PortalApp() {
             {!loading && activeTab === "products" ? <ProductsPanel products={products} categories={categories} productForm={productForm} setProductForm={setProductForm} saveProduct={actions.saveProduct} beginProductEdit={actions.beginProductEdit} toggleProductStatus={actions.toggleProductStatus} deleteProduct={actions.deleteProduct} busyAction={busyAction} /> : null}
             {!loading && activeTab === "categories" ? <CategoriesPanel categories={categories} categoryForm={categoryForm} setCategoryForm={setCategoryForm} saveCategory={actions.saveCategory} beginCategoryEdit={actions.beginCategoryEdit} deleteCategory={actions.deleteCategory} busyAction={busyAction} /> : null}
             {!loading && activeTab === "jobs" ? <JobsPanel jobs={jobs} jobForm={jobForm} setJobForm={setJobForm} saveJob={actions.saveJob} beginJobEdit={actions.beginJobEdit} deleteJob={actions.deleteJob} busyAction={busyAction} /> : null}
+            {!loading && activeTab === "clients" ? <ClientsPanel clients={clients} clientForm={clientForm} setClientForm={setClientForm} saveClient={actions.saveClient} beginClientEdit={actions.beginClientEdit} deleteClient={actions.deleteClient} busyAction={busyAction} /> : null}
+            {!loading && activeTab === "portfolio" ? <PortfolioPanel portfolio={portfolio} portfolioForm={portfolioForm} setPortfolioForm={setPortfolioForm} savePortfolio={actions.savePortfolio} beginPortfolioEdit={actions.beginPortfolioEdit} deletePortfolio={actions.deletePortfolio} busyAction={busyAction} /> : null}
             {!loading && activeTab === "leads" ? <LeadsPanel leads={leads} busyAction={busyAction} updateLeadStatus={actions.updateLeadStatus} /> : null}
+            {!loading && activeTab === "applications" ? <ApplicationsPanel applications={applications} busyAction={busyAction} updateApplicationStatus={actions.updateApplicationStatus} /> : null}
             {!loading && activeTab === "tasks" ? <TasksPanel sessionRole={session.role} users={users} visibleTasks={visibleTasks} taskForm={taskForm} setTaskForm={setTaskForm} saveTask={actions.saveTask} beginTaskEdit={actions.beginTaskEdit} updateTaskStatus={actions.updateTaskStatus} deleteTaskEntry={actions.deleteTaskEntry} busyAction={busyAction} /> : null}
             {!loading && activeTab === "team" && session.role === "SADMIN" ? <TeamPanel users={users} userForm={userForm} setUserForm={setUserForm} saveUser={actions.saveUser} beginUserEdit={actions.beginUserEdit} toggleUserStatus={actions.toggleUserStatus} deleteUser={actions.deleteUser} busyAction={busyAction} /> : null}
           </div>
@@ -653,12 +710,16 @@ function createPortalActions(context) {
     productForm,
     categoryForm,
     jobForm,
+    clientForm,
+    portfolioForm,
     userForm,
     taskForm,
     setServiceForm,
     setProductForm,
     setCategoryForm,
     setJobForm,
+    setClientForm,
+    setPortfolioForm,
     setUserForm,
     setTaskForm,
     setActiveTab,
@@ -694,7 +755,7 @@ function createPortalActions(context) {
         const payload = new FormData();
         payload.append("data", JSON.stringify({ title: serviceForm.title.trim(), description: serviceForm.description.trim(), features }));
         if (serviceForm.file) payload.append("file", serviceForm.file);
-        await requestJson(serviceForm.id ? `${API_BASE_URL}/admin/services/${serviceForm.id}` : `${API_BASE_URL}/admin/services`, {
+        await requestJson(serviceForm.id ? `${API_BASE_URL}/api/v1/admin/services/${serviceForm.id}` : `${API_BASE_URL}/api/v1/admin/services`, {
           method: serviceForm.id ? "PUT" : "POST",
           headers: authHeaders(session.token, false),
           body: payload,
@@ -707,7 +768,7 @@ function createPortalActions(context) {
     async deleteService(id) {
       if (!window.confirm("Delete this service?")) return;
       await runAction(`service-delete-${id}`, async () => {
-        await requestJson(`${API_BASE_URL}/admin/services/${id}`, {
+        await requestJson(`${API_BASE_URL}/api/v1/admin/services/${id}`, {
           method: "DELETE",
           headers: authHeaders(session.token, false),
         });
@@ -733,7 +794,7 @@ function createPortalActions(context) {
         const payload = new FormData();
         payload.append("request", JSON.stringify({ title: productForm.title.trim(), description: productForm.description.trim(), imageUrl: "", categoryId: Number(productForm.categoryId), isActive: productForm.isActive }));
         if (productForm.file) payload.append("file", productForm.file);
-        await requestJson(productForm.id ? `${API_BASE_URL}/admin/products/${productForm.id}` : `${API_BASE_URL}/admin/products`, {
+        await requestJson(productForm.id ? `${API_BASE_URL}/api/v1/admin/products/${productForm.id}` : `${API_BASE_URL}/api/v1/admin/products`, {
           method: productForm.id ? "PUT" : "POST",
           headers: authHeaders(session.token, false),
           body: payload,
@@ -745,8 +806,8 @@ function createPortalActions(context) {
     },
     async toggleProductStatus(item) {
       await runAction(`product-status-${item.id}`, async () => {
-        await requestJson(`${API_BASE_URL}/admin/products/status/${item.id}`, {
-          method: "PUT",
+        await requestJson(`${API_BASE_URL}/api/v1/admin/products/${item.id}/status`, {
+          method: "PATCH",
           headers: authHeaders(session.token),
           body: JSON.stringify({ isActive: !item.isActive }),
         });
@@ -757,7 +818,7 @@ function createPortalActions(context) {
     async deleteProduct(id) {
       if (!window.confirm("Delete this product?")) return;
       await runAction(`product-delete-${id}`, async () => {
-        await requestJson(`${API_BASE_URL}/admin/products/${id}?id=${id}`, {
+        await requestJson(`${API_BASE_URL}/api/v1/admin/products/${id}`, {
           method: "DELETE",
           headers: authHeaders(session.token, false),
         });
@@ -775,7 +836,7 @@ function createPortalActions(context) {
         return;
       }
       await runAction("category", async () => {
-        await requestJson(categoryForm.id ? `${API_BASE_URL}/admin/categories/${categoryForm.id}` : `${API_BASE_URL}/admin/categories`, {
+        await requestJson(categoryForm.id ? `${API_BASE_URL}/api/v1/admin/categories/${categoryForm.id}` : `${API_BASE_URL}/api/v1/admin/categories`, {
           method: categoryForm.id ? "PUT" : "POST",
           headers: authHeaders(session.token),
           body: JSON.stringify({ name: categoryForm.name.trim(), description: categoryForm.description.trim() }),
@@ -788,7 +849,7 @@ function createPortalActions(context) {
     async deleteCategory(id) {
       if (!window.confirm("Delete this category?")) return;
       await runAction(`category-delete-${id}`, async () => {
-        await requestJson(`${API_BASE_URL}/admin/categories/${id}`, {
+        await requestJson(`${API_BASE_URL}/api/v1/admin/categories/${id}`, {
           method: "DELETE",
           headers: authHeaders(session.token, false),
         });
@@ -806,7 +867,7 @@ function createPortalActions(context) {
         return;
       }
       await runAction("job", async () => {
-        await requestJson(jobForm.id ? `${API_BASE_URL}/admin/jobs/${jobForm.id}` : `${API_BASE_URL}/admin/jobs`, {
+        await requestJson(jobForm.id ? `${API_BASE_URL}/api/v1/admin/jobs/${jobForm.id}` : `${API_BASE_URL}/api/v1/admin/jobs`, {
           method: jobForm.id ? "PUT" : "POST",
           headers: authHeaders(session.token),
           body: JSON.stringify({ title: jobForm.title.trim(), description: jobForm.description.trim(), location: jobForm.location.trim(), skills: jobForm.skills.trim() }),
@@ -819,12 +880,124 @@ function createPortalActions(context) {
     async deleteJob(id) {
       if (!window.confirm("Delete this job?")) return;
       await runAction(`job-delete-${id}`, async () => {
-        await requestJson(`${API_BASE_URL}/admin/jobs/${id}`, {
+        await requestJson(`${API_BASE_URL}/api/v1/admin/jobs/${id}`, {
           method: "DELETE",
           headers: authHeaders(session.token, false),
         });
         await hydrate(session);
         pushNotice("Job deleted.");
+      });
+    },
+    beginClientEdit(item) {
+      setClientForm({
+        id: item.id,
+        name: item.name,
+        websiteUrl: item.websiteUrl || "",
+        description: item.description || "",
+        displayOrder: "",
+        file: null,
+      });
+      setActiveTab("clients");
+    },
+    async saveClient() {
+      if (!clientForm.name.trim()) {
+        pushError("Client name is required.");
+        return;
+      }
+      if (!clientForm.id && !clientForm.file) {
+        pushError("Add a client logo before saving.");
+        return;
+      }
+      await runAction("client", async () => {
+        const payload = new FormData();
+        payload.append("name", clientForm.name.trim());
+        payload.append("websiteUrl", clientForm.websiteUrl.trim());
+        payload.append("description", clientForm.description.trim());
+        if (clientForm.displayOrder) {
+          payload.append("displayOrder", clientForm.displayOrder.trim());
+        }
+        if (clientForm.file) {
+          payload.append("logo", clientForm.file);
+        }
+        await requestJson(
+          clientForm.id
+            ? `${API_BASE_URL}/api/v1/admin/clients/${clientForm.id}`
+            : `${API_BASE_URL}/api/v1/admin/clients`,
+          {
+            method: clientForm.id ? "PUT" : "POST",
+            headers: authHeaders(session.token, false),
+            body: payload,
+          }
+        );
+        setClientForm(initialClientForm);
+        await hydrate(session);
+        pushNotice("Client saved successfully.");
+      });
+    },
+    async deleteClient(id) {
+      if (!window.confirm("Delete this client?")) return;
+      await runAction(`client-delete-${id}`, async () => {
+        await requestJson(`${API_BASE_URL}/api/v1/admin/clients/${id}`, {
+          method: "DELETE",
+          headers: authHeaders(session.token, false),
+        });
+        await hydrate(session);
+        pushNotice("Client deleted.");
+      });
+    },
+    beginPortfolioEdit(item) {
+      setPortfolioForm({
+        id: item.id,
+        title: item.title,
+        description: item.description || "",
+        projectUrl: item.projectUrl || "",
+        githubUrl: item.githubUrl || "",
+        file: null,
+      });
+      setActiveTab("portfolio");
+    },
+    async savePortfolio() {
+      if (!portfolioForm.title.trim()) {
+        pushError("Portfolio title is required.");
+        return;
+      }
+      if (!portfolioForm.id && !portfolioForm.file) {
+        pushError("Add a project image before saving.");
+        return;
+      }
+      await runAction("portfolio", async () => {
+        const payload = new FormData();
+        payload.append("title", portfolioForm.title.trim());
+        payload.append("description", portfolioForm.description.trim());
+        payload.append("projectUrl", portfolioForm.projectUrl.trim());
+        payload.append("githubUrl", portfolioForm.githubUrl.trim());
+        if (portfolioForm.file) {
+          payload.append("image", portfolioForm.file);
+        }
+        await requestJson(
+          portfolioForm.id
+            ? `${API_BASE_URL}/api/v1/admin/portfolio/${portfolioForm.id}`
+            : `${API_BASE_URL}/api/v1/admin/portfolio`,
+          {
+            method: portfolioForm.id ? "PUT" : "POST",
+            headers: authHeaders(session.token, false),
+            body: payload,
+          }
+        );
+        setPortfolioForm(initialPortfolioForm);
+        await hydrate(session);
+        pushNotice("Portfolio project saved successfully.");
+      });
+    },
+    async deletePortfolio(id) {
+      if (!window.confirm("Delete this portfolio project?")) return;
+      await runAction(`portfolio-delete-${id}`, async () => {
+        await requestJson(`${API_BASE_URL}/api/v1/admin/portfolio/${id}`, {
+          method: "DELETE",
+          headers: authHeaders(session.token, false),
+        });
+        await hydrate(session);
+        pushNotice("Portfolio project deleted.");
       });
     },
     beginUserEdit(item) {
@@ -841,7 +1014,7 @@ function createPortalActions(context) {
         return;
       }
       await runAction("user", async () => {
-        await requestJson(userForm.id ? `${API_BASE_URL}/admin/users/${userForm.id}` : `${API_BASE_URL}/admin/users`, {
+        await requestJson(userForm.id ? `${API_BASE_URL}/api/v1/admin/users/${userForm.id}` : `${API_BASE_URL}/api/v1/admin/users`, {
           method: userForm.id ? "PUT" : "POST",
           headers: authHeaders(session.token),
           body: JSON.stringify({ username: userForm.username.trim(), email: userForm.email.trim(), contact: userForm.contact.trim(), password: userForm.password.trim(), role: userForm.role }),
@@ -853,8 +1026,8 @@ function createPortalActions(context) {
     },
     async toggleUserStatus(id) {
       await runAction(`user-status-${id}`, async () => {
-        await requestJson(`${API_BASE_URL}/admin/users/${id}/status`, {
-          method: "PUT",
+        await requestJson(`${API_BASE_URL}/api/v1/admin/users/${id}/status`, {
+          method: "PATCH",
           headers: authHeaders(session.token, false),
         });
         await hydrate(session);
@@ -864,7 +1037,7 @@ function createPortalActions(context) {
     async deleteUser(id) {
       if (!window.confirm("Delete this user?")) return;
       await runAction(`user-delete-${id}`, async () => {
-        await requestJson(`${API_BASE_URL}/admin/users/${id}`, {
+        await requestJson(`${API_BASE_URL}/api/v1/admin/users/${id}`, {
           method: "DELETE",
           headers: authHeaders(session.token, false),
         });
@@ -923,6 +1096,19 @@ function createPortalActions(context) {
         });
         await hydrate(session);
         pushNotice("Lead updated.");
+      });
+    },
+    async updateApplicationStatus(id, status) {
+      await runAction(`application-status-${id}`, async () => {
+        await requestJson(
+          `${API_BASE_URL}/api/v1/admin/applications/${id}/status?status=${encodeURIComponent(status)}`,
+          {
+            method: "PATCH",
+            headers: authHeaders(session.token, false),
+          }
+        );
+        await hydrate(session);
+        pushNotice("Application status updated.");
       });
     },
     resetForms,

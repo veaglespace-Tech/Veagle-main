@@ -9,6 +9,7 @@ import {
   pageClass,
 } from "@/components/site/UiBits";
 import { resolveClientProfile } from "@/lib/fallback-data";
+import { backendAssetUrl } from "@/lib/backend";
 import { COMPANY_NAME } from "@/lib/site";
 
 const financeMatchers = [
@@ -59,6 +60,17 @@ function normalizeClients(items = []) {
   return items
     .map(resolveClientProfile)
     .filter((item) => item?.name && item?.href);
+}
+
+function normalizeBackendClients(items = []) {
+  return items
+    .map((client) => ({
+      name: client?.name || "",
+      href: client?.websiteUrl || "/contact",
+      image: backendAssetUrl(client?.logoUrl),
+      description: client?.description || "",
+    }))
+    .filter((item) => item.name);
 }
 
 function resolveGroupKey(name = "") {
@@ -255,10 +267,16 @@ function GroupSection({ sectionKey, items }) {
   );
 }
 
-export default function ClientsPageContent({ content }) {
+export default function ClientsPageContent({ content, clientsData = [] }) {
   const clients = content?.clients || {};
+  const backendClients = Array.isArray(clientsData) ? clientsData : [];
+  const backendLogos = normalizeBackendClients(backendClients);
   const logos =
-    Array.isArray(clients?.logos) && clients.logos.length ? clients.logos : [];
+    backendLogos.length
+      ? backendLogos
+      : Array.isArray(clients?.logos) && clients.logos.length
+        ? clients.logos
+        : [];
   const normalizedClients = normalizeClients(logos);
   const groupedClients = groupClients(normalizedClients);
   const proof = Array.isArray(clients?.proof) ? clients.proof.slice(0, 3) : [];

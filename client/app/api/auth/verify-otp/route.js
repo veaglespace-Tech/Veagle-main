@@ -1,24 +1,21 @@
 import { API_BASE_URL } from "@/lib/site";
+import { normalizeRole } from "@/lib/utils";
 
 export async function POST(request) {
   const body = await request.json();
   const fallbackBaseUrl = API_BASE_URL.includes("localhost")
     ? API_BASE_URL.replace("localhost", "127.0.0.1")
     : API_BASE_URL;
-  const registerEndpoints = [
+  const verifyEndpoints = [
     ...new Set([
-      `${API_BASE_URL}/api/v1/auth/register`,
-      `${API_BASE_URL}/register`,
-      `${API_BASE_URL}/auth/register`,
-      `${fallbackBaseUrl}/api/v1/auth/register`,
-      `${fallbackBaseUrl}/register`,
-      `${fallbackBaseUrl}/auth/register`,
+      `${API_BASE_URL}/api/verify-otp`,
+      `${fallbackBaseUrl}/api/verify-otp`,
     ]),
   ];
   let response = null;
   let lastError = null;
 
-  for (const endpoint of registerEndpoints) {
+  for (const endpoint of verifyEndpoints) {
     try {
       response = await fetch(endpoint, {
         method: "POST",
@@ -40,7 +37,7 @@ export async function POST(request) {
   if (!response) {
     return Response.json(
       {
-        error: `Registration service is unavailable. Make sure the backend is running on ${API_BASE_URL}.`,
+        error: `OTP verification is unavailable. Make sure the backend is running on ${API_BASE_URL}.`,
         detail: lastError?.cause?.code || lastError?.message || "",
       },
       { status: 503 }
@@ -61,11 +58,14 @@ export async function POST(request) {
         error:
           payload?.message ||
           payload?.error ||
-          "Registration failed. Please verify the details and try again.",
+          "OTP verification failed. Please try again.",
       },
       { status: response.status }
     );
   }
 
-  return Response.json(payload, { status: response.status });
+  return Response.json({
+    ...payload,
+    normalizedRole: normalizeRole(payload?.role),
+  });
 }

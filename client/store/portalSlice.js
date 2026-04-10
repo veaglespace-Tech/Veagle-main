@@ -43,6 +43,9 @@ function createInitialState() {
     products: [],
     categories: [],
     jobs: [],
+    clients: [],
+    portfolio: [],
+    applications: [],
     users: [],
     leads: [],
     tasks: [],
@@ -157,6 +160,9 @@ const portalSlice = createSlice({
         state.products = action.payload.products || [];
         state.categories = action.payload.categories || [];
         state.jobs = action.payload.jobs || [];
+        state.clients = action.payload.clients || [];
+        state.portfolio = action.payload.portfolio || [];
+        state.applications = action.payload.applications || [];
         state.users = action.payload.users || [];
         if (action.payload.fallbackUsed) {
           state.notice =

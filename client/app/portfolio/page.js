@@ -1,4 +1,5 @@
 import PortfolioPageContent from "@/components/site/PortfolioPageContent";
+import { getPortfolio } from "@/lib/backend";
 import { getSiteContent } from "@/lib/cms/store";
 import { buildPageMetadata } from "@/lib/seo";
 import { COMPANY_NAME } from "@/lib/site";
@@ -17,6 +18,9 @@ export const metadata = buildPageMetadata({
 });
 
 export default async function PortfolioPage() {
-  const content = await getSiteContent();
-  return <PortfolioPageContent content={content} />;
+  const [content, portfolio] = await Promise.all([
+    getSiteContent(),
+    getPortfolio(),
+  ]);
+  return <PortfolioPageContent content={content} portfolioData={portfolio} />;
 }
