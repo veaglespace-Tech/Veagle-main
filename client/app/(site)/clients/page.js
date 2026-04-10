@@ -17,9 +17,7 @@ export const metadata = buildPageMetadata({
 });
 
 export default async function ClientsPage() {
-  const [content, clients] = await Promise.all([
-    getSiteContent(),
-    getClients(),
-  ]);
+  const [content, clients] = await Promise.all([getSiteContent(), getClients()]);
   return <ClientsPageContent content={content} clientsData={clients} />;
 }
+

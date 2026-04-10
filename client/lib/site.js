@@ -11,6 +11,8 @@ export const LOGO_PATH = "/veagle-logo.webp";
 
 export const COMPANY_EMAIL = "info@veaglespace.com";
 export const COMPANY_EMAIL_LINK = `mailto:${COMPANY_EMAIL}`;
+export const COMPANY_PHONE = "+91 82379 99101";
+export const COMPANY_PHONE_LINK = "tel:+918237999101";
 export const COMPANY_ADDRESS =
   "Kudale Patil Tower, Office No. 207, 2nd Floor, Jadhav Nagar, Near Shiv Temple, Vadgaon Budruk, Pune, Maharashtra 411041";
 export const COMPANY_LOCATION_LABEL = "Pune, Maharashtra";

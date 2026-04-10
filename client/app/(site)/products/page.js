@@ -26,3 +26,4 @@ export default async function ProductsPage() {
 
   return <ProductsPageContent products={products} categories={categories} content={content} />;
 }
+

@@ -5,22 +5,15 @@ import { buildPageMetadata } from "@/lib/seo";
 import { COMPANY_NAME } from "@/lib/site";
 
 export const metadata = buildPageMetadata({
-  title: "Portfolio and Selected Work",
+  title: "Portfolio",
   description:
-    `Browse ${COMPANY_NAME} portfolio-style case studies across websites, software experiences and operational workflows.`,
+    `See the real project work, deployments and delivery outcomes from ${COMPANY_NAME}.`,
   path: "/portfolio",
-  keywords: [
-    `${COMPANY_NAME} portfolio`,
-    "website project portfolio Pune",
-    "software case studies Pune",
-    "UI UX project showcase",
-  ],
+  keywords: [`${COMPANY_NAME} portfolio`, "software company portfolio Pune"],
 });
 
 export default async function PortfolioPage() {
-  const [content, portfolio] = await Promise.all([
-    getSiteContent(),
-    getPortfolio(),
-  ]);
+  const [content, portfolio] = await Promise.all([getSiteContent(), getPortfolio()]);
   return <PortfolioPageContent content={content} portfolioData={portfolio} />;
 }
+

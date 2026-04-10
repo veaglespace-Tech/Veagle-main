@@ -17,15 +17,24 @@ export const eyebrowClass =
 export const chipClass =
   "inline-flex items-center rounded-full border border-[color:var(--border)] bg-[color:var(--surface-strong)] px-3 py-1.5 text-xs font-semibold tracking-[0.08em] text-[color:var(--text-secondary)]";
 export const buttonBaseClass =
-  "inline-flex items-center justify-center gap-2 rounded-full px-6 py-3.5 text-sm font-bold transition duration-300";
+  "inline-flex min-h-[3.15rem] items-center justify-center gap-2 rounded-full px-6 py-3.5 text-center text-sm font-bold leading-none transition duration-300 sm:px-7";
 export const primaryButtonClass = cn(
   buttonBaseClass,
-  "border border-transparent bg-[linear-gradient(135deg,var(--accent),var(--accent-strong))] text-[color:var(--button-ink)] shadow-[var(--shadow-accent)] hover:-translate-y-0.5 hover:brightness-110"
+  "border border-transparent bg-[linear-gradient(135deg,var(--accent),var(--accent-strong))] text-[color:var(--button-ink)] shadow-[var(--shadow-accent)] hover:-translate-y-0.5 hover:brightness-110 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[color:var(--ring)]"
 );
 export const secondaryButtonClass = cn(
   buttonBaseClass,
-  "border border-[color:var(--border)] bg-[rgba(52,53,53,0.6)] text-[color:var(--text-primary)] shadow-[var(--shadow-soft)] backdrop-blur-[12px] hover:-translate-y-0.5 hover:bg-white/10"
+  "border border-[color:var(--border-strong)] bg-[rgba(21,27,35,0.82)] text-[color:var(--text-primary)] shadow-[var(--shadow-soft)] backdrop-blur-[12px] hover:-translate-y-0.5 hover:border-[color:var(--border-strong)] hover:bg-[rgba(25,94,226,0.12)] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[color:var(--ring)]"
 );
+export const buttonGroupClass =
+  "flex flex-col gap-4 sm:flex-row sm:flex-wrap sm:items-center";
+export const filterButtonClass = (active) =>
+  cn(
+    "inline-flex min-h-11 items-center justify-center rounded-full px-6 py-2.5 text-center text-sm font-semibold transition duration-300",
+    active
+      ? "border border-transparent bg-[linear-gradient(135deg,var(--accent),var(--accent-strong))] text-[color:var(--button-ink)] shadow-[var(--shadow-accent)]"
+      : "border border-[color:var(--border)] bg-[color:var(--surface-strong)] text-[color:var(--text-secondary)] hover:border-[color:var(--border-strong)] hover:bg-[rgba(25,94,226,0.1)] hover:text-[color:var(--text-primary)]"
+  );
 export const labelClass =
   "block text-[11px] font-semibold uppercase tracking-[0.2em] text-[color:var(--text-secondary)]";
 export const inputClass =
@@ -108,7 +117,9 @@ export function MetricCard({ value, label }) {
 export function EmptyState({ title, description }) {
   return (
     <Panel className="border-dashed text-center">
-      <h3 className="text-lg font-semibold text-[color:var(--text-primary)]">{title}</h3>
+      <h3 className="font-headline text-lg font-black tracking-tight text-[color:var(--text-primary)]">
+        {title}
+      </h3>
       <p className="mt-3 text-sm leading-7 text-[color:var(--text-secondary)]">{description}</p>
     </Panel>
   );

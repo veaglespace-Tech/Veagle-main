@@ -284,6 +284,7 @@ export function ContentPanel({
           <InputField label="Secondary CTA link" value={content.finalCta.secondaryHref} onChange={(value) => updateContentField("finalCta", "secondaryHref", value)} />
           <InputField label="Contact title" value={content.contact.title} onChange={(value) => updateContentField("contact", "title", value)} />
           <InputField label="Contact email" value={content.contact.email} onChange={(value) => updateContentField("contact", "email", value)} />
+          <InputField label="Contact phone" value={content.contact.phone} onChange={(value) => updateContentField("contact", "phone", value)} />
         </div>
         <div className="mt-4">
           <TextAreaField label="CTA description" value={content.finalCta.description} onChange={(value) => updateContentField("finalCta", "description", value)} />

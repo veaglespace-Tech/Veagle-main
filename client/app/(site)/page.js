@@ -48,12 +48,8 @@ export default async function Page() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
       />
-      <HomePage
-        content={content}
-        services={services}
-        products={products}
-        jobs={jobs}
-      />
+      <HomePage content={content} services={services} products={products} jobs={jobs} />
     </>
   );
 }
+

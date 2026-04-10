@@ -18,6 +18,7 @@ import {
   inputClass,
   labelClass,
   primaryButtonClass,
+  secondaryButtonClass,
   selectClass,
   textareaClass,
 } from "@/components/site/UiBits";
@@ -226,7 +227,7 @@ export default function LeadCaptureForm({
               }));
             }}
           />
-          <h3 className="font-headline text-2xl font-bold tracking-tight text-[color:var(--text-primary)]">
+          <h3 className="font-headline text-2xl font-black tracking-tight text-[color:var(--text-primary)]">
             Quick Enquiry
           </h3>
           <p className="mt-2 text-sm leading-7 text-[color:var(--text-secondary)]">
@@ -277,7 +278,7 @@ export default function LeadCaptureForm({
             ) : null}
 
             <button
-              className="w-full rounded-xl bg-[linear-gradient(135deg,var(--accent),var(--accent-strong))] px-6 py-4 font-headline text-sm font-bold text-white shadow-[var(--shadow-accent)] transition hover:brightness-105"
+              className={`${primaryButtonClass} w-full`}
               type="submit"
               disabled={isSubmitting}
             >
@@ -455,7 +456,7 @@ export default function LeadCaptureForm({
 
           <div className="md:col-span-2">
             <button
-              className="group inline-flex w-full items-center justify-center gap-2 rounded-full bg-[linear-gradient(135deg,var(--accent),var(--accent-strong))] px-6 py-4 font-headline text-sm font-bold text-white transition hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-70"
+              className={`${primaryButtonClass} group w-full disabled:cursor-not-allowed disabled:opacity-70`}
               type="submit"
               disabled={isSubmitting}
             >
@@ -650,7 +651,7 @@ function AccessBanner({ session, loginHref, registerHref, onLogout }) {
           <button
             type="button"
             onClick={onLogout}
-            className="rounded-full border border-emerald-400/20 px-4 py-2 text-xs font-semibold uppercase tracking-[0.18em] text-emerald-50 transition hover:bg-emerald-500/10"
+            className={`${secondaryButtonClass} min-h-0 border-emerald-400/20 bg-transparent px-4 py-2 text-xs uppercase tracking-[0.18em] text-emerald-50 hover:bg-emerald-500/10`}
           >
             Logout
           </button>
@@ -670,13 +671,13 @@ function AccessBanner({ session, loginHref, registerHref, onLogout }) {
       <div className="mt-3 flex flex-wrap gap-3">
         <Link
           href={loginHref}
-          className="rounded-full bg-white px-4 py-2 text-xs font-semibold uppercase tracking-[0.18em] text-[#5b3d00] transition hover:bg-amber-50"
+          className="inline-flex min-h-0 items-center justify-center rounded-full border border-[color:var(--border-strong)] bg-[color:var(--text-primary)] px-4 py-2 text-xs font-bold uppercase tracking-[0.18em] text-[color:var(--accent)] transition duration-300 hover:brightness-95"
         >
           User Login
         </Link>
         <Link
           href={registerHref}
-          className="rounded-full border border-amber-100/30 px-4 py-2 text-xs font-semibold uppercase tracking-[0.18em] text-amber-50 transition hover:bg-amber-500/10"
+          className="inline-flex min-h-0 items-center justify-center rounded-full border border-[color:var(--border-strong)] bg-[color:var(--surface-strong)] px-4 py-2 text-xs font-bold uppercase tracking-[0.18em] text-[color:var(--text-primary)] transition duration-300 hover:bg-[color:var(--surface)]"
         >
           Register
         </Link>

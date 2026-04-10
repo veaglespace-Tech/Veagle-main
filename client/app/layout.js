@@ -1,5 +1,4 @@
 import ThemeProvider, { themeInitScript } from "@/components/ThemeProvider";
-import AppShell from "@/components/shared/AppShell";
 import { COMPANY_NAME, COMPANY_SHORT_NAME, LOGO_PATH, SITE_URL } from "@/lib/site";
 import ReduxProvider from "@/store/provider";
 import "./globals.css";
@@ -68,7 +67,7 @@ export default function RootLayout({ children }) {
       <body className="min-h-screen bg-[color:var(--page-bg)] font-sans text-[color:var(--text-primary)]">
         <ReduxProvider>
           <ThemeProvider>
-            <AppShell>{children}</AppShell>
+            {children}
           </ThemeProvider>
         </ReduxProvider>
       </body>

@@ -1,7 +1,5 @@
-"use client";
-
 import Link from "next/link";
-import { Globe2, Mail, MapPin } from "lucide-react";
+import { Globe2, Mail, MapPin, Phone, Rocket } from "lucide-react";
 
 import BrandMark from "@/components/BrandMark";
 import {
@@ -9,30 +7,18 @@ import {
   COMPANY_ADDRESS_QUERY,
   COMPANY_EMAIL,
   COMPANY_EMAIL_LINK,
+  COMPANY_PHONE,
+  COMPANY_PHONE_LINK,
   COMPANY_INSTAGRAM,
   COMPANY_LINKEDIN,
-  COMPANY_LOCATION_LABEL,
   COMPANY_NAME,
 } from "@/lib/site";
-
-const serviceLinks = [
-  { href: "/services", label: "Dynamic Websites" },
-  { href: "/services", label: "Software Development" },
-  { href: "/services", label: "ERP Systems" },
-  { href: "/services", label: "Admin Dashboards" },
-];
 
 const quickLinks = [
   { href: "/about", label: "About Us" },
   { href: "/portfolio", label: "Portfolio" },
   { href: "/career", label: "Career" },
   { href: "/contact", label: "Contact" },
-];
-
-const contactLinks = [
-  { href: COMPANY_EMAIL_LINK, label: COMPANY_EMAIL, external: true },
-  { href: COMPANY_ADDRESS_QUERY, label: COMPANY_LOCATION_LABEL, external: true },
-  { href: "/university/java-full-stack", label: "Veagle University" },
 ];
 
 const socialLinks = [
@@ -83,7 +69,7 @@ function LinkedInIcon(props) {
 
 function FooterLink({ href, label, external = false }) {
   const className =
-    "block break-words text-sm leading-7 text-[color:var(--text-secondary)] transition-colors hover:text-white";
+    "group inline-flex items-center break-words text-sm leading-7 text-slate-400 transition-colors duration-300 hover:text-slate-100";
 
   if (external) {
     return (
@@ -96,6 +82,9 @@ function FooterLink({ href, label, external = false }) {
   return (
     <Link href={href} className={className}>
       {label}
+      <span className="ml-2 text-xs opacity-0 transition-all duration-300 -translate-x-1 group-hover:translate-x-0 group-hover:opacity-100">
+        {"->"}
+      </span>
     </Link>
   );
 }
@@ -103,7 +92,7 @@ function FooterLink({ href, label, external = false }) {
 function FooterColumn({ title, children }) {
   return (
     <div className="space-y-4">
-      <h3 className="text-xs font-bold uppercase tracking-[0.24em] text-white">
+      <h3 className="font-headline text-[11px] font-black uppercase tracking-[0.24em] text-white/80">
         {title}
       </h3>
       <div className="space-y-3">{children}</div>
@@ -111,125 +100,157 @@ function FooterColumn({ title, children }) {
   );
 }
 
-export default function SiteFooter() {
+function buildServiceLinks(services = []) {
+  if (!Array.isArray(services) || services.length === 0) {
+    return [];
+  }
+
+  return services.slice(0, 4).map((service) => ({
+    href: service?.slug ? `/services/${service.slug}` : "/services",
+    label: service?.title || "Service",
+  }));
+}
+
+export default function SiteFooter({ content, services }) {
+  const serviceLinks = buildServiceLinks(services);
+  const contact = content?.contact || {};
+  const footerEmail = contact.email || COMPANY_EMAIL;
+  const footerEmailLink = footerEmail ? `mailto:${footerEmail}` : COMPANY_EMAIL_LINK;
+  const footerPhone = contact.phone || COMPANY_PHONE;
+  const footerPhoneLink = contact.phone
+    ? `tel:${String(contact.phone).replace(/[^\d+]/g, "")}`
+    : COMPANY_PHONE_LINK;
+  const footerAddress = contact.address || COMPANY_ADDRESS;
+  const footerAddressQuery = footerAddress
+    ? `https://maps.google.com/?q=${encodeURIComponent(footerAddress)}`
+    : COMPANY_ADDRESS_QUERY;
+
   return (
-    <footer className="relative overflow-hidden bg-[#080b11] text-white">
-      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_16%_14%,rgba(25,94,226,0.2),transparent_24%),radial-gradient(circle_at_84%_16%,rgba(86,226,64,0.08),transparent_22%),linear-gradient(180deg,rgba(10,14,20,0.96),rgba(7,10,15,1))]" />
-      <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-white/10" />
+    <footer className="w-full border-t border-slate-800/30 bg-[#0b0e14] pt-24 pb-12">
+      <div className="mx-auto grid max-w-7xl grid-cols-1 gap-16 px-8 pb-24 md:grid-cols-4 md:px-12">
+        <div className="space-y-8">
+          <div className="font-headline text-2xl font-bold tracking-tighter text-slate-50">
+            <BrandMark variant="footer" tone="light" />
+          </div>
+          <p className="max-w-xs text-sm leading-relaxed text-slate-400">
+            Engineering dynamic websites, complex software systems, and high-performance ERP workflows for modern businesses.
+          </p>
+          <div className="flex space-x-4">
+            <a
+              href="https://www.veaglespace.com"
+              target="_blank"
+              rel="noreferrer"
+              aria-label="Website"
+              className="flex h-10 w-10 items-center justify-center rounded-full bg-[color:var(--surface-container-high)] text-[color:var(--accent)] transition-all hover:bg-[color:var(--accent)] hover:text-[color:var(--button-ink)]"
+            >
+              <Globe2 className="h-5 w-5" />
+            </a>
+            <a
+              href={COMPANY_LINKEDIN}
+              target="_blank"
+              rel="noreferrer"
+              aria-label="LinkedIn"
+              className="flex h-10 w-10 items-center justify-center rounded-full bg-[color:var(--surface-container-high)] text-[color:var(--accent)] transition-all hover:bg-[color:var(--accent)] hover:text-[color:var(--button-ink)]"
+            >
+              <Rocket className="h-5 w-5" />
+            </a>
+          </div>
+        </div>
 
-      <div className="relative w-full border-y border-white/8 bg-[linear-gradient(180deg,rgba(14,18,26,0.96),rgba(10,13,19,0.98))] px-4 py-12 shadow-[0_30px_90px_rgba(0,0,0,0.34)] sm:px-6 sm:py-14 lg:px-12 xl:px-16">
-          <div className="grid gap-10 lg:grid-cols-2 xl:grid-cols-[1.45fr_0.78fr_0.78fr_1fr] xl:gap-12">
-            <div className="min-w-0 space-y-5">
-              <BrandMark variant="footer" tone="light" />
-              <p className="max-w-[36rem] text-sm leading-8 text-[color:var(--text-secondary)]">
-                {COMPANY_NAME} builds dynamic websites, software systems, ERP
-                workflows, dashboards, and digital experiences for businesses
-                that want stronger presentation and cleaner operations.
-              </p>
+        <div className="space-y-8">
+          <h3 className="font-headline text-sm font-semibold uppercase tracking-tight text-[#7bd0ff]">
+            Services
+          </h3>
+          <ul className="space-y-4">
+            <li>
+              <FooterLink href="/services" label="Explore services" />
+            </li>
+            <li className="pt-4 text-xs uppercase tracking-widest text-slate-500">Capabilities</li>
+            {(serviceLinks.length ? serviceLinks : [{ href: "/services", label: "Dynamic Web" }])
+              .slice(0, 3)
+              .map((link) => (
+                <li key={link.label} className="text-sm text-slate-400">
+                  {link.label}
+                </li>
+              ))}
+          </ul>
+        </div>
 
-              <div className="grid max-w-[42rem] gap-3 sm:grid-cols-[minmax(0,1.15fr)_minmax(0,0.9fr)]">
-                <div className="min-w-0 rounded-[1.25rem] border border-white/10 bg-white/[0.05] p-4 backdrop-blur-sm">
-                  <div className="flex items-center gap-3">
-                    <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[#195ee2]/18 text-[#dbe5ff]">
-                      <Mail className="h-4 w-4" />
-                    </div>
-                    <div className="min-w-0">
-                      <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-white/62">
-                        Email
-                      </p>
-                      <a
-                        href={COMPANY_EMAIL_LINK}
-                        className="mt-1 block break-all text-[0.96rem] font-medium leading-6 text-white"
-                      >
-                        {COMPANY_EMAIL}
-                      </a>
-                    </div>
-                  </div>
-                </div>
+        <div className="space-y-8">
+          <h3 className="font-headline text-sm font-semibold uppercase tracking-tight text-slate-400">
+            Quick Links
+          </h3>
+          <nav className="flex flex-col space-y-4">
+            {quickLinks.map((link) => (
+              <Link
+                key={link.label}
+                href={link.href}
+                className="text-sm font-medium text-slate-400 transition-colors duration-300 hover:text-slate-100"
+              >
+                {link.label}
+              </Link>
+            ))}
+          </nav>
+        </div>
 
-                <div className="min-w-0 rounded-[1.25rem] border border-white/10 bg-white/[0.05] p-4 backdrop-blur-sm">
-                  <div className="flex items-center gap-3">
-                    <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[#195ee2]/18 text-[#dbe5ff]">
-                      <MapPin className="h-4 w-4" />
-                    </div>
-                    <div className="min-w-0">
-                      <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-white/62">
-                        Location
-                      </p>
-                      <p className="mt-1 text-[0.96rem] font-medium leading-6 text-white">{COMPANY_LOCATION_LABEL}</p>
-                    </div>
-                  </div>
-                </div>
+        <div className="space-y-8">
+          <h3 className="font-headline text-sm font-semibold uppercase tracking-tight text-slate-400">
+            Contact
+          </h3>
+          <div className="space-y-6">
+            <div className="flex items-start space-x-4">
+              <Mail className="mt-0.5 h-5 w-5 text-[color:var(--accent)]" />
+              <div className="space-y-1">
+                <p className="text-xs uppercase tracking-tighter text-slate-500">Email</p>
+                <a href={footerEmailLink} className="text-sm text-slate-100 transition-colors hover:text-[color:var(--accent)]">
+                  {footerEmail}
+                </a>
               </div>
             </div>
-
-            <div className="min-w-0">
-            <FooterColumn title="Services">
-              {serviceLinks.map((link) => (
-                <FooterLink key={link.label} href={link.href} label={link.label} />
-              ))}
-            </FooterColumn>
+            <div className="flex items-start space-x-4">
+              <Phone className="mt-0.5 h-5 w-5 text-[color:var(--accent)]" />
+              <div className="space-y-1">
+                <p className="text-xs uppercase tracking-tighter text-slate-500">Phone</p>
+                <a href={footerPhoneLink} className="text-sm text-slate-100 transition-colors hover:text-[color:var(--accent)]">
+                  {footerPhone}
+                </a>
+              </div>
             </div>
-
-            <div className="min-w-0">
-            <FooterColumn title="Quick Links">
-              {quickLinks.map((link) => (
-                <FooterLink key={link.label} href={link.href} label={link.label} />
-              ))}
-            </FooterColumn>
-            </div>
-
-            <div className="min-w-0 space-y-4">
-              <FooterColumn title="Contact">
-                {contactLinks.map((link) => (
-                  <FooterLink
-                    key={link.label}
-                    href={link.href}
-                    label={link.label}
-                    external={link.external}
-                  />
-                ))}
-              </FooterColumn>
-
-              <p className="max-w-sm text-sm leading-8 text-[color:var(--text-secondary)]">
-                {COMPANY_ADDRESS}
-              </p>
-
-              <div className="flex items-center gap-3 pt-2">
-                {socialLinks.map((item) => {
-                  const Icon = item.icon;
-
-                  return (
-                    <a
-                      key={item.label}
-                      href={item.href}
-                      target="_blank"
-                      rel="noreferrer"
-                      aria-label={item.label}
-                      className="flex h-10 w-10 items-center justify-center rounded-full border border-white/10 bg-white/[0.06] text-white transition-colors hover:border-[#195ee2] hover:bg-[#195ee2] hover:text-white"
-                    >
-                      <Icon className="h-4 w-4" />
-                    </a>
-                  );
-                })}
+            <div className="flex items-start space-x-4">
+              <MapPin className="mt-0.5 h-5 w-5 text-[color:var(--accent)]" />
+              <div className="space-y-1">
+                <p className="text-xs uppercase tracking-tighter text-slate-500">Address</p>
+                <a
+                  href={footerAddressQuery}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="text-sm leading-relaxed text-slate-100 transition-colors hover:text-[color:var(--accent)]"
+                >
+                  {footerAddress}
+                </a>
               </div>
             </div>
           </div>
+        </div>
+      </div>
 
-          <div className="mt-10 flex flex-col gap-4 border-t border-white/10 pt-6 text-sm text-[color:var(--text-muted)] md:flex-row md:items-center md:justify-between">
-            <p className="max-w-2xl">Copyright {new Date().getFullYear()} {COMPANY_NAME}. All rights reserved.</p>
-            <div className="flex flex-wrap gap-4 sm:gap-5">
-              <Link href="/contact" className="transition-colors hover:text-white">
-                Terms of Service
-              </Link>
-              <Link href="/contact" className="transition-colors hover:text-white">
-                Privacy Policy
-              </Link>
-              <Link href="/login" className="transition-colors hover:text-white">
-                User Login
-              </Link>
-            </div>
+      <div className="mx-auto max-w-7xl border-t border-slate-800/20 px-8 pt-12 md:px-12">
+        <div className="flex flex-col items-center justify-between gap-8 md:flex-row">
+          <div className="text-xs font-medium uppercase tracking-widest text-slate-500">
+            © {new Date().getFullYear()} {COMPANY_NAME}. All rights reserved.
           </div>
+          <div className="flex flex-wrap justify-center gap-8 text-[10px] font-bold uppercase tracking-widest text-slate-400 md:text-xs">
+            <Link href="/contact" className="transition-colors hover:text-[color:var(--accent)]">
+              Terms of Service
+            </Link>
+            <Link href="/contact" className="transition-colors hover:text-[color:var(--accent)]">
+              Privacy Policy
+            </Link>
+            <Link href="/login" className="flex items-center transition-colors hover:text-[color:var(--accent)]">
+              User Login
+            </Link>
+          </div>
+        </div>
       </div>
     </footer>
   );

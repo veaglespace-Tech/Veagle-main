@@ -1,7 +1,12 @@
 import Image from "next/image";
-import Link from "next/link";
 import { BriefcaseBusiness, Eye, Rocket, ShieldCheck } from "lucide-react";
 
+import {
+  PrimaryLink,
+  SecondaryLink,
+  ctaShellClass,
+  pageClass,
+} from "@/components/site/UiBits";
 import { pageArtwork } from "@/lib/visuals";
 
 const principleIcons = [BriefcaseBusiness, Eye, ShieldCheck];
@@ -50,7 +55,7 @@ export default function AboutPageContent({ content }) {
   const missionLine = about.story || about.background;
 
   return (
-    <main className="overflow-hidden bg-[#131314] text-[#e4e2e2]">
+    <main className={pageClass}>
       <section className="relative flex min-h-[78vh] items-center overflow-hidden px-4 pb-14 pt-28 sm:px-6 sm:pt-32 lg:px-8 lg:pt-36">
         <div className="absolute inset-0">
           <Image
@@ -78,19 +83,13 @@ export default function AboutPageContent({ content }) {
                 {missionLine}
               </p>
             ) : null}
-            <div className="mt-8 flex flex-col gap-4 sm:flex-row sm:items-center">
-              <Link
-                href="/services"
-                className="inline-flex items-center justify-center rounded-full bg-[#1e64ef] px-8 py-3.5 text-sm font-bold text-white transition hover:brightness-110"
-              >
+            <div className="mt-8 flex flex-col gap-4 sm:flex-row sm:flex-wrap sm:items-center">
+              <PrimaryLink href="/services">
                 Explore Our Tech
-              </Link>
-              <Link
-                href="/contact"
-                className="inline-flex items-center justify-center rounded-full border border-[#5f6c88]/45 bg-[#151a23]/58 px-8 py-3.5 text-sm font-bold text-white transition hover:bg-[#1d2533]"
-              >
+              </PrimaryLink>
+              <SecondaryLink href="/contact">
                 Mission Protocol
-              </Link>
+              </SecondaryLink>
             </div>
           </div>
         </div>
@@ -231,7 +230,7 @@ export default function AboutPageContent({ content }) {
       </section>
 
       <section className="px-4 pb-20 sm:px-6 lg:px-8 lg:pb-24">
-        <div className="mx-auto max-w-6xl overflow-hidden rounded-[1.1rem] bg-[#2d67eb]">
+        <div className={`mx-auto max-w-6xl ${ctaShellClass} border border-white/10 bg-[linear-gradient(135deg,#182a59,#101a33)] shadow-[0_30px_90px_-44px_rgba(6,12,28,0.72)]`}>
           <div className="relative px-6 py-14 text-center sm:px-10 lg:px-14 lg:py-16">
             <div className="absolute inset-0 opacity-[0.12]">
               <Image
@@ -250,19 +249,13 @@ export default function AboutPageContent({ content }) {
                 {about.ctaDescription ||
                   "Use the dashboard CMS to publish your about-page message, milestones and trust signals without touching code."}
               </p>
-              <div className="mt-8 flex flex-col justify-center gap-4 sm:flex-row">
-                <Link
-                  href="/contact"
-                  className="inline-flex items-center justify-center rounded-full bg-white px-8 py-3.5 text-sm font-bold text-[#2d67eb] transition hover:bg-[#f1f6ff]"
-                >
+              <div className="mt-8 flex flex-col justify-center gap-4 sm:flex-row sm:flex-wrap sm:items-center">
+                <PrimaryLink href="/contact">
                   Initiate Contact
-                </Link>
-                <Link
-                  href="/services"
-                  className="inline-flex items-center justify-center rounded-full border border-white/35 bg-[#2558c7]/55 px-8 py-3.5 text-sm font-bold text-white transition hover:bg-[#214daf]"
-                >
+                </PrimaryLink>
+                <SecondaryLink href="/services">
                   View Tech Stack
-                </Link>
+                </SecondaryLink>
               </div>
             </div>
           </div>
