@@ -21,3 +21,4 @@ export default async function ServicesPage() {
   const [services, content] = await Promise.all([getServices(), getSiteContent()]);
   return <ServicesPageContent services={services} content={content} />;
 }
+

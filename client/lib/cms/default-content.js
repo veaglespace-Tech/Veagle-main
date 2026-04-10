@@ -26,6 +26,7 @@ export const defaultContent = {
     title: "",
     description: "",
     email: "",
+    phone: "",
     address: "",
   },
   about: {

@@ -308,12 +308,20 @@ export function StringListEditor({
 export function StatusBadge({ value }) {
   const normalized = (value || "").toLowerCase();
   const tone =
-    normalized === "active" || normalized === "done" || normalized === "qualified"
+    normalized === "active" ||
+    normalized === "done" ||
+    normalized === "qualified" ||
+    normalized === "selected"
       ? "border-emerald-500/20 bg-emerald-500/10 text-emerald-200"
-      : normalized === "blocked" || normalized === "high" || normalized === "new"
+      : normalized === "blocked" ||
+          normalized === "high" ||
+          normalized === "new" ||
+          normalized === "applied"
         ? "border-amber-500/20 bg-amber-500/10 text-amber-200"
         : normalized === "contacted" || normalized === "in-progress"
           ? "border-sky-500/20 bg-sky-500/10 text-sky-200"
+          : normalized === "rejected"
+            ? "border-rose-500/20 bg-rose-500/10 text-rose-200"
           : "border-[color:var(--border)] bg-[color:var(--surface-strong)] text-[color:var(--text-secondary)]";
 
   return (

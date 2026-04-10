@@ -7,11 +7,13 @@ import {
   MailCheck,
   MapPin,
   Network,
+  Phone,
   TerminalSquare,
 } from "lucide-react";
 
 import LeadCaptureForm from "@/components/forms/LeadCaptureForm";
-import { COMPANY_ADDRESS, COMPANY_EMAIL } from "@/lib/site";
+import { SecondaryLink, pageClass } from "@/components/site/UiBits";
+import { COMPANY_ADDRESS, COMPANY_EMAIL, COMPANY_PHONE, COMPANY_PHONE_LINK } from "@/lib/site";
 
 const enquiryChecklist = [
   {
@@ -98,6 +100,10 @@ function toAddressLines(address) {
 export default function ContactPageContent({ content, services = [] }) {
   const contact = content?.contact || {};
   const contactEmail = contact.email || COMPANY_EMAIL;
+  const contactPhone = contact.phone || COMPANY_PHONE;
+  const contactPhoneLink = contact.phone
+    ? `tel:${String(contact.phone).replace(/[^\d+]/g, "")}`
+    : COMPANY_PHONE_LINK;
   const contactAddress = contact.address || COMPANY_ADDRESS;
   const contactAddressQuery = `https://maps.google.com/?q=${encodeURIComponent(contactAddress)}`;
   const serviceOptions = services.map((service) => ({
@@ -107,7 +113,7 @@ export default function ContactPageContent({ content, services = [] }) {
   const addressLines = toAddressLines(contactAddress);
 
   return (
-    <main className="overflow-hidden bg-[#131314] text-[#e4e2e2]">
+    <main className={pageClass}>
       <section className="px-4 pb-8 pt-28 sm:px-6 sm:pt-32 lg:px-8 lg:pt-36">
         <div className="mx-auto max-w-7xl">
           <div className="max-w-4xl">
@@ -150,7 +156,9 @@ export default function ContactPageContent({ content, services = [] }) {
                       <Icon className="h-5 w-5" />
                     </div>
                     <div>
-                      <p className="text-base font-semibold text-white">{item.title}</p>
+                      <p className="font-headline text-base font-black tracking-tight text-white">
+                        {item.title}
+                      </p>
                       <p className="mt-2 text-sm leading-7 text-[#aebad2]">
                         {item.description}
                       </p>
@@ -178,6 +186,22 @@ export default function ContactPageContent({ content, services = [] }) {
                     </p>
                     <p className="mt-1 break-all text-base font-medium text-white">
                       {contactEmail}
+                    </p>
+                  </div>
+                </a>
+                <a
+                  href={contactPhoneLink}
+                  className="flex items-start gap-4 transition hover:opacity-90"
+                >
+                  <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#1f2533]">
+                    <Phone className="h-4.5 w-4.5 text-[#7ea7ff]" />
+                  </div>
+                  <div>
+                    <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-[#95a3bd]">
+                      Call us
+                    </p>
+                    <p className="mt-1 break-all text-base font-medium text-white">
+                      {contactPhone}
                     </p>
                   </div>
                 </a>
@@ -249,12 +273,9 @@ export default function ContactPageContent({ content, services = [] }) {
           </div>
 
           <div className="mt-14 text-center">
-            <Link
-              href="/services"
-              className="inline-flex items-center justify-center rounded-full border border-white/14 bg-[#1c212b] px-7 py-3 text-sm font-bold text-[#d5dff4] transition hover:bg-[#252c39]"
-            >
+            <SecondaryLink href="/services">
               View Services
-            </Link>
+            </SecondaryLink>
           </div>
         </div>
       </section>

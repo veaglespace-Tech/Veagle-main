@@ -21,3 +21,4 @@ export default async function CareerPage() {
   const [jobs, content] = await Promise.all([getJobs(), getSiteContent()]);
   return <CareerPageContent jobs={jobs} content={content} />;
 }
+

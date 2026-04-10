@@ -15,6 +15,13 @@ import {
   TerminalSquare,
 } from "lucide-react";
 
+import {
+  PrimaryLink,
+  SecondaryLink,
+  ctaShellClass,
+  filterButtonClass,
+  pageClass,
+} from "@/components/site/UiBits";
 import { pageArtwork } from "@/lib/visuals";
 
 const categoryAllId = "ALL_SOLUTIONS";
@@ -206,7 +213,7 @@ export default function ProductsPageContent({ products, categories, content }) {
     "Our engineering teams specialize in building bespoke software layers for unique mission parameters.";
 
   return (
-    <main className="overflow-hidden bg-[#131314] text-[#e4e2e2]">
+    <main className={pageClass}>
       <header className="relative overflow-hidden pb-20 pt-32">
         <div className="absolute inset-0 opacity-40">
           <div className="absolute inset-0 bg-gradient-to-br from-[#195ee2]/20 to-transparent" />
@@ -247,11 +254,7 @@ export default function ProductsPageContent({ products, categories, content }) {
                   key={filter.id}
                   type="button"
                   onClick={() => setActiveFilter(filter.id)}
-                  className={
-                    isActive
-                      ? "whitespace-nowrap rounded-full bg-[#195ee2] px-6 py-2 text-sm font-semibold text-white"
-                      : "whitespace-nowrap rounded-full bg-[#1f2020] px-6 py-2 text-sm font-medium text-[#b4bfd5] transition hover:bg-[#2b2c2d] hover:text-white"
-                  }
+                  className={`whitespace-nowrap ${filterButtonClass(isActive)}`}
                 >
                   {filter.name}
                 </button>
@@ -321,7 +324,7 @@ export default function ProductsPageContent({ products, categories, content }) {
       </section>
 
       <section className="mx-auto max-w-screen-2xl px-4 py-20 sm:px-6 lg:px-8 lg:py-24">
-        <div className="relative overflow-hidden rounded-[1.2rem] bg-gradient-to-br from-[#1b4fc4] to-[#1b3e8e] p-8 sm:p-12 lg:flex lg:items-center lg:justify-between lg:gap-12">
+        <div className={`relative overflow-hidden border border-white/10 bg-[linear-gradient(135deg,#182a59,#101a33)] p-8 shadow-[0_30px_90px_-44px_rgba(6,12,28,0.72)] sm:p-12 lg:flex lg:items-center lg:justify-between lg:gap-12 ${ctaShellClass}`}>
           <div className="absolute inset-0 opacity-15">
             <Image
               src={pageArtwork.hero}
@@ -337,19 +340,13 @@ export default function ProductsPageContent({ products, categories, content }) {
               {ctaTitle}
             </h2>
             <p className="mt-5 text-base leading-8 text-[#dde7ff]">{ctaDescription}</p>
-            <div className="mt-8 flex flex-wrap gap-4">
-              <Link
-                href="/contact"
-                className="inline-flex items-center rounded-full bg-white px-8 py-3.5 text-sm font-bold text-[#1b4ebf] transition hover:scale-[1.02]"
-              >
+            <div className="mt-8 flex flex-col gap-4 sm:flex-row sm:flex-wrap sm:items-center">
+              <PrimaryLink href="/contact">
                 Request a Demo
-              </Link>
-              <Link
-                href="/contact"
-                className="inline-flex items-center rounded-full border border-white/30 bg-white/10 px-8 py-3.5 text-sm font-bold text-white transition hover:bg-white/20"
-              >
+              </PrimaryLink>
+              <SecondaryLink href="/contact">
                 Contact Engineering
-              </Link>
+              </SecondaryLink>
             </div>
           </div>
 

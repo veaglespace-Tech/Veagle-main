@@ -19,6 +19,7 @@ import {
   Eyebrow,
   PrimaryLink,
   SecondaryLink,
+  buttonGroupClass,
   containerClass,
   ctaShellClass,
   firstSectionClass,
@@ -84,14 +85,11 @@ export default function ServicesPageContent({ services, content }) {
               </p>
             </div>
 
-            <div className="flex flex-wrap gap-4">
-              <PrimaryLink href="/contact" className="bg-white text-[#0c2d7a] shadow-none">
+            <div className={buttonGroupClass}>
+              <PrimaryLink href="/contact">
                 Initialize Mission
               </PrimaryLink>
-              <SecondaryLink
-                href="/products"
-                className="border-white/10 bg-white/[0.05] text-white hover:bg-white/[0.08]"
-              >
+              <SecondaryLink href="/products">
                 Explore Catalog
               </SecondaryLink>
             </div>
@@ -126,7 +124,9 @@ export default function ServicesPageContent({ services, content }) {
         <div className={containerClass}>
           <div className="mb-8 flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
             <div className="space-y-2">
-              <p className="text-sm font-semibold text-white">Service Modules</p>
+              <p className="font-headline text-[11px] font-black uppercase tracking-[0.24em] text-white">
+                Service Modules
+              </p>
               <p className="text-sm text-[color:var(--text-secondary)]">
                 Strategic deployment of technology across core sectors.
               </p>
@@ -213,7 +213,7 @@ export default function ServicesPageContent({ services, content }) {
                     "Unlock operational synergy with a unified mission protocol. We tailor integrated strategies that align development, design and marketing into a single powerhouse."}
                 </p>
               </div>
-              <PrimaryLink href="/contact" className="bg-white text-[#16367d] shadow-none">
+              <PrimaryLink href="/contact">
                 Request Custom Configuration
               </PrimaryLink>
             </div>

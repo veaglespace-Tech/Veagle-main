@@ -12,15 +12,19 @@ import {
   PORTAL_STORAGE_KEY,
   PORTAL_SESSION_EVENT,
 } from "@/lib/auth-session";
+import {
+  primaryButtonClass,
+  secondaryButtonClass,
+} from "@/components/site/UiBits";
 import { cn } from "@/lib/utils";
 
 const headerLinksBeforeAbout = [
   { href: "/", label: "Home" },
-  { href: "/products", label: "Products" },
+  { href: "/about", label: "About Us" },
 ];
 
-const aboutDropdownLinks = [
-  { href: "/about", label: "About Us" },
+const productDropdownLinks = [
+  { href: "/products", label: "Products" },
   { href: "/services", label: "Services" },
   { href: "/portfolio", label: "Portfolio" },
   { href: "/clients", label: "Clients" },
@@ -74,7 +78,7 @@ export default function SiteHeader() {
       return null;
     }
   }, [sessionSnapshot]);
-  const isAboutActive = aboutDropdownLinks.some((item) => isActive(item.href));
+  const isProductsActive = productDropdownLinks.some((item) => isActive(item.href));
 
   function isActive(href) {
     if (href === "/") {
@@ -115,18 +119,18 @@ export default function SiteHeader() {
               type="button"
               className={cn(
                 "inline-flex items-center gap-1 font-headline text-sm font-medium tracking-tight transition-colors duration-300",
-                isAboutActive
+                isProductsActive
                   ? "border-b-2 border-[#195ee2] pb-1 text-[#195ee2]"
                   : "text-[#d9e1f2] hover:text-white"
               )}
             >
-              About
+              Products
               <ChevronDown className="h-4 w-4" />
             </button>
 
             <div className="invisible absolute left-0 top-full z-50 mt-3 w-56 translate-y-2 opacity-0 transition duration-200 group-hover:visible group-hover:translate-y-0 group-hover:opacity-100 group-focus-within:visible group-focus-within:translate-y-0 group-focus-within:opacity-100">
               <div className="rounded-2xl border border-white/10 bg-slate-950/95 p-2 shadow-2xl shadow-blue-900/20 backdrop-blur-xl">
-                {aboutDropdownLinks.map((item) => (
+                {productDropdownLinks.map((item) => (
                   <Link
                     key={item.href}
                     href={item.href}
@@ -187,7 +191,7 @@ export default function SiteHeader() {
           )}
           <Link
             href="/contact"
-            className="rounded-full bg-[#195ee2] px-6 py-2.5 font-headline text-sm font-bold text-[#e1e6ff] transition hover:brightness-110"
+            className={cn(primaryButtonClass, "min-h-0 px-6 py-2.5")}
           >
             Get Started
           </Link>
@@ -225,10 +229,10 @@ export default function SiteHeader() {
 
             <div className="rounded-xl border border-[color:var(--border)] bg-[color:var(--surface)] p-3">
               <p className="px-2 pb-2 font-headline text-xs font-semibold uppercase tracking-[0.18em] text-[#9eb4ff]">
-                About Menu
+                Products Menu
               </p>
               <div className="space-y-1">
-                {aboutDropdownLinks.map((item) => (
+                {productDropdownLinks.map((item) => (
                   <Link
                     key={item.href}
                     href={item.href}
@@ -251,7 +255,7 @@ export default function SiteHeader() {
                 <Link
                   href="/portal"
                   onClick={() => setIsOpen(false)}
-                  className="rounded-xl border border-[color:var(--border)] bg-transparent px-4 py-3 text-center font-headline text-sm font-medium text-white"
+                  className={cn(secondaryButtonClass, "min-h-0 rounded-xl px-4 py-3")}
                 >
                   Portal
                 </Link>
@@ -260,7 +264,7 @@ export default function SiteHeader() {
                 <button
                   type="button"
                   onClick={handleLogout}
-                  className="rounded-xl border border-[color:var(--border)] bg-transparent px-4 py-3 text-center font-headline text-sm font-medium text-white"
+                  className={cn(secondaryButtonClass, "min-h-0 rounded-xl px-4 py-3")}
                 >
                   Logout
                 </button>
@@ -268,7 +272,7 @@ export default function SiteHeader() {
                 <Link
                   href="/login"
                   onClick={() => setIsOpen(false)}
-                  className="rounded-xl border border-[color:var(--border)] bg-transparent px-4 py-3 text-center font-headline text-sm font-medium text-white"
+                  className={cn(secondaryButtonClass, "min-h-0 rounded-xl px-4 py-3")}
                 >
                   Login
                 </Link>
@@ -276,7 +280,7 @@ export default function SiteHeader() {
               <Link
                 href="/contact"
                 onClick={() => setIsOpen(false)}
-                className="rounded-xl bg-[#195ee2] px-4 py-3 text-center font-headline text-sm font-bold text-white"
+                className={cn(primaryButtonClass, "min-h-0 rounded-xl px-4 py-3")}
               >
                 Get Started
               </Link>

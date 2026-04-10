@@ -2,9 +2,17 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import { ArrowUpRight, Rocket } from "lucide-react";
 
+import {
+  PrimaryLink,
+  filterButtonClass,
+  pageClass,
+  secondaryButtonClass,
+} from "@/components/site/UiBits";
+import { backendAssetUrl } from "@/lib/backend";
+import { cn } from "@/lib/utils";
 import { pageArtwork } from "@/lib/visuals";
 
 const cardLayouts = [
@@ -91,38 +99,65 @@ function normalizeProject(project, index) {
     imageUrl: project?.imageUrl || pageArtwork.services,
     summary: project?.summary || "",
     tags,
+    linkUrl: project?.linkUrl || "",
+    linkLabel: project?.linkLabel || "",
   };
 }
 
-export default function PortfolioPageContent({ content }) {
+function normalizeBackendProject(project, index) {
+  const imageUrl = backendAssetUrl(project?.imageUrl) || pageArtwork.services;
+  const linkUrl = project?.projectUrl || project?.githubUrl || "";
+  const linkLabel = project?.projectUrl
+    ? "Open project"
+    : project?.githubUrl
+      ? "View code"
+      : "";
+
+  return {
+    id: project?.id || `portfolio-${index + 1}`,
+    title: project?.title || `Project ${index + 1}`,
+    subtitle: "",
+    result: "",
+    category: "PROJECT",
+    imageUrl,
+    summary: project?.description || "",
+    tags: [],
+    linkUrl,
+    linkLabel,
+  };
+}
+
+export default function PortfolioPageContent({ content, portfolioData = [] }) {
   const portfolio = content?.portfolio || {};
-  const projects = useMemo(
-    () =>
-      Array.isArray(portfolio?.projects)
-        ? portfolio.projects.map((project, index) => normalizeProject(project, index))
-        : [],
-    [portfolio?.projects]
-  );
-  const filters = useMemo(() => {
-    const categories = Array.from(
+  const normalizedBackendProjects = Array.isArray(portfolioData)
+    ? portfolioData.map((project, index) =>
+        normalizeBackendProject(project, index)
+      )
+    : [];
+  const projects = normalizedBackendProjects.length
+    ? normalizedBackendProjects
+    : Array.isArray(portfolio?.projects)
+      ? portfolio.projects.map((project, index) =>
+          normalizeProject(project, index)
+        )
+      : [];
+  const filters = [
+    "ALL",
+    ...Array.from(
       new Set(projects.map((project) => normalizeCategory(project.category)).filter(Boolean))
-    );
-    return ["ALL", ...categories];
-  }, [projects]);
+    ),
+  ];
   const [activeFilter, setActiveFilter] = useState("ALL");
 
-  const filteredProjects = useMemo(() => {
-    if (activeFilter === "ALL") {
-      return projects;
-    }
-
-    return projects.filter(
-      (project) => normalizeCategory(project.category) === activeFilter
-    );
-  }, [activeFilter, projects]);
+  const filteredProjects =
+    activeFilter === "ALL"
+      ? projects
+      : projects.filter(
+          (project) => normalizeCategory(project.category) === activeFilter
+        );
 
   return (
-    <main className="overflow-hidden bg-[#131314] text-[#e4e2e2]">
+    <main className={pageClass}>
       <section className="relative flex min-h-[72vh] items-center justify-center overflow-hidden px-4 pb-12 pt-28 sm:px-6 sm:pt-32 lg:px-8 lg:pt-36">
         <div className="absolute inset-0">
           <Image
@@ -158,11 +193,10 @@ export default function PortfolioPageContent({ content }) {
               key={filter}
               type="button"
               onClick={() => setActiveFilter(filter)}
-              className={
-                activeFilter === filter
-                  ? "rounded-full bg-[#b3c5ff] px-8 py-2 text-xs font-bold uppercase tracking-[0.18em] text-[#0f2e77]"
-                  : "rounded-full bg-[#22252d] px-8 py-2 text-xs font-semibold uppercase tracking-[0.18em] text-[#9da7bc] transition hover:bg-[#2b2f38] hover:text-white"
-              }
+              className={cn(
+                filterButtonClass(activeFilter === filter),
+                "text-xs uppercase tracking-[0.18em]"
+              )}
             >
               {filter}
             </button>
@@ -249,17 +283,32 @@ export default function PortfolioPageContent({ content }) {
                   {isTall ? (
                     <Link
                       href="/contact"
-                      className="mt-6 inline-flex w-full items-center justify-center rounded-full border border-[#b3c5ff]/32 bg-[#1d2844]/55 py-3 text-xs font-bold uppercase tracking-[0.18em] text-[#d4dfff] transition hover:bg-[#263967]"
+                      className={cn(
+                        secondaryButtonClass,
+                        "mt-6 w-full border-white/10 bg-[rgba(21,27,35,0.82)] px-6 py-3 text-xs uppercase tracking-[0.18em]"
+                      )}
                     >
                       Orbit Details
                     </Link>
                   ) : null}
 
                   {isCompact ? (
-                    <div className="mt-4 inline-flex items-center gap-2 text-xs font-bold uppercase tracking-[0.18em] text-[#c9d7ff]">
-                      View Case Study
-                      <ArrowUpRight className="h-3.5 w-3.5" />
-                    </div>
+                    study.linkUrl ? (
+                      <a
+                        href={study.linkUrl}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="mt-4 inline-flex items-center gap-2 text-xs font-bold uppercase tracking-[0.18em] text-[#c9d7ff]"
+                      >
+                        {study.linkLabel || "View Case Study"}
+                        <ArrowUpRight className="h-3.5 w-3.5" />
+                      </a>
+                    ) : (
+                      <div className="mt-4 inline-flex items-center gap-2 text-xs font-bold uppercase tracking-[0.18em] text-[#c9d7ff]">
+                        View Case Study
+                        <ArrowUpRight className="h-3.5 w-3.5" />
+                      </div>
+                    )
                   ) : null}
 
                   {isWideStat ? (
@@ -305,13 +354,10 @@ export default function PortfolioPageContent({ content }) {
                   "Use the dashboard CMS to add real portfolio data instead of hardcoded showcase cards."}
               </p>
               <div className="mt-8">
-                <Link
-                  href="/contact"
-                  className="inline-flex items-center gap-3 rounded-full bg-[#2d69e8] px-8 py-3.5 text-sm font-bold text-white transition hover:brightness-110"
-                >
+                <PrimaryLink href="/contact">
                   Create your next launch
                   <Rocket className="h-4 w-4" />
-                </Link>
+                </PrimaryLink>
               </div>
             </div>
           </div>

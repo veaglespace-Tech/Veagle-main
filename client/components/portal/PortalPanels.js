@@ -22,6 +22,7 @@ import {
   StatusBadge,
   TextAreaField,
 } from "@/components/portal/PortalFields";
+import { backendAssetUrl } from "@/lib/backend";
 import { formatDate } from "@/lib/utils";
 
 export function OverviewPanel({ metrics, leads, visibleTasks }) {
@@ -283,6 +284,7 @@ export function ContentPanel({
           <InputField label="Secondary CTA link" value={content.finalCta.secondaryHref} onChange={(value) => updateContentField("finalCta", "secondaryHref", value)} />
           <InputField label="Contact title" value={content.contact.title} onChange={(value) => updateContentField("contact", "title", value)} />
           <InputField label="Contact email" value={content.contact.email} onChange={(value) => updateContentField("contact", "email", value)} />
+          <InputField label="Contact phone" value={content.contact.phone} onChange={(value) => updateContentField("contact", "phone", value)} />
         </div>
         <div className="mt-4">
           <TextAreaField label="CTA description" value={content.finalCta.description} onChange={(value) => updateContentField("finalCta", "description", value)} />
@@ -865,7 +867,7 @@ export function JobsPanel({ jobs, jobForm, setJobForm, saveJob, beginJobEdit, de
 export function LeadsPanel({ leads, busyAction, updateLeadStatus }) {
   return (
     <div className="space-y-6">
-      <DashboardIntro title="Review incoming leads" description="Contact-form submissions are captured in the frontend CMS layer for follow-up." />
+      <DashboardIntro title="Review incoming leads" description="Contact-form submissions now flow into the backend contact inbox so the team can respond from one place." />
 
       <Card title="Leads table">
         <div className="space-y-4 md:hidden">
@@ -1109,6 +1111,225 @@ export function TeamPanel({
                         Delete
                       </button>
                     </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </Card>
+    </div>
+  );
+}
+
+export function ClientsPanel({
+  clients,
+  clientForm,
+  setClientForm,
+  saveClient,
+  beginClientEdit,
+  deleteClient,
+  busyAction,
+}) {
+  return (
+    <div className="space-y-6">
+      <DashboardIntro title="Manage client proof" description="Control the client logos and reference links that power the public trust page." />
+
+      <Card title={clientForm.id ? "Edit client" : "Add new client"}>
+        <div className="grid gap-4 md:grid-cols-2">
+          <InputField label="Client name" value={clientForm.name} onChange={(value) => setClientForm((current) => ({ ...current, name: value }))} />
+          <InputField label="Website URL" value={clientForm.websiteUrl} onChange={(value) => setClientForm((current) => ({ ...current, websiteUrl: value }))} />
+          <InputField label="Display order" value={clientForm.displayOrder} onChange={(value) => setClientForm((current) => ({ ...current, displayOrder: value.replace(/\D/g, "") }))} />
+          <FileField label="Client logo" onChange={(file) => setClientForm((current) => ({ ...current, file }))} />
+        </div>
+        <div className="mt-4">
+          <TextAreaField label="Description" value={clientForm.description} onChange={(value) => setClientForm((current) => ({ ...current, description: value }))} />
+        </div>
+        <div className="mt-5 flex flex-col gap-3 sm:flex-row">
+          <button type="button" className={portalButtonPrimaryClass} onClick={saveClient} disabled={busyAction === "client"}>
+            {busyAction === "client" ? "Saving..." : "Save client"}
+          </button>
+          <button type="button" className={portalButtonSecondaryClass} onClick={() => setClientForm({ id: "", name: "", websiteUrl: "", description: "", displayOrder: "", file: null })}>
+            Reset
+          </button>
+        </div>
+      </Card>
+
+      <GridList
+        items={clients}
+        renderItem={(item) => (
+          <ItemCard
+            title={item.name}
+            subtitle={item.websiteUrl || "No website linked"}
+            description={item.description}
+            tags={item.logoUrl ? ["Logo added"] : []}
+            onEdit={() => beginClientEdit(item)}
+            onDelete={() => deleteClient(item.id)}
+            busyDelete={busyAction === `client-delete-${item.id}`}
+          />
+        )}
+      />
+    </div>
+  );
+}
+
+export function PortfolioPanel({
+  portfolio,
+  portfolioForm,
+  setPortfolioForm,
+  savePortfolio,
+  beginPortfolioEdit,
+  deletePortfolio,
+  busyAction,
+}) {
+  return (
+    <div className="space-y-6">
+      <DashboardIntro title="Manage portfolio projects" description="Publish work samples with project links, GitHub references and backend-hosted visuals." />
+
+      <Card title={portfolioForm.id ? "Edit portfolio project" : "Add new portfolio project"}>
+        <div className="grid gap-4 md:grid-cols-2">
+          <InputField label="Project title" value={portfolioForm.title} onChange={(value) => setPortfolioForm((current) => ({ ...current, title: value }))} />
+          <InputField label="Live project URL" value={portfolioForm.projectUrl} onChange={(value) => setPortfolioForm((current) => ({ ...current, projectUrl: value }))} />
+          <InputField label="GitHub URL" value={portfolioForm.githubUrl} onChange={(value) => setPortfolioForm((current) => ({ ...current, githubUrl: value }))} />
+          <FileField label="Project image" onChange={(file) => setPortfolioForm((current) => ({ ...current, file }))} />
+        </div>
+        <div className="mt-4">
+          <TextAreaField label="Description" value={portfolioForm.description} onChange={(value) => setPortfolioForm((current) => ({ ...current, description: value }))} />
+        </div>
+        <div className="mt-5 flex flex-col gap-3 sm:flex-row">
+          <button type="button" className={portalButtonPrimaryClass} onClick={savePortfolio} disabled={busyAction === "portfolio"}>
+            {busyAction === "portfolio" ? "Saving..." : "Save project"}
+          </button>
+          <button type="button" className={portalButtonSecondaryClass} onClick={() => setPortfolioForm({ id: "", title: "", description: "", projectUrl: "", githubUrl: "", file: null })}>
+            Reset
+          </button>
+        </div>
+      </Card>
+
+      <GridList
+        items={portfolio}
+        renderItem={(item) => (
+          <ItemCard
+            title={item.title}
+            subtitle={item.projectUrl || item.githubUrl || "No project link added"}
+            description={item.description}
+            tags={[
+              ...(item.projectUrl ? ["Live"] : []),
+              ...(item.githubUrl ? ["GitHub"] : []),
+            ]}
+            onEdit={() => beginPortfolioEdit(item)}
+            onDelete={() => deletePortfolio(item.id)}
+            busyDelete={busyAction === `portfolio-delete-${item.id}`}
+          />
+        )}
+      />
+    </div>
+  );
+}
+
+export function ApplicationsPanel({
+  applications,
+  busyAction,
+  updateApplicationStatus,
+}) {
+  return (
+    <div className="space-y-6">
+      <DashboardIntro title="Track job applications" description="Applications from the career page land here with resume links and a simple shortlist workflow." />
+
+      <Card title="Applications table">
+        <div className="space-y-4 md:hidden">
+          {applications.map((application) => (
+            <div key={application.id} className={portalSubcardClass}>
+              <div className="flex flex-wrap items-start justify-between gap-3">
+                <div className="min-w-0">
+                  <p className="font-semibold text-[color:var(--text-primary)]">{application.name}</p>
+                  <p className="break-all text-sm text-[color:var(--text-secondary)]">{application.email}</p>
+                </div>
+                <StatusBadge value={application.status} />
+              </div>
+
+              <div className="mt-4 space-y-2 text-sm text-[color:var(--text-secondary)]">
+                <p>{application.jobTitle || "General application"}</p>
+                <p>{application.phone || "No phone shared"}</p>
+                <p className="text-xs text-[color:var(--text-muted)]">{formatDate(application.createdAt)}</p>
+              </div>
+
+              {application.resumeUrl ? (
+                <div className="mt-4">
+                  <a
+                    href={backendAssetUrl(application.resumeUrl) || application.resumeUrl}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="text-sm font-semibold text-[color:var(--accent)] hover:underline"
+                  >
+                    View resume
+                  </a>
+                </div>
+              ) : null}
+
+              <div className="mt-4">
+                <select
+                  className={portalSelectClass}
+                  value={application.status}
+                  onChange={(event) => updateApplicationStatus(application.id, event.target.value)}
+                  disabled={busyAction === `application-status-${application.id}`}
+                >
+                  <option value="APPLIED">Applied</option>
+                  <option value="SELECTED">Selected</option>
+                  <option value="REJECTED">Rejected</option>
+                </select>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        <div className={`${portalTableShellClass} hidden md:block`}>
+          <table className={portalTableClass}>
+            <thead>
+              <tr>
+                <th>Candidate</th>
+                <th>Job</th>
+                <th>Resume</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              {applications.map((application) => (
+                <tr key={application.id}>
+                  <td>
+                    <p className="font-semibold text-[color:var(--text-primary)]">{application.name}</p>
+                    <p className="text-sm text-[color:var(--text-secondary)]">{application.email}</p>
+                    <p className="text-xs text-[color:var(--text-muted)]">{application.phone || "No phone shared"}</p>
+                  </td>
+                  <td>
+                    <p className="text-sm text-[color:var(--text-secondary)]">{application.jobTitle || "General application"}</p>
+                    <p className="text-xs text-[color:var(--text-muted)]">{formatDate(application.createdAt)}</p>
+                  </td>
+                  <td>
+                    {application.resumeUrl ? (
+                      <a
+                        href={backendAssetUrl(application.resumeUrl) || application.resumeUrl}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="text-sm font-semibold text-[color:var(--accent)] hover:underline"
+                      >
+                        View resume
+                      </a>
+                    ) : (
+                      <span className="text-sm text-[color:var(--text-secondary)]">Unavailable</span>
+                    )}
+                  </td>
+                  <td>
+                    <select
+                      className={portalSelectClass}
+                      value={application.status}
+                      onChange={(event) => updateApplicationStatus(application.id, event.target.value)}
+                      disabled={busyAction === `application-status-${application.id}`}
+                    >
+                      <option value="APPLIED">Applied</option>
+                      <option value="SELECTED">Selected</option>
+                      <option value="REJECTED">Rejected</option>
+                    </select>
                   </td>
                 </tr>
               ))}

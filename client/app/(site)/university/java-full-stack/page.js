@@ -184,7 +184,9 @@ export default async function JavaFullStackPage() {
 
           <div className="mt-10 grid grid-cols-1 gap-5 md:grid-cols-3">
             <article className="relative min-h-[300px] overflow-hidden rounded-[1rem] bg-[#1d2129] p-8 md:col-span-2">
-              <p className="absolute left-7 top-5 font-headline text-6xl font-black text-white/[0.05]">01</p>
+              <p className="absolute left-7 top-5 font-headline text-6xl font-black text-white/[0.05]">
+                01
+              </p>
               <div className="relative z-10 pt-16">
                 <Users2 className="h-8 w-8 text-[#7ea8ff]" />
                 <h3 className="mt-5 font-headline text-2xl font-black tracking-tight text-white">
@@ -195,7 +197,9 @@ export default async function JavaFullStackPage() {
             </article>
 
             <article className="relative min-h-[300px] overflow-hidden rounded-[1rem] bg-[#1d2129] p-8">
-              <p className="absolute left-7 top-5 font-headline text-6xl font-black text-white/[0.05]">02</p>
+              <p className="absolute left-7 top-5 font-headline text-6xl font-black text-white/[0.05]">
+                02
+              </p>
               <div className="relative z-10 pt-16">
                 <ClipboardCheck className="h-8 w-8 text-[#56e240]" />
                 <h3 className="mt-5 font-headline text-2xl font-black tracking-tight text-white">
@@ -207,7 +211,9 @@ export default async function JavaFullStackPage() {
 
             <article className="grid overflow-hidden rounded-[1rem] border border-[#33549a]/30 bg-[#1a2438] md:col-span-3 md:grid-cols-[1.12fr_0.88fr]">
               <div className="relative p-8">
-                <p className="absolute left-7 top-5 font-headline text-6xl font-black text-white/[0.07]">03</p>
+                <p className="absolute left-7 top-5 font-headline text-6xl font-black text-white/[0.07]">
+                  03
+                </p>
                 <div className="relative z-10 pt-16">
                   <TerminalSquare className="h-8 w-8 text-[#7ea8ff]" />
                   <h3 className="mt-5 font-headline text-2xl font-black tracking-tight text-white">

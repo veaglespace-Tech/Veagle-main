@@ -3,7 +3,6 @@ package com.example.VeagleSpaceTech.config;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -40,6 +39,8 @@ public class SecurityConfig {
 //                                .requestMatchers("/user/**").hasRole("USER")
 
                                 req.requestMatchers(
+                                        "/auth/**",
+                                        "/api/verify-otp",
                                         "/api/v1/auth/**",
                                         // "/api/auth/register",
                                         "/api/v1/categories/**",
@@ -48,7 +49,8 @@ public class SecurityConfig {
                                         "/api/v1/services/**",
                                         "/api/v1/portfolio/**",
                                         "/api/v1/products/**",
-                                        "/api/v1/contacts"
+                                        "/api/v1/contacts",
+                                        "/uploads/**"
                                 ).permitAll()
 
                                 .requestMatchers("/api/v1/admin/**").hasAnyRole("ADMIN", "SADMIN")

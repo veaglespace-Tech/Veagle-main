@@ -44,6 +44,8 @@ export default function PortalLoginPage({
   const router = useRouter();
   const searchParams = useSearchParams();
   const nextPath = getSafeNextPath(searchParams.get("next"));
+  const prefilledEmail = searchParams.get("email") || "";
+  const showRegistrationNotice = searchParams.get("registered") === "1";
   const availableRoles = useMemo(
     () => allowedRoles.map((role) => roleMeta[role]).filter(Boolean),
     [allowedRoles]
@@ -54,6 +56,9 @@ export default function PortalLoginPage({
   );
   const [persistSession, setPersistSession] = useState(true);
   const [showPassword, setShowPassword] = useState(false);
+  const [otpCode, setOtpCode] = useState("");
+  const [otpPendingEmail, setOtpPendingEmail] = useState("");
+  const [otpMessage, setOtpMessage] = useState("");
   const [error, setError] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -71,6 +76,12 @@ export default function PortalLoginPage({
   }, [allowedRoles, availableRoles, defaultRole, selectedRole]);
 
   useEffect(() => {
+    if (prefilledEmail && !form.email) {
+      setForm((current) => ({ ...current, email: prefilledEmail }));
+    }
+  }, [form.email, prefilledEmail]);
+
+  useEffect(() => {
     const session = readStoredSession();
 
     if (!session) {
@@ -86,6 +97,64 @@ export default function PortalLoginPage({
     setError("");
   }
 
+  async function requestOtp() {
+    const response = await fetch("/api/auth/login", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(form),
+    });
+
+    const payload = await response.json();
+
+    if (!response.ok) {
+      throw new Error(payload.error || "Invalid login credentials.");
+    }
+
+    if (payload.otpRequired) {
+      setOtpPendingEmail(form.email.trim());
+      setOtpCode("");
+      setOtpMessage(payload.message || "We sent an OTP to your email address.");
+      return null;
+    }
+
+    if (payload.normalizedRole !== selectedRole) {
+      throw new Error(
+        `This account is registered as ${payload.normalizedRole}. Please use the matching login page.`
+      );
+    }
+
+    return payload;
+  }
+
+  async function verifyOtp() {
+    const response = await fetch("/api/auth/verify-otp", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        email: otpPendingEmail || form.email.trim(),
+        otp: otpCode.trim(),
+      }),
+    });
+
+    const payload = await response.json();
+
+    if (!response.ok) {
+      throw new Error(payload.error || "OTP verification failed.");
+    }
+
+    if (payload.normalizedRole !== selectedRole) {
+      throw new Error(
+        `This account is registered as ${payload.normalizedRole}. Please use the matching login page.`
+      );
+    }
+
+    return payload;
+  }
+
   async function handleSubmit(event) {
     event.preventDefault();
     setError("");
@@ -93,33 +162,30 @@ export default function PortalLoginPage({
 
     startTransition(async () => {
       try {
-        const response = await fetch("/api/auth/login", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(form),
-        });
+        if (otpMessage) {
+          if (!otpCode.trim()) {
+            setError("Enter the OTP sent to your email.");
+            return;
+          }
 
-        const payload = await response.json();
-
-        if (!response.ok) {
-          setError(payload.error || "Invalid login credentials.");
+          const payload = await verifyOtp();
+          const nextSession = normalizeSessionPayload(payload, persistSession);
+          writeStoredSession(nextSession);
+          router.replace(routeForPortalRole(payload.normalizedRole, nextPath));
           return;
         }
 
-        if (payload.normalizedRole !== selectedRole) {
-          setError(
-            `This account is registered as ${payload.normalizedRole}. Please use the matching login page.`
-          );
+        const payload = await requestOtp();
+
+        if (!payload) {
           return;
         }
 
         const nextSession = normalizeSessionPayload(payload, persistSession);
         writeStoredSession(nextSession);
         router.replace(routeForPortalRole(payload.normalizedRole, nextPath));
-      } catch {
-        setError("Login is unavailable right now.");
+      } catch (submitError) {
+        setError(submitError.message || "Login is unavailable right now.");
       } finally {
         setIsSubmitting(false);
       }
@@ -221,32 +287,55 @@ export default function PortalLoginPage({
                   className="ml-1 text-xs font-medium text-[#c3c6d7]"
                   htmlFor="portal-password"
                 >
-                  Password
+                  {otpMessage ? "One-time password" : "Password"}
                 </label>
                 <div className="relative">
                   <Lock className="absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-[#8d90a0]" />
-                  <input
-                    id="portal-password"
-                    className="w-full rounded-2xl border-none bg-[#292a2a] py-4 pl-12 pr-12 text-[#e4e2e2] outline-none transition placeholder:text-[#8d90a0]/50 focus:ring-2 focus:ring-[#b3c5ff]/50"
-                    name="password"
-                    type={showPassword ? "text" : "password"}
-                    value={form.password}
-                    onChange={handleChange}
-                    placeholder="************"
-                  />
-                  <button
-                    type="button"
-                    onClick={() => setShowPassword((current) => !current)}
-                    className="absolute right-4 top-1/2 -translate-y-1/2 text-[#8d90a0] transition-colors hover:text-[#e4e2e2]"
-                    aria-label={showPassword ? "Hide password" : "Show password"}
-                  >
-                    {showPassword ? (
-                      <EyeOff className="h-5 w-5" />
-                    ) : (
-                      <Eye className="h-5 w-5" />
-                    )}
-                  </button>
+                  {otpMessage ? (
+                    <input
+                      id="portal-password"
+                      className="w-full rounded-2xl border-none bg-[#292a2a] py-4 pl-12 pr-4 text-[#e4e2e2] outline-none transition placeholder:text-[#8d90a0]/50 focus:ring-2 focus:ring-[#b3c5ff]/50"
+                      name="otp"
+                      type="text"
+                      inputMode="numeric"
+                      value={otpCode}
+                      onChange={(event) => {
+                        setOtpCode(event.target.value.replace(/\D/g, "").slice(0, 6));
+                        setError("");
+                      }}
+                      placeholder="Enter 6-digit OTP"
+                    />
+                  ) : (
+                    <>
+                      <input
+                        id="portal-password"
+                        className="w-full rounded-2xl border-none bg-[#292a2a] py-4 pl-12 pr-12 text-[#e4e2e2] outline-none transition placeholder:text-[#8d90a0]/50 focus:ring-2 focus:ring-[#b3c5ff]/50"
+                        name="password"
+                        type={showPassword ? "text" : "password"}
+                        value={form.password}
+                        onChange={handleChange}
+                        placeholder="************"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => setShowPassword((current) => !current)}
+                        className="absolute right-4 top-1/2 -translate-y-1/2 text-[#8d90a0] transition-colors hover:text-[#e4e2e2]"
+                        aria-label={showPassword ? "Hide password" : "Show password"}
+                      >
+                        {showPassword ? (
+                          <EyeOff className="h-5 w-5" />
+                        ) : (
+                          <Eye className="h-5 w-5" />
+                        )}
+                      </button>
+                    </>
+                  )}
                 </div>
+                {otpMessage ? (
+                  <p className="ml-1 text-xs leading-6 text-[#8d90a0]">
+                    {otpMessage} Verify for <span className="font-semibold text-[#dbe1ff]">{otpPendingEmail || form.email}</span>.
+                  </p>
+                ) : null}
               </div>
             </div>
 
@@ -268,13 +357,34 @@ export default function PortalLoginPage({
                 </span>
               </label>
 
-              <Link
-                href="/contact"
-                className="text-[#b3c5ff] transition-colors hover:text-[#dbe1ff]"
-              >
-                Need help?
-              </Link>
+              {otpMessage ? (
+                <button
+                  type="button"
+                  onClick={() => {
+                    setOtpMessage("");
+                    setOtpCode("");
+                    setOtpPendingEmail("");
+                    setError("");
+                  }}
+                  className="text-[#b3c5ff] transition-colors hover:text-[#dbe1ff]"
+                >
+                  Use another account
+                </button>
+              ) : (
+                <Link
+                  href="/contact"
+                  className="text-[#b3c5ff] transition-colors hover:text-[#dbe1ff]"
+                >
+                  Need help?
+                </Link>
+              )}
             </div>
+
+            {showRegistrationNotice && !otpMessage ? (
+              <div className="rounded-2xl border border-emerald-500/20 bg-emerald-500/10 px-4 py-3 text-sm text-emerald-200">
+                Account created successfully. Sign in once to receive your OTP.
+              </div>
+            ) : null}
 
             {error ? (
               <div className="rounded-2xl border border-rose-500/20 bg-rose-500/10 px-4 py-3 text-sm text-rose-200">
@@ -287,9 +397,38 @@ export default function PortalLoginPage({
               type="submit"
               disabled={isSubmitting}
             >
-              {isSubmitting ? "Signing in..." : "Sign in"}
+              {isSubmitting
+                ? otpMessage
+                  ? "Verifying..."
+                  : "Signing in..."
+                : otpMessage
+                  ? "Verify OTP"
+                  : "Sign in"}
               <ArrowRight className="h-5 w-5" />
             </button>
+
+            {otpMessage ? (
+              <button
+                type="button"
+                className="w-full text-center text-xs font-semibold uppercase tracking-[0.22em] text-[#8d90a0] transition-colors hover:text-[#dbe1ff]"
+                onClick={() => {
+                  setError("");
+                  setIsSubmitting(true);
+                  startTransition(async () => {
+                    try {
+                      await requestOtp();
+                    } catch (submitError) {
+                      setError(submitError.message || "Unable to resend OTP.");
+                    } finally {
+                      setIsSubmitting(false);
+                    }
+                  });
+                }}
+                disabled={isSubmitting}
+              >
+                Resend OTP
+              </button>
+            ) : null}
           </form>
 
           {canRegister ? (

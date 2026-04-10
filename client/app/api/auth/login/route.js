@@ -8,8 +8,10 @@ export async function POST(request) {
     : API_BASE_URL;
   const loginEndpoints = [
     ...new Set([
+      `${API_BASE_URL}/api/v1/auth/login`,
       `${API_BASE_URL}/auth/login`,
       `${API_BASE_URL}/login`,
+      `${fallbackBaseUrl}/api/v1/auth/login`,
       `${fallbackBaseUrl}/auth/login`,
       `${fallbackBaseUrl}/login`,
     ]),
@@ -47,11 +49,16 @@ export async function POST(request) {
   }
 
   let payload = null;
+  let rawText = "";
 
   try {
     payload = await response.json();
   } catch {
-    payload = null;
+    try {
+      rawText = await response.text();
+    } catch {
+      rawText = "";
+    }
   }
 
   if (!response.ok) {
@@ -60,10 +67,18 @@ export async function POST(request) {
         error:
           payload?.message ||
           payload?.error ||
+          rawText ||
           "Login failed. Please verify your credentials.",
       },
       { status: response.status }
     );
+  }
+
+  if (!payload && rawText) {
+    return Response.json({
+      message: rawText,
+      otpRequired: true,
+    });
   }
 
   return Response.json({

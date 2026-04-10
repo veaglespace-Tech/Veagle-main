@@ -15,7 +15,12 @@ import {
   Sparkles,
 } from "lucide-react";
 
-import { ctaShellClass } from "@/components/site/UiBits";
+import {
+  PrimaryLink,
+  SecondaryLink,
+  ctaShellClass,
+  pageClass,
+} from "@/components/site/UiBits";
 import { resolveClientProfile } from "@/lib/fallback-data";
 import { COMPANY_BRAND_NAME } from "@/lib/site";
 import { pageArtwork } from "@/lib/visuals";
@@ -155,7 +160,7 @@ export default function HomePage({ content, services = [], products = [], jobs =
         ];
 
   return (
-    <main className="overflow-hidden bg-[#131314] text-[#e4e2e2]">
+    <main className={pageClass}>
       <section className="relative flex min-h-[88vh] items-center justify-center overflow-hidden px-4 pb-16 pt-28 sm:px-6 sm:pt-32 lg:px-8">
         <div className="absolute inset-0">
           <Image
@@ -190,20 +195,13 @@ export default function HomePage({ content, services = [], products = [], jobs =
               `${COMPANY_BRAND_NAME} builds dynamic websites, software products, ERP systems and business-ready dashboard experiences.`}
           </p>
 
-          <div className="mt-8 flex flex-wrap justify-center gap-4">
-            <Link
-              href={hero.primaryCtaHref || "/contact"}
-              className="inline-flex items-center gap-2 rounded-full bg-[#b3c5ff] px-7 py-3.5 text-sm font-bold text-[#0c2d7a] transition hover:brightness-110"
-            >
+          <div className="mt-8 flex flex-col items-center gap-4 sm:flex-row sm:flex-wrap sm:justify-center">
+            <PrimaryLink href={hero.primaryCtaHref || "/contact"}>
               {hero.primaryCtaLabel || "Get Started"}
-            </Link>
-            <Link
-              href={hero.secondaryCtaHref || "/about"}
-              className="inline-flex items-center gap-2 rounded-full border border-white/16 bg-[#171b23]/70 px-7 py-3.5 text-sm font-bold text-white backdrop-blur-sm transition hover:bg-white/10"
-            >
+            </PrimaryLink>
+            <SecondaryLink href={hero.secondaryCtaHref || "/about"}>
               {hero.secondaryCtaLabel || "View Process"}
-              <Rocket className="h-4 w-4" />
-            </Link>
+            </SecondaryLink>
           </div>
 
           <div className="mx-auto mt-12 grid max-w-4xl gap-px overflow-hidden rounded-2xl border border-white/12 bg-white/8 sm:grid-cols-2 lg:grid-cols-4">
@@ -467,30 +465,24 @@ export default function HomePage({ content, services = [], products = [], jobs =
       <section className="px-4 pb-24 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-screen-xl">
           <div
-            className={`${ctaShellClass} relative overflow-hidden border border-white/10 bg-[linear-gradient(135deg,#a7bcff,#89a4ff)] px-6 py-12 text-center sm:px-8 lg:px-16`}
+            className={`${ctaShellClass} relative overflow-hidden border border-white/10 bg-[linear-gradient(135deg,#182a59,#101a33)] px-6 py-12 text-center shadow-[0_30px_90px_-44px_rgba(6,12,28,0.72)] sm:px-8 lg:px-16`}
           >
-            <div className="absolute inset-0 bg-[radial-gradient(circle_at_12%_8%,rgba(255,255,255,0.42),transparent_26%),radial-gradient(circle_at_86%_18%,rgba(255,255,255,0.28),transparent_20%)]" />
+            <div className="absolute inset-0 bg-[radial-gradient(circle_at_12%_8%,rgba(179,197,255,0.24),transparent_26%),radial-gradient(circle_at_86%_18%,rgba(86,226,64,0.12),transparent_20%)]" />
             <div className="relative z-10">
-              <h2 className="mx-auto max-w-4xl font-headline text-3xl font-black leading-tight tracking-[-0.035em] text-[#1a2f73] sm:text-5xl">
+              <h2 className="mx-auto max-w-4xl font-headline text-3xl font-black leading-tight tracking-[-0.035em] text-white sm:text-5xl">
                 {finalCta.title || "Ready to build the next version of your website..."}
               </h2>
-              <p className="mx-auto mt-5 max-w-3xl text-base leading-8 text-[#233f8f]">
+              <p className="mx-auto mt-5 max-w-3xl text-base leading-8 text-[#d8e2fb]">
                 {finalCta.description ||
                   "Tell us what needs to improve and we will convert it into a clear execution plan."}
               </p>
-              <div className="mt-8 flex flex-wrap justify-center gap-4">
-                <Link
-                  href={finalCta.primaryHref || "/contact"}
-                  className="inline-flex items-center rounded-full bg-[#203f96] px-7 py-3.5 text-sm font-bold text-white transition hover:brightness-110"
-                >
+              <div className="mt-8 flex flex-col items-center gap-4 sm:flex-row sm:flex-wrap sm:justify-center">
+                <PrimaryLink href={finalCta.primaryHref || "/contact"}>
                   {finalCta.primaryLabel || "Start a Project"}
-                </Link>
-                <Link
-                  href={finalCta.secondaryHref || "/services"}
-                  className="inline-flex items-center rounded-full border border-[#2f57bb]/35 bg-[#eff3ff] px-7 py-3.5 text-sm font-bold text-[#2047a9] transition hover:bg-white"
-                >
+                </PrimaryLink>
+                <SecondaryLink href={finalCta.secondaryHref || "/services"}>
                   {finalCta.secondaryLabel || "See the Workflow"}
-                </Link>
+                </SecondaryLink>
               </div>
             </div>
           </div>

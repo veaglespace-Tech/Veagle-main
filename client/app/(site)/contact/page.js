@@ -18,10 +18,8 @@ export const metadata = buildPageMetadata({
 });
 
 export default async function ContactPage() {
-  const [content, services] = await Promise.all([
-    getSiteContent(),
-    getServices(),
-  ]);
+  const [content, services] = await Promise.all([getSiteContent(), getServices()]);
 
   return <ContactPageContent content={content} services={services} />;
 }
+

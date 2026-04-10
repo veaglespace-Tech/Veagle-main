@@ -1,11 +1,20 @@
+import {
+  createPortalTask,
+  deletePortalTask,
+  readPortalTasks,
+  updatePortalTask,
+} from "@/lib/cms/local-store";
 import { requirePortalRole } from "@/lib/portal/token";
-import { API_BASE_URL } from "@/lib/site";
 
-async function readPayload(response) {
-  const contentType = response.headers.get("content-type") || "";
-  return contentType.includes("application/json")
-    ? response.json()
-    : response.text();
+function forbidIfNotSuperadmin(access) {
+  if (access.role === "SADMIN") {
+    return null;
+  }
+
+  return Response.json(
+    { error: "Only superadmin can manage task records." },
+    { status: 403 }
+  );
 }
 
 export async function GET(request) {
@@ -14,15 +23,8 @@ export async function GET(request) {
     return access.response;
   }
 
-  const response = await fetch(`${API_BASE_URL}/admin/tasks`, {
-    headers: {
-      Authorization: `Bearer ${access.token}`,
-    },
-    cache: "no-store",
-  });
-
-  const payload = await readPayload(response);
-  return Response.json(payload, { status: response.status });
+  const tasks = await readPortalTasks();
+  return Response.json(tasks);
 }
 
 export async function POST(request) {
@@ -31,31 +33,27 @@ export async function POST(request) {
     return access.response;
   }
 
+  const forbiddenResponse = forbidIfNotSuperadmin(access);
+  if (forbiddenResponse) {
+    return forbiddenResponse;
+  }
+
   const body = await request.json();
 
   if (!body.title?.trim()) {
     return Response.json({ error: "Task title is required" }, { status: 422 });
   }
 
-  const response = await fetch(`${API_BASE_URL}/admin/tasks`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${access.token}`,
-    },
-    body: JSON.stringify({
-      title: body.title.trim(),
-      section: body.section?.trim() || "Homepage",
-      priority: body.priority || "medium",
-      assignedTo: body.assignedTo || "",
-      summary: body.summary?.trim() || "",
-      status: body.status || "todo",
-    }),
-    cache: "no-store",
+  const task = await createPortalTask({
+    title: body.title.trim(),
+    section: body.section?.trim() || "Homepage",
+    priority: body.priority || "medium",
+    assignedTo: body.assignedTo || "",
+    summary: body.summary?.trim() || "",
+    status: body.status || "todo",
   });
 
-  const payload = await readPayload(response);
-  return Response.json(payload, { status: response.status });
+  return Response.json(task, { status: 201 });
 }
 
 export async function PATCH(request) {
@@ -65,28 +63,31 @@ export async function PATCH(request) {
   }
 
   const { id, ...updates } = await request.json();
+
   if (!id) {
     return Response.json({ error: "Task id is required" }, { status: 400 });
   }
 
-  const response = await fetch(`${API_BASE_URL}/admin/tasks/${id}`, {
-    method: "PATCH",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${access.token}`,
-    },
-    body: JSON.stringify(updates),
-    cache: "no-store",
-  });
-
-  const payload = await readPayload(response);
-  return Response.json(payload, { status: response.status });
+  try {
+    const task = await updatePortalTask(id, updates);
+    return Response.json(task);
+  } catch (error) {
+    return Response.json(
+      { error: error.message || "Unable to update task." },
+      { status: 404 }
+    );
+  }
 }
 
 export async function DELETE(request) {
   const access = requirePortalRole(request);
   if (!access.ok) {
     return access.response;
+  }
+
+  const forbiddenResponse = forbidIfNotSuperadmin(access);
+  if (forbiddenResponse) {
+    return forbiddenResponse;
   }
 
   const { searchParams } = new URL(request.url);
@@ -96,14 +97,13 @@ export async function DELETE(request) {
     return Response.json({ error: "Task id is required" }, { status: 400 });
   }
 
-  const response = await fetch(`${API_BASE_URL}/admin/tasks/${id}`, {
-    method: "DELETE",
-    headers: {
-      Authorization: `Bearer ${access.token}`,
-    },
-    cache: "no-store",
-  });
-
-  const payload = await readPayload(response);
-  return Response.json(payload, { status: response.status });
+  try {
+    await deletePortalTask(id);
+    return Response.json({ ok: true });
+  } catch (error) {
+    return Response.json(
+      { error: error.message || "Unable to delete task." },
+      { status: 404 }
+    );
+  }
 }
