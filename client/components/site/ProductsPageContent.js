@@ -1,0 +1,370 @@
+"use client";
+
+import Image from "next/image";
+import Link from "next/link";
+import { useDeferredValue, useMemo, useState } from "react";
+import {
+  ArrowRight,
+  BarChart3,
+  Cpu,
+  Landmark,
+  Network,
+  RadioTower,
+  Satellite,
+  Shield,
+  TerminalSquare,
+} from "lucide-react";
+
+import { pageArtwork } from "@/lib/visuals";
+
+const categoryAllId = "ALL_SOLUTIONS";
+
+const iconMatchers = [
+  { pattern: /(data|entry|ingest|validation)/i, icon: TerminalSquare },
+  { pattern: /(zoho|suite|platform|crm|erp)/i, icon: Network },
+  { pattern: /(bank|finance|loan|insurance|payment)/i, icon: Landmark },
+  { pattern: /(digital|token|mobile|app|cloud|ai)/i, icon: Cpu },
+  { pattern: /(analysis|analytics|report|insight)/i, icon: BarChart3 },
+  { pattern: /(ground|station|antenna|router|network)/i, icon: RadioTower },
+  { pattern: /(threat|defense|security|protect)/i, icon: Shield },
+  { pattern: /(satellite|fleet|constellation|orbit)/i, icon: Satellite },
+];
+
+function normalize(value = "") {
+  return value.trim().toLowerCase();
+}
+
+function resolveProductIcon(product) {
+  const text = `${product?.title || ""} ${product?.description || ""} ${
+    product?.categoryName || ""
+  }`;
+  return iconMatchers.find((entry) => entry.pattern.test(text))?.icon || Cpu;
+}
+
+function resolveStatus(product, index) {
+  const text = `${product?.title || ""} ${product?.description || ""} ${
+    product?.categoryName || ""
+  }`.toLowerCase();
+
+  if (product?.isActive === false) {
+    return {
+      label: "INACTIVE",
+      className: "bg-rose-500/20 text-rose-200",
+    };
+  }
+
+  if (/(bank|finance|loan|insurance)/i.test(text)) {
+    return {
+      label: "ENCRYPTED",
+      className: "bg-[#56e240]/15 text-[#a7ff9c]",
+    };
+  }
+
+  if (/(zoho|platform|suite|erp|business)/i.test(text)) {
+    return {
+      label: "PLATFORM",
+      className: "bg-[#3a4151] text-[#d0d8eb]",
+    };
+  }
+
+  if (/(digital|token|mobile|app|cloud|ai|next)/i.test(text)) {
+    return {
+      label: "NEXT GEN",
+      className: "bg-[#ffb1c5]/16 text-[#ffd2de]",
+    };
+  }
+
+  return {
+    label: `v${index + 1}.STABLE`,
+    className: "bg-[#56e240]/15 text-[#a7ff9c]",
+  };
+}
+
+function buildCatalog(products, categories) {
+  const normalizedProducts = Array.isArray(products) ? products : [];
+  const baseCategories = Array.isArray(categories)
+    ? categories
+        .filter((item) => item?.name)
+        .map((item) => ({
+          id: item.id || item.name,
+          name: item.name,
+          description: item.description || "",
+        }))
+    : [];
+
+  const seen = new Set(baseCategories.map((item) => normalize(item.name)));
+  const dynamicCategories = [];
+
+  normalizedProducts.forEach((product) => {
+    const categoryName = (product?.categoryName || "").trim();
+    if (!categoryName) {
+      return;
+    }
+    const key = normalize(categoryName);
+    if (seen.has(key)) {
+      return;
+    }
+    seen.add(key);
+    dynamicCategories.push({
+      id: `dynamic-${categoryName}`,
+      name: categoryName,
+      description: "",
+    });
+  });
+
+  const mergedCategories = [...baseCategories, ...dynamicCategories];
+  const groups = mergedCategories.map((category) => ({
+    ...category,
+    items: normalizedProducts.filter(
+      (product) =>
+        normalize(product?.categoryName || "other") === normalize(category.name)
+    ),
+  }));
+
+  const groupedKeys = new Set(
+    mergedCategories.map((category) => normalize(category.name))
+  );
+  const uncategorized = normalizedProducts.filter(
+    (product) =>
+      !product?.categoryName ||
+      !groupedKeys.has(normalize(product.categoryName))
+  );
+
+  if (uncategorized.length) {
+    groups.push({
+      id: "other",
+      name: "Other",
+      description: "Products without mapped category yet.",
+      items: uncategorized,
+    });
+  }
+
+  return groups;
+}
+
+function renderHeroTitle(value) {
+  const title = value || "Products & Solutions";
+  const marker = "solutions";
+  const index = title.toLowerCase().indexOf(marker);
+
+  if (index === -1) {
+    return title;
+  }
+
+  const start = title.slice(0, index);
+  const focus = title.slice(index, index + marker.length);
+  const end = title.slice(index + marker.length);
+
+  return (
+    <>
+      {start}
+      <span className="text-[#9eb4ff]">{focus}</span>
+      {end}
+    </>
+  );
+}
+
+export default function ProductsPageContent({ products, categories, content }) {
+  const pageContent = content?.productsPage || {};
+  const catalogGroups = useMemo(
+    () => buildCatalog(products, categories),
+    [products, categories]
+  );
+  const categoryFilters = useMemo(
+    () => [
+      { id: categoryAllId, name: "All Solutions", description: "" },
+      ...catalogGroups.map((group) => ({
+        id: group.id || group.name,
+        name: group.name,
+        description: group.description || "",
+      })),
+    ],
+    [catalogGroups]
+  );
+  const [activeFilter, setActiveFilter] = useState(categoryAllId);
+  const deferredFilter = useDeferredValue(activeFilter);
+
+  const filteredProducts = useMemo(() => {
+    if (deferredFilter === categoryAllId) {
+      return Array.isArray(products) ? products : [];
+    }
+
+    const selected = catalogGroups.find(
+      (group) => group.id === deferredFilter || group.name === deferredFilter
+    );
+
+    return selected?.items || [];
+  }, [deferredFilter, products, catalogGroups]);
+
+  const activeFilterMeta = categoryFilters.find(
+    (filter) => filter.id === deferredFilter
+  );
+  const ctaTitle =
+    pageContent.ctaTitle || "Need a custom orbital configuration?";
+  const ctaDescription =
+    pageContent.ctaDescription ||
+    "Our engineering teams specialize in building bespoke software layers for unique mission parameters.";
+
+  return (
+    <main className="overflow-hidden bg-[#131314] text-[#e4e2e2]">
+      <header className="relative overflow-hidden pb-20 pt-32">
+        <div className="absolute inset-0 opacity-40">
+          <div className="absolute inset-0 bg-gradient-to-br from-[#195ee2]/20 to-transparent" />
+          <Image
+            src={pageArtwork.hero}
+            alt="Products background"
+            fill
+            className="object-cover opacity-30 grayscale"
+            priority
+            unoptimized
+          />
+        </div>
+
+        <div className="relative z-10 mx-auto max-w-screen-2xl px-4 sm:px-6 lg:px-8">
+          <div className="max-w-3xl">
+            <span className="inline-flex rounded-full bg-[#b3c5ff]/12 px-4 py-1.5 text-[11px] font-bold uppercase tracking-[0.22em] text-[#d3deff]">
+              Fleet Catalog v2.0
+            </span>
+            <h1 className="mt-6 font-headline text-5xl font-black leading-[0.94] tracking-[-0.04em] text-white sm:text-7xl">
+              {renderHeroTitle(pageContent.title)}
+            </h1>
+            <p className="mt-6 text-base leading-8 text-[#bac6de] sm:text-lg">
+              {pageContent.description ||
+                "Integrated ecosystems for business operations, automation and financial workflows with mission-grade reliability."}
+            </p>
+          </div>
+        </div>
+      </header>
+
+      <section className="sticky top-20 z-40 border-y border-white/6 bg-[#131314]/85 py-6 backdrop-blur-md">
+        <div className="mx-auto max-w-screen-2xl px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center gap-3 overflow-x-auto pb-2">
+            {categoryFilters.map((filter) => {
+              const isActive = deferredFilter === filter.id;
+
+              return (
+                <button
+                  key={filter.id}
+                  type="button"
+                  onClick={() => setActiveFilter(filter.id)}
+                  className={
+                    isActive
+                      ? "whitespace-nowrap rounded-full bg-[#195ee2] px-6 py-2 text-sm font-semibold text-white"
+                      : "whitespace-nowrap rounded-full bg-[#1f2020] px-6 py-2 text-sm font-medium text-[#b4bfd5] transition hover:bg-[#2b2c2d] hover:text-white"
+                  }
+                >
+                  {filter.name}
+                </button>
+              );
+            })}
+          </div>
+        </div>
+      </section>
+
+      <section className="mx-auto max-w-screen-2xl px-4 py-12 sm:px-6 lg:px-8">
+        {activeFilterMeta?.description ? (
+          <p className="mb-6 text-sm leading-7 text-[#aeb9ce]">
+            {activeFilterMeta.description}
+          </p>
+        ) : null}
+
+        <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+          {filteredProducts.map((product, index) => {
+            const Icon = resolveProductIcon(product);
+            const status = resolveStatus(product, index);
+            const categoryName = product.categoryName || "General";
+
+            return (
+              <article
+                key={product.id || `${product.title}-${index}`}
+                className="group flex h-full flex-col rounded-[1rem] border border-white/6 bg-[rgba(52,53,53,0.4)] p-6 backdrop-blur-[12px] transition duration-300 hover:bg-[#2b2f38]"
+              >
+                <div className="mb-7 flex items-start justify-between gap-4">
+                  <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-[#b3c5ff]/10 text-[#9db5ff] transition duration-300 group-hover:scale-110">
+                    <Icon className="h-6 w-6" />
+                  </div>
+                  <span
+                    className={`rounded px-2 py-1 text-[10px] font-bold uppercase tracking-[0.16em] ${status.className}`}
+                  >
+                    {status.label}
+                  </span>
+                </div>
+
+                <h3 className="font-headline text-2xl font-black tracking-tight text-white">
+                  {product.title}
+                </h3>
+                <p className="mt-4 flex-grow text-sm leading-7 text-[#b8c4db]">
+                  {product.description}
+                </p>
+
+                <div className="mt-7 flex items-center justify-between border-t border-white/5 pt-5">
+                  <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#8f9bb3]">
+                    {categoryName}
+                  </span>
+                  <ArrowRight className="h-4.5 w-4.5 text-[#9eb4ff] transition duration-300 group-hover:translate-x-1" />
+                </div>
+              </article>
+            );
+          })}
+        </div>
+
+        {!filteredProducts.length ? (
+          <div className="mt-8 rounded-[1rem] border border-dashed border-white/15 bg-[#1a1c21] px-6 py-12 text-center">
+            <h3 className="font-headline text-2xl font-black tracking-tight text-white">
+              No products in this category yet
+            </h3>
+            <p className="mx-auto mt-3 max-w-2xl text-sm leading-7 text-[#b0bdd4]">
+              Add products from admin/sadmin dashboard and they will appear here automatically.
+            </p>
+          </div>
+        ) : null}
+      </section>
+
+      <section className="mx-auto max-w-screen-2xl px-4 py-20 sm:px-6 lg:px-8 lg:py-24">
+        <div className="relative overflow-hidden rounded-[1.2rem] bg-gradient-to-br from-[#1b4fc4] to-[#1b3e8e] p-8 sm:p-12 lg:flex lg:items-center lg:justify-between lg:gap-12">
+          <div className="absolute inset-0 opacity-15">
+            <Image
+              src={pageArtwork.hero}
+              alt="CTA background"
+              fill
+              className="object-cover"
+              unoptimized
+            />
+          </div>
+
+          <div className="relative z-10 max-w-3xl">
+            <h2 className="font-headline text-4xl font-black leading-[0.95] tracking-[-0.03em] text-white sm:text-5xl">
+              {ctaTitle}
+            </h2>
+            <p className="mt-5 text-base leading-8 text-[#dde7ff]">{ctaDescription}</p>
+            <div className="mt-8 flex flex-wrap gap-4">
+              <Link
+                href="/contact"
+                className="inline-flex items-center rounded-full bg-white px-8 py-3.5 text-sm font-bold text-[#1b4ebf] transition hover:scale-[1.02]"
+              >
+                Request a Demo
+              </Link>
+              <Link
+                href="/contact"
+                className="inline-flex items-center rounded-full border border-white/30 bg-white/10 px-8 py-3.5 text-sm font-bold text-white transition hover:bg-white/20"
+              >
+                Contact Engineering
+              </Link>
+            </div>
+          </div>
+
+          <div className="relative z-10 mt-12 hidden xl:block lg:mt-0">
+            <div className="flex h-64 w-64 items-center justify-center rounded-full border border-white/15">
+              <div className="flex h-48 w-48 items-center justify-center rounded-full border border-white/20">
+                <div className="flex h-32 w-32 items-center justify-center rounded-full bg-white/10">
+                  <Satellite className="h-14 w-14 text-white" />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+  );
+}
+

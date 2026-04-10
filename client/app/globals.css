@@ -1,0 +1,407 @@
+@import "tailwindcss";
+@plugin "daisyui";
+
+:root,
+html[data-theme="veagle-light"] {
+  --font-body: "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+  --page-bg: #131314;
+  --page-bg-soft: #131314;
+  --surface: rgba(25, 28, 34, 0.94);
+  --surface-strong: rgba(31, 35, 43, 0.98);
+  --surface-muted: #171c24;
+  --border: rgba(190, 206, 245, 0.18);
+  --border-strong: rgba(190, 206, 245, 0.38);
+  --text-primary: #f7f9ff;
+  --text-secondary: #e4ebf8;
+  --text-muted: #bdc9dc;
+  --accent: #195ee2;
+  --accent-strong: #0054d7;
+  --accent-soft: rgba(179, 197, 255, 0.16);
+  --accent-contrast: rgba(179, 197, 255, 0.14);
+  --button-ink: #e1e6ff;
+  --ring: rgba(179, 197, 255, 0.2);
+  --glow-one: rgba(25, 94, 226, 0.2);
+  --glow-two: rgba(86, 226, 64, 0.1);
+  --glow-three: rgba(179, 197, 255, 0.08);
+  --shadow-card: 0 30px 80px -42px rgba(0, 0, 0, 0.55);
+  --shadow-soft: 0 18px 48px -36px rgba(0, 0, 0, 0.4);
+  --shadow-accent: 0 24px 56px -28px rgba(25, 94, 226, 0.35);
+  --surface-container-high: rgba(22, 25, 31, 0.92);
+  --veagle-border: var(--border);
+  --veagle-surface: var(--surface);
+  --veagle-surface-soft: var(--surface-muted);
+  --veagle-surface-strong: var(--surface-strong);
+  --veagle-heading: var(--text-primary);
+  --veagle-text: var(--text-secondary);
+  --veagle-copy: var(--text-secondary);
+  --veagle-muted: var(--text-muted);
+  --veagle-subtle: var(--text-muted);
+  --veagle-shadow: var(--shadow-card);
+  --veagle-soft-shadow: var(--shadow-soft);
+  --color-primary: var(--accent);
+  --color-base-100: var(--page-bg);
+}
+
+html[data-theme="veagle-dark"] {
+  --font-body: "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+  --page-bg: #131314;
+  --page-bg-soft: #131314;
+  --surface: rgba(25, 28, 34, 0.94);
+  --surface-strong: rgba(31, 35, 43, 0.98);
+  --surface-muted: #171c24;
+  --border: rgba(190, 206, 245, 0.18);
+  --border-strong: rgba(190, 206, 245, 0.38);
+  --text-primary: #f7f9ff;
+  --text-secondary: #e4ebf8;
+  --text-muted: #bdc9dc;
+  --accent: #195ee2;
+  --accent-strong: #0054d7;
+  --accent-soft: rgba(179, 197, 255, 0.16);
+  --accent-contrast: rgba(179, 197, 255, 0.14);
+  --button-ink: #e1e6ff;
+  --ring: rgba(179, 197, 255, 0.2);
+  --glow-one: rgba(25, 94, 226, 0.2);
+  --glow-two: rgba(86, 226, 64, 0.1);
+  --glow-three: rgba(179, 197, 255, 0.08);
+  --shadow-card: 0 30px 80px -42px rgba(0, 0, 0, 0.55);
+  --shadow-soft: 0 18px 48px -36px rgba(0, 0, 0, 0.4);
+  --shadow-accent: 0 24px 56px -28px rgba(25, 94, 226, 0.35);
+  --surface-container-high: rgba(22, 25, 31, 0.92);
+  --veagle-border: var(--border);
+  --veagle-surface: var(--surface);
+  --veagle-surface-soft: var(--surface-muted);
+  --veagle-surface-strong: var(--surface-strong);
+  --veagle-heading: var(--text-primary);
+  --veagle-text: var(--text-secondary);
+  --veagle-copy: var(--text-secondary);
+  --veagle-muted: var(--text-muted);
+  --veagle-subtle: var(--text-muted);
+  --veagle-shadow: var(--shadow-card);
+  --veagle-soft-shadow: var(--shadow-soft);
+  --color-primary: var(--accent);
+  --color-base-100: var(--page-bg);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  overflow-x: hidden;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  overflow-x: hidden;
+  background:
+    radial-gradient(circle at 14% 12%, var(--glow-one), transparent 24%),
+    radial-gradient(circle at 88% 18%, var(--glow-two), transparent 26%),
+    radial-gradient(circle at 50% 100%, var(--glow-three), transparent 30%),
+    linear-gradient(180deg, #16181a 0%, var(--page-bg) 100%);
+  color: var(--text-primary);
+  font-family: var(--font-body), ui-sans-serif, system-ui, sans-serif;
+  text-rendering: optimizeLegibility;
+}
+
+:where(main, section, article, aside, header, footer, div) {
+  min-width: 0;
+}
+
+:where(button, input, textarea, select) {
+  font: inherit;
+}
+
+:where(p, a, li, td, th, figcaption) {
+  overflow-wrap: anywhere;
+}
+
+.veagle-grid-background {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image:
+    linear-gradient(to right, color-mix(in srgb, var(--border) 70%, transparent) 1px, transparent 1px),
+    linear-gradient(to bottom, color-mix(in srgb, var(--border) 70%, transparent) 1px, transparent 1px);
+  background-size: 84px 84px;
+  mask-image: radial-gradient(circle at center, black 24%, transparent 84%);
+  opacity: 0.55;
+}
+
+.veagle-section-wash {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(circle at 14% 16%, color-mix(in srgb, var(--glow-one) 85%, transparent), transparent 32%),
+    radial-gradient(circle at 84% 18%, color-mix(in srgb, var(--glow-two) 85%, transparent), transparent 30%),
+    radial-gradient(circle at 50% 100%, color-mix(in srgb, var(--glow-three) 90%, transparent), transparent 34%);
+  opacity: 0.95;
+}
+
+.veagle-panel-sheen {
+  position: relative;
+}
+
+.veagle-panel-sheen::before {
+  content: "";
+  position: absolute;
+  inset: 1px;
+  pointer-events: none;
+  border-radius: inherit;
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.42),
+    rgba(255, 255, 255, 0.08) 28%,
+    transparent 56%
+  );
+  opacity: 0.45;
+}
+
+.veagle-chip-track {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.veagle-chip-track > * {
+  border-radius: 9999px;
+  border: 1px solid var(--border);
+  background: var(--surface-strong);
+  padding: 0.65rem 0.9rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+  box-shadow: var(--shadow-soft);
+}
+
+.veagle-marquee {
+  position: relative;
+  overflow: hidden;
+  border-radius: 9999px;
+  border: 1px solid var(--border);
+  background: rgba(17, 23, 33, 0.88);
+}
+
+.veagle-marquee::before,
+.veagle-marquee::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 5rem;
+  z-index: 1;
+}
+
+.veagle-marquee::before {
+  left: 0;
+  background: linear-gradient(90deg, #101319, transparent);
+}
+
+.veagle-marquee::after {
+  right: 0;
+  background: linear-gradient(270deg, #101319, transparent);
+}
+
+.veagle-marquee-track {
+  display: flex;
+  width: max-content;
+  gap: 0.9rem;
+  padding: 0.95rem;
+  animation: marquee 28s linear infinite;
+}
+
+.veagle-marquee-track > * {
+  border-radius: 9999px;
+  border: 1px solid var(--border);
+  background: rgba(255, 255, 255, 0.04);
+  padding: 0.7rem 1rem;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+  white-space: nowrap;
+}
+
+.veagle-marquee-track > a {
+  transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+}
+
+.veagle-marquee-track > a:hover {
+  border-color: color-mix(in srgb, var(--accent) 50%, transparent);
+  background: color-mix(in srgb, var(--accent) 18%, rgba(255, 255, 255, 0.04));
+  color: var(--text-primary);
+}
+
+.veagle-marquee-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+}
+
+.veagle-marquee-item.has-logo {
+  min-width: 12.5rem;
+  padding: 0.48rem 0.9rem 0.48rem 0.55rem;
+  font-size: 0.76rem;
+  letter-spacing: 0.08em;
+  text-transform: none;
+}
+
+.veagle-marquee-item.logo-only {
+  min-width: auto;
+  padding: 0.55rem;
+  gap: 0;
+}
+
+.veagle-marquee-logo-wrap {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  flex-shrink: 0;
+  border-radius: 9999px;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  background: #ffffff;
+  overflow: hidden;
+}
+
+.veagle-marquee-item.logo-only .veagle-marquee-logo-wrap {
+  width: 3.1rem;
+  height: 3.1rem;
+  border-radius: 1rem;
+}
+
+.veagle-marquee-logo {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  padding: 0.18rem;
+}
+
+.veagle-marquee-label {
+  white-space: nowrap;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+img {
+  display: block;
+  max-width: 100%;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--font-body), ui-sans-serif, system-ui, sans-serif;
+}
+
+.font-headline {
+  font-family: var(--font-body), ui-sans-serif, system-ui, sans-serif;
+}
+
+@media (max-width: 767px) {
+  .veagle-marquee-track {
+    padding: 0.8rem;
+  }
+
+  .veagle-marquee-item.has-logo {
+    min-width: 10.5rem;
+  }
+}
+
+.veagle-orb {
+  position: absolute;
+  border-radius: 9999px;
+  filter: blur(64px);
+  pointer-events: none;
+}
+
+.animate-float {
+  animation: float 9s ease-in-out infinite;
+}
+
+.animate-float-delayed {
+  animation: float 11s ease-in-out infinite;
+  animation-delay: -3s;
+}
+
+.animate-drift {
+  animation: drift 16s linear infinite alternate;
+}
+
+.animate-rise {
+  animation: rise 0.8s ease-out both;
+}
+
+::selection {
+  background: var(--accent-soft);
+  color: var(--text-primary);
+}
+
+@keyframes float {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0);
+  }
+
+  50% {
+    transform: translate3d(0, -12px, 0);
+  }
+}
+
+@keyframes drift {
+  0% {
+    transform: translate3d(-12px, 0, 0);
+  }
+
+  100% {
+    transform: translate3d(12px, 20px, 0);
+  }
+}
+
+@keyframes rise {
+  0% {
+    opacity: 0;
+    transform: translate3d(0, 24px, 0);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@keyframes marquee {
+  0% {
+    transform: translate3d(0, 0, 0);
+  }
+
+  100% {
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  .animate-float,
+  .animate-float-delayed,
+  .animate-drift,
+  .animate-rise,
+  .veagle-marquee-track {
+    animation: none;
+  }
+}

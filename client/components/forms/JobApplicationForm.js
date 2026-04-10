@@ -1,0 +1,369 @@
+"use client";
+
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { startTransition, useEffect, useMemo, useState } from "react";
+import { UploadCloud } from "lucide-react";
+
+import {
+  buildLoginHref,
+  buildRegisterHref,
+  clearStoredSession,
+  isUserSession,
+  readStoredSession,
+} from "@/lib/auth-session";
+import { postJobApplication } from "@/lib/backend";
+import { cn } from "@/lib/utils";
+
+const initialState = {
+  name: "",
+  email: "",
+  phone: "",
+  jobId: "",
+  file: null,
+};
+
+function validate(values) {
+  const errors = {};
+
+  if (!values.name.trim()) {
+    errors.name = "Name is required";
+  }
+
+  if (!values.email.trim()) {
+    errors.email = "Email is required";
+  } else if (!/^\S+@\S+\.\S+$/.test(values.email)) {
+    errors.email = "Enter a valid email";
+  }
+
+  if (!values.phone.trim()) {
+    errors.phone = "Phone number is required";
+  } else if (!/^\+?[0-9\s-]{10,15}$/.test(values.phone)) {
+    errors.phone = "Enter a valid phone number";
+  }
+
+  if (!values.jobId) {
+    errors.jobId = "Select the role you are applying for";
+  }
+
+  if (!values.file) {
+    errors.file = "Resume is required";
+  }
+
+  return errors;
+}
+
+const fieldLabelClass =
+  "text-[10px] font-semibold uppercase tracking-[0.2em] text-[color:var(--text-muted)]";
+const fieldInputClass =
+  "mt-2 w-full rounded-[0.9rem] border border-[color:var(--border)] bg-[color:var(--surface-strong)] px-4 py-3 text-sm text-[color:var(--text-primary)] outline-none transition placeholder:text-[color:var(--text-muted)] focus:border-[color:var(--border-strong)] focus:ring-2 focus:ring-[color:var(--ring)]";
+
+export default function JobApplicationForm({
+  jobs = [],
+  className = "",
+  showSelectedCard = true,
+}) {
+  const pathname = usePathname();
+  const defaultJobId = jobs[0]?.id ? String(jobs[0].id) : "";
+  const [form, setForm] = useState({
+    ...initialState,
+    jobId: defaultJobId,
+  });
+  const [errors, setErrors] = useState({});
+  const [status, setStatus] = useState({ type: "", message: "" });
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [session, setSession] = useState(null);
+
+  const selectedJob = useMemo(
+    () => jobs.find((job) => String(job.id) === form.jobId),
+    [form.jobId, jobs]
+  );
+  const userLocked = isUserSession(session);
+  const loginHref = buildLoginHref(pathname || "/career");
+  const registerHref = buildRegisterHref(pathname || "/career");
+
+  useEffect(() => {
+    setForm((current) => {
+      if (!defaultJobId) {
+        return current.jobId ? { ...current, jobId: "" } : current;
+      }
+
+      const exists = jobs.some((job) => String(job.id) === current.jobId);
+      return exists ? current : { ...current, jobId: defaultJobId };
+    });
+  }, [defaultJobId, jobs]);
+
+  useEffect(() => {
+    function syncSession() {
+      const nextSession = readStoredSession();
+      setSession(nextSession);
+
+      if (isUserSession(nextSession)) {
+        setForm((current) => ({
+          ...current,
+          name: nextSession.username || current.name,
+          email: nextSession.email || current.email,
+          phone: nextSession.contact || current.phone,
+        }));
+      }
+    }
+
+    syncSession();
+    window.addEventListener("storage", syncSession);
+
+    return () => {
+      window.removeEventListener("storage", syncSession);
+    };
+  }, []);
+
+  function handleChange(event) {
+    const { name, value, files } = event.target;
+    const nextValue = name === "file" ? files?.[0] || null : value;
+    setForm((current) => ({ ...current, [name]: nextValue }));
+    setErrors((current) => ({ ...current, [name]: "" }));
+  }
+
+  async function handleSubmit(event) {
+    event.preventDefault();
+
+    if (!userLocked) {
+      setStatus({
+        type: "error",
+        message: "User login or registration is required before applying for a job.",
+      });
+      return;
+    }
+
+    const nextErrors = validate(form);
+
+    if (Object.keys(nextErrors).length > 0) {
+      setErrors(nextErrors);
+      return;
+    }
+
+    setIsSubmitting(true);
+    setStatus({ type: "", message: "" });
+
+    startTransition(async () => {
+      try {
+        const payload = new FormData();
+        payload.append("name", form.name.trim());
+        payload.append("email", form.email.trim());
+        payload.append("phone", form.phone.trim());
+        payload.append("jobId", form.jobId);
+        payload.append("file", form.file);
+
+        await postJobApplication(payload, session.token);
+        setStatus({
+          type: "success",
+          message: `Application submitted for ${selectedJob?.title || "the selected role"}.`,
+        });
+        setForm({
+          ...initialState,
+          jobId: defaultJobId,
+          name: session.username || "",
+          email: session.email || "",
+          phone: session.contact || "",
+        });
+      } catch (error) {
+        setStatus({
+          type: "error",
+          message: error.message || "Unable to submit your application right now.",
+        });
+      } finally {
+        setIsSubmitting(false);
+      }
+    });
+  }
+
+  return (
+    <div
+      className={cn(
+        "rounded-[1.2rem] border border-[color:var(--border)] bg-[color:var(--surface)] p-6 shadow-[0_24px_70px_rgba(0,0,0,0.45)] sm:p-8",
+        className
+      )}
+    >
+      <AccessBanner
+        session={session}
+        loginHref={loginHref}
+        registerHref={registerHref}
+        onLogout={() => {
+          clearStoredSession();
+          setSession(null);
+          setForm((current) => ({
+            ...current,
+            name: "",
+            email: "",
+            phone: "",
+          }));
+        }}
+      />
+
+      <form className="space-y-6" onSubmit={handleSubmit}>
+        <div className="grid gap-4 sm:grid-cols-2">
+          <Field label="Full Name" name="name" value={form.name} onChange={handleChange} readOnly={userLocked} error={errors.name} />
+          <Field
+            label="Email Address"
+            name="email"
+            type="email"
+            value={form.email}
+            onChange={handleChange}
+            readOnly={userLocked}
+            error={errors.email}
+          />
+          <Field
+            label="Phone Number"
+            name="phone"
+            value={form.phone}
+            onChange={handleChange}
+            readOnly={userLocked}
+            error={errors.phone}
+          />
+
+          <label className="block">
+            <span className={fieldLabelClass}>Position Applied</span>
+            <select
+              className={fieldInputClass}
+              name="jobId"
+              value={form.jobId}
+              onChange={handleChange}
+              disabled={!jobs.length}
+            >
+              <option value="">Select role</option>
+              {jobs.map((job) => (
+                <option key={job.id} value={job.id}>
+                  {job.title}
+                </option>
+              ))}
+            </select>
+            {errors.jobId ? <FieldError>{errors.jobId}</FieldError> : null}
+          </label>
+        </div>
+
+        <label className="block">
+          <span className={fieldLabelClass}>Resume / CV Upload</span>
+          <div className="relative mt-2 rounded-[1rem] border-2 border-dashed border-[color:var(--border)] bg-[color:var(--surface-muted)] p-5 text-center transition hover:border-[color:var(--border-strong)]">
+            <input
+              className="absolute inset-0 z-10 cursor-pointer opacity-0"
+              type="file"
+              accept=".pdf,.doc,.docx"
+              name="file"
+              onChange={handleChange}
+            />
+            <UploadCloud className="mx-auto h-7 w-7 text-[color:var(--text-muted)]" />
+            <p className="mt-2 text-sm text-[color:var(--text-secondary)]">
+              Drag and drop your file or <span className="font-semibold text-[color:var(--text-primary)]">browse</span>
+            </p>
+            <p className="mt-1 text-xs text-[color:var(--text-muted)]">
+              {form.file?.name || "PDF or DOCX (Max 10MB)"}
+            </p>
+          </div>
+          {errors.file ? <FieldError>{errors.file}</FieldError> : null}
+        </label>
+
+        {showSelectedCard && selectedJob ? (
+          <div className="rounded-[1rem] border border-[color:var(--border)] bg-[color:var(--surface-strong)] p-4">
+            <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-[color:var(--text-muted)]">
+              Selected role
+            </p>
+            <p className="mt-2 text-lg font-semibold text-[color:var(--text-primary)]">{selectedJob.title}</p>
+            <p className="mt-1 text-sm text-[color:var(--text-secondary)]">{selectedJob.location}</p>
+            <p className="mt-3 text-sm leading-7 text-[color:var(--text-secondary)]">{selectedJob.skills}</p>
+          </div>
+        ) : null}
+
+        {!jobs.length ? (
+          <p className="text-sm text-[color:var(--text-secondary)]">
+            No active roles yet. Add jobs from dashboard to enable applications.
+          </p>
+        ) : null}
+
+        {status.message ? (
+          <div
+            className={
+              status.type === "success"
+                ? "rounded-[0.9rem] border border-emerald-500/25 bg-emerald-500/10 px-4 py-3 text-sm text-emerald-200"
+                : "rounded-[0.9rem] border border-rose-500/25 bg-rose-500/10 px-4 py-3 text-sm text-rose-200"
+            }
+          >
+            {status.message}
+          </div>
+        ) : null}
+
+        <button
+          className="inline-flex w-full items-center justify-center rounded-full bg-[linear-gradient(135deg,var(--accent),var(--accent-strong))] px-6 py-3.5 text-sm font-bold text-[color:var(--button-ink)] transition hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-70"
+          type="submit"
+          disabled={isSubmitting || !jobs.length}
+        >
+          {isSubmitting ? "Submitting..." : "Initiate Application"}
+        </button>
+      </form>
+    </div>
+  );
+}
+
+function Field({ label, error, ...props }) {
+  return (
+    <label className="block">
+      <span className={fieldLabelClass}>{label}</span>
+      <input className={fieldInputClass} {...props} />
+      {error ? <FieldError>{error}</FieldError> : null}
+    </label>
+  );
+}
+
+function FieldError({ children }) {
+  return <span className="mt-2 block text-xs text-rose-300">{children}</span>;
+}
+
+function AccessBanner({ session, loginHref, registerHref, onLogout }) {
+  if (isUserSession(session)) {
+    return (
+      <div className="mb-6 rounded-2xl border border-emerald-500/20 bg-emerald-500/10 px-4 py-3 text-sm text-emerald-100">
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+          <div>
+            <p className="font-semibold">
+              Logged in as {session.username || session.email}
+            </p>
+            <p className="mt-1 text-xs text-emerald-100/80">
+              {session.email}
+              {session.contact ? ` / ${session.contact}` : ""}
+            </p>
+          </div>
+          <button
+            type="button"
+            onClick={onLogout}
+            className="rounded-full border border-emerald-400/20 px-4 py-2 text-xs font-semibold uppercase tracking-[0.18em] text-emerald-50 transition hover:bg-emerald-500/10"
+          >
+            Logout
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="mb-6 rounded-2xl border border-amber-500/20 bg-amber-500/10 px-4 py-4 text-sm text-amber-100">
+      <p className="font-semibold">
+        User login is required before applying for any job.
+      </p>
+      <p className="mt-2 text-xs leading-6 text-amber-100/85">
+        Register first, then your user profile will be used for job applications.
+      </p>
+      <div className="mt-3 flex flex-wrap gap-3">
+        <Link
+          href={loginHref}
+          className="rounded-full bg-white px-4 py-2 text-xs font-semibold uppercase tracking-[0.18em] text-[#5b3d00] transition hover:bg-amber-50"
+        >
+          User Login
+        </Link>
+        <Link
+          href={registerHref}
+          className="rounded-full border border-amber-100/30 px-4 py-2 text-xs font-semibold uppercase tracking-[0.18em] text-amber-50 transition hover:bg-amber-500/10"
+        >
+          Register
+        </Link>
+      </div>
+    </div>
+  );
+}

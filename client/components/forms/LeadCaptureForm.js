@@ -1,0 +1,720 @@
+"use client";
+
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { startTransition, useEffect, useMemo, useState } from "react";
+import { Grid3X3, Rocket } from "lucide-react";
+
+import {
+  buildLoginHref,
+  buildRegisterHref,
+  clearStoredSession,
+  isUserSession,
+  readStoredSession,
+} from "@/lib/auth-session";
+import {
+  Eyebrow,
+  Panel,
+  inputClass,
+  labelClass,
+  primaryButtonClass,
+  selectClass,
+  textareaClass,
+} from "@/components/site/UiBits";
+
+const initialState = {
+  name: "",
+  company: "",
+  email: "",
+  phone: "",
+  serviceInterest: "",
+  budget: "",
+  timeline: "",
+  message: "",
+};
+
+const budgetOptions = [
+  { value: "", label: "Select budget range" },
+  { value: "25k-50k", label: "$25k - $50k" },
+  { value: "50k-150k", label: "$50k - $150k" },
+  { value: "150k-plus", label: "$150k+" },
+  { value: "guidance", label: "Need budget guidance" },
+];
+
+const timelineOptions = [
+  { value: "", label: "Select timeline" },
+  { value: "rapid-4-8-weeks", label: "Rapid Deployment (4-8 weeks)" },
+  { value: "standard-3-6-months", label: "Standard Mission (3-6 months)" },
+  { value: "strategic-6-plus-months", label: "Strategic Long-term (6+ months)" },
+  { value: "need-recommendation", label: "Need recommendation" },
+];
+
+function validate(values) {
+  const errors = {};
+
+  if (!values.name.trim()) {
+    errors.name = "Please enter your name";
+  }
+
+  if (!values.email.trim()) {
+    errors.email = "Please enter your email";
+  } else if (!/^\S+@\S+\.\S+$/.test(values.email)) {
+    errors.email = "Please enter a valid email";
+  }
+
+  if (values.phone && !/^\+?[0-9\s-]{10,15}$/.test(values.phone)) {
+    errors.phone = "Please enter a valid contact number";
+  }
+
+  if (!values.message.trim()) {
+    errors.message = "Please describe your requirement";
+  }
+
+  return errors;
+}
+
+export default function LeadCaptureForm({
+  compact = false,
+  defaultService = "",
+  serviceOptions = [],
+  appearance = "default",
+}) {
+  const pathname = usePathname();
+  const [form, setForm] = useState({ ...initialState, serviceInterest: defaultService });
+  const [errors, setErrors] = useState({});
+  const [status, setStatus] = useState({ type: "", message: "" });
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [session, setSession] = useState(null);
+
+  const normalizedServiceOptions = useMemo(() => {
+    const options = serviceOptions.map((option) =>
+      typeof option === "string"
+        ? { value: option, label: option }
+        : option
+    );
+
+    if (defaultService && !options.some((option) => option.value === defaultService)) {
+      options.unshift({ value: defaultService, label: defaultService });
+    }
+
+    return [{ value: "", label: "Select a service" }, ...options];
+  }, [defaultService, serviceOptions]);
+
+  useEffect(() => {
+    if (defaultService) {
+      setForm((current) => ({ ...current, serviceInterest: defaultService }));
+    }
+  }, [defaultService]);
+
+  useEffect(() => {
+    function syncSession() {
+      const nextSession = readStoredSession();
+      setSession(nextSession);
+
+      if (isUserSession(nextSession)) {
+        setForm((current) => ({
+          ...current,
+          name: nextSession.username || current.name,
+          email: nextSession.email || current.email,
+          phone: nextSession.contact || current.phone,
+        }));
+      }
+    }
+
+    syncSession();
+    window.addEventListener("storage", syncSession);
+
+    return () => {
+      window.removeEventListener("storage", syncSession);
+    };
+  }, []);
+
+  const orbitalFieldLabelClass =
+    "text-[10px] font-bold uppercase tracking-[0.18em] text-[color:var(--text-muted)]";
+  const orbitalFieldInputClass =
+    "mt-2 w-full rounded-[0.95rem] border border-[color:var(--border)] bg-[color:var(--surface-strong)] px-4 py-3.5 text-sm text-[color:var(--text-primary)] outline-none transition placeholder:text-[color:var(--text-muted)] focus:border-[color:var(--border-strong)] focus:ring-2 focus:ring-[color:var(--ring)]";
+  const userLocked = isUserSession(session);
+  const loginHref = buildLoginHref(pathname || "/contact");
+  const registerHref = buildRegisterHref(pathname || "/contact");
+
+  function handleChange(event) {
+    const { name, value } = event.target;
+    setForm((current) => ({ ...current, [name]: value }));
+    setErrors((current) => ({ ...current, [name]: "" }));
+  }
+
+  async function handleSubmit(event) {
+    event.preventDefault();
+
+    if (!userLocked) {
+      setStatus({
+        type: "error",
+        message: "User login or registration is required before submitting the contact form.",
+      });
+      return;
+    }
+
+    const nextErrors = validate(form);
+
+    if (Object.keys(nextErrors).length > 0) {
+      setErrors(nextErrors);
+      return;
+    }
+
+    setIsSubmitting(true);
+    setStatus({ type: "", message: "" });
+
+    startTransition(async () => {
+      try {
+        const response = await fetch("/api/cms/leads", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${session.token}`,
+          },
+          body: JSON.stringify(form),
+        });
+
+        const payload = await response.json();
+
+        if (!response.ok) {
+          setErrors(payload.errors || {});
+          setStatus({
+            type: "error",
+            message: payload.error || "We could not submit the form right now.",
+          });
+          return;
+        }
+
+        setForm({
+          ...initialState,
+          serviceInterest: defaultService,
+          name: session.username || "",
+          email: session.email || "",
+          phone: session.contact || "",
+        });
+        setStatus({
+          type: "success",
+          message: "Requirement received. We will get back to you shortly.",
+        });
+      } catch {
+        setStatus({
+          type: "error",
+          message: "Something went wrong while submitting the form.",
+        });
+      } finally {
+        setIsSubmitting(false);
+      }
+    });
+  }
+
+  if (appearance === "architect") {
+    return (
+      <div className="relative overflow-hidden rounded-2xl bg-[color:var(--surface-container-high)] p-8 shadow-[var(--shadow-soft)] sm:p-10">
+        <div className="absolute right-0 top-0 h-32 w-32 rounded-full bg-[color:var(--accent)]/5 blur-2xl" />
+
+        <div className="relative">
+          <AccessBanner
+            session={session}
+            loginHref={loginHref}
+            registerHref={registerHref}
+            onLogout={() => {
+              clearStoredSession();
+              setSession(null);
+              setForm((current) => ({
+                ...current,
+                name: "",
+                email: "",
+                phone: "",
+              }));
+            }}
+          />
+          <h3 className="font-headline text-2xl font-bold tracking-tight text-[color:var(--text-primary)]">
+            Quick Enquiry
+          </h3>
+          <p className="mt-2 text-sm leading-7 text-[color:var(--text-secondary)]">
+            Start your journey toward premium digital execution today.
+          </p>
+
+          <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
+            <MinimalField
+              label="Your Name"
+              name="name"
+              value={form.name}
+              onChange={handleChange}
+              readOnly={userLocked}
+              error={errors.name}
+              placeholder="John Architect"
+            />
+
+            <MinimalField
+              label="Work Email"
+              name="email"
+              type="email"
+              value={form.email}
+              onChange={handleChange}
+              readOnly={userLocked}
+              error={errors.email}
+              placeholder="john@company.com"
+            />
+
+            <MinimalTextarea
+              label="Project Brief"
+              name="message"
+              value={form.message}
+              onChange={handleChange}
+              error={errors.message}
+              placeholder="Tell us about your technical goals..."
+            />
+
+            {status.message ? (
+              <div
+                className={
+              status.type === "success"
+                    ? "rounded-xl border border-emerald-500/20 bg-emerald-500/10 px-4 py-3 text-sm text-emerald-200"
+                    : "rounded-xl border border-rose-500/20 bg-rose-500/10 px-4 py-3 text-sm text-rose-200"
+                }
+              >
+                {status.message}
+              </div>
+            ) : null}
+
+            <button
+              className="w-full rounded-xl bg-[linear-gradient(135deg,var(--accent),var(--accent-strong))] px-6 py-4 font-headline text-sm font-bold text-white shadow-[var(--shadow-accent)] transition hover:brightness-105"
+              type="submit"
+              disabled={isSubmitting}
+            >
+              {isSubmitting ? "Submitting..." : "Send Blueprint Request"}
+            </button>
+          </form>
+        </div>
+      </div>
+    );
+  }
+
+  if (appearance === "orbital") {
+    return (
+      <div className="relative overflow-hidden rounded-[1.25rem] border border-[color:var(--border)] bg-[color:var(--surface)] p-6 shadow-[0_30px_90px_rgba(0,0,0,0.4)] backdrop-blur-md sm:p-8">
+        <div className="pointer-events-none absolute right-4 top-4 opacity-25">
+          <Grid3X3 className="h-7 w-7 text-[color:var(--text-muted)]" />
+        </div>
+
+        <AccessBanner
+          session={session}
+          loginHref={loginHref}
+          registerHref={registerHref}
+          onLogout={() => {
+            clearStoredSession();
+            setSession(null);
+            setForm((current) => ({
+              ...current,
+              name: "",
+              email: "",
+              phone: "",
+            }));
+          }}
+        />
+
+        <form
+          className="relative z-10 grid grid-cols-1 gap-5 md:grid-cols-2"
+          onSubmit={handleSubmit}
+        >
+          <label className="block">
+            <span className={orbitalFieldLabelClass}>Full Name</span>
+            <input
+              className={orbitalFieldInputClass}
+              name="name"
+              value={form.name}
+              onChange={handleChange}
+              readOnly={userLocked}
+              placeholder="Commander Name"
+            />
+            {errors.name ? <FieldError>{errors.name}</FieldError> : null}
+          </label>
+
+          <label className="block">
+            <span className={orbitalFieldLabelClass}>Company</span>
+            <input
+              className={orbitalFieldInputClass}
+              name="company"
+              value={form.company}
+              onChange={handleChange}
+              placeholder="Organization"
+            />
+            {errors.company ? <FieldError>{errors.company}</FieldError> : null}
+          </label>
+
+          <label className="block">
+            <span className={orbitalFieldLabelClass}>Email Address</span>
+            <input
+              className={orbitalFieldInputClass}
+              type="email"
+              name="email"
+              value={form.email}
+              onChange={handleChange}
+              readOnly={userLocked}
+              placeholder="official@domain.com"
+            />
+            {errors.email ? <FieldError>{errors.email}</FieldError> : null}
+          </label>
+
+          <label className="block">
+            <span className={orbitalFieldLabelClass}>Phone Number</span>
+            <input
+              className={orbitalFieldInputClass}
+              name="phone"
+              value={form.phone}
+              onChange={handleChange}
+              readOnly={userLocked}
+              placeholder="+1 (000) 000-0000"
+            />
+            {errors.phone ? <FieldError>{errors.phone}</FieldError> : null}
+          </label>
+
+          <label className="block">
+            <span className={orbitalFieldLabelClass}>Service Needed</span>
+            <select
+              className={orbitalFieldInputClass}
+              name="serviceInterest"
+              value={form.serviceInterest}
+              onChange={handleChange}
+            >
+              {normalizedServiceOptions.map((option) => (
+                <option
+                  key={`orbital-service-${option.value || option.label}`}
+                  value={option.value}
+                >
+                  {option.label}
+                </option>
+              ))}
+            </select>
+            {errors.serviceInterest ? <FieldError>{errors.serviceInterest}</FieldError> : null}
+          </label>
+
+          <label className="block">
+            <span className={orbitalFieldLabelClass}>Approx Budget</span>
+            <select
+              className={orbitalFieldInputClass}
+              name="budget"
+              value={form.budget}
+              onChange={handleChange}
+            >
+              {budgetOptions.map((option) => (
+                <option
+                  key={`orbital-budget-${option.value || option.label}`}
+                  value={option.value}
+                >
+                  {option.label}
+                </option>
+              ))}
+            </select>
+            {errors.budget ? <FieldError>{errors.budget}</FieldError> : null}
+          </label>
+
+          <label className="block md:col-span-2">
+            <span className={orbitalFieldLabelClass}>Preferred Timeline</span>
+            <select
+              className={orbitalFieldInputClass}
+              name="timeline"
+              value={form.timeline}
+              onChange={handleChange}
+            >
+              {timelineOptions.map((option) => (
+                <option
+                  key={`orbital-timeline-${option.value || option.label}`}
+                  value={option.value}
+                >
+                  {option.label}
+                </option>
+              ))}
+            </select>
+            {errors.timeline ? <FieldError>{errors.timeline}</FieldError> : null}
+          </label>
+
+          <label className="block md:col-span-2">
+            <span className={orbitalFieldLabelClass}>Project Brief</span>
+            <textarea
+              className={`${orbitalFieldInputClass} min-h-[128px] resize-none`}
+              rows={5}
+              name="message"
+              value={form.message}
+              onChange={handleChange}
+              placeholder="Detail your mission requirements here..."
+            />
+            {errors.message ? <FieldError>{errors.message}</FieldError> : null}
+          </label>
+
+          {status.message ? (
+            <div
+              className={`md:col-span-2 rounded-[0.9rem] px-4 py-3 text-sm ${
+                status.type === "success"
+                  ? "border border-emerald-500/25 bg-emerald-500/10 text-emerald-200"
+                  : "border border-rose-500/25 bg-rose-500/10 text-rose-200"
+              }`}
+            >
+              {status.message}
+            </div>
+          ) : null}
+
+          <div className="md:col-span-2">
+            <button
+              className="group inline-flex w-full items-center justify-center gap-2 rounded-full bg-[linear-gradient(135deg,var(--accent),var(--accent-strong))] px-6 py-4 font-headline text-sm font-bold text-white transition hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-70"
+              type="submit"
+              disabled={isSubmitting}
+            >
+              {isSubmitting ? "Submitting..." : "Initiate Signal Transfer"}
+              <Rocket className="h-4.5 w-4.5 transition group-hover:translate-x-0.5" />
+            </button>
+          </div>
+        </form>
+      </div>
+    );
+  }
+
+  return (
+    <Panel className="overflow-hidden p-0">
+      <div className="border-b border-[color:var(--border)] bg-[linear-gradient(135deg,var(--accent),var(--accent-strong))] px-5 py-6 text-white sm:px-6 sm:py-7">
+        <Eyebrow className="border-white/15 bg-white/10 text-white">
+          {compact ? "Quick enquiry" : "Requirement form"}
+        </Eyebrow>
+        <h3 className="mt-4 font-headline text-2xl font-black tracking-tighter text-white sm:text-3xl">
+          {compact ? "Tell us what needs to improve." : "Share the requirement and we will shape the right next step."}
+        </h3>
+        <p className="mt-3 text-sm leading-7 text-blue-50">
+          {compact
+            ? "Use this form for website, software, dashboard, SEO or admin workflow requirements."
+            : "Add business context, service priority and project expectations so the team can respond with more clarity."}
+        </p>
+      </div>
+
+      <form className="space-y-6 p-5 sm:p-6" onSubmit={handleSubmit}>
+        <AccessBanner
+          session={session}
+          loginHref={loginHref}
+          registerHref={registerHref}
+          onLogout={() => {
+            clearStoredSession();
+            setSession(null);
+            setForm((current) => ({
+              ...current,
+              name: "",
+              email: "",
+              phone: "",
+            }));
+          }}
+        />
+
+        <div className="grid gap-4 sm:grid-cols-2">
+          <Field
+            label="Full name"
+            name="name"
+            value={form.name}
+            onChange={handleChange}
+            readOnly={userLocked}
+            error={errors.name}
+            placeholder="Your full name"
+          />
+          <Field
+            label="Company"
+            name="company"
+            value={form.company}
+            onChange={handleChange}
+            error={errors.company}
+            placeholder="Business or company name"
+          />
+          <Field
+            label="Email"
+            name="email"
+            type="email"
+            value={form.email}
+            onChange={handleChange}
+            readOnly={userLocked}
+            error={errors.email}
+            placeholder="name@company.com"
+          />
+          <Field
+            label="Phone"
+            name="phone"
+            value={form.phone}
+            onChange={handleChange}
+            readOnly={userLocked}
+            error={errors.phone}
+            placeholder="+91"
+          />
+          <SelectField
+            label="Service needed"
+            name="serviceInterest"
+            value={form.serviceInterest}
+            onChange={handleChange}
+            options={normalizedServiceOptions}
+            error={errors.serviceInterest}
+          />
+          <SelectField
+            label="Approx budget"
+            name="budget"
+            value={form.budget}
+            onChange={handleChange}
+            options={budgetOptions}
+            error={errors.budget}
+          />
+        </div>
+
+        <SelectField
+          label="Preferred timeline"
+          name="timeline"
+          value={form.timeline}
+          onChange={handleChange}
+          options={timelineOptions}
+          error={errors.timeline}
+        />
+
+        <label className="block">
+          <span className={labelClass}>Project brief</span>
+          <textarea
+            className={textareaClass}
+            rows={compact ? 4 : 6}
+            name="message"
+            value={form.message}
+            onChange={handleChange}
+            placeholder="Tell us what needs to improve, what the website or software must do, and what success looks like."
+          />
+          {errors.message ? <FieldError>{errors.message}</FieldError> : null}
+        </label>
+
+        {status.message ? (
+          <div
+            className={
+              status.type === "success"
+                ? "rounded-2xl border border-emerald-500/20 bg-emerald-500/10 px-4 py-3 text-sm text-emerald-200"
+                : "rounded-2xl border border-rose-500/20 bg-rose-500/10 px-4 py-3 text-sm text-rose-200"
+            }
+          >
+            {status.message}
+          </div>
+        ) : null}
+
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+          <p className="text-xs leading-6 text-[color:var(--text-muted)]">
+            Submitted enquiries are stored for dashboard review and follow-up.
+          </p>
+          <button className={`${primaryButtonClass} w-full sm:w-auto`} type="submit" disabled={isSubmitting}>
+            {isSubmitting ? "Submitting..." : "Submit requirement"}
+          </button>
+        </div>
+      </form>
+    </Panel>
+  );
+}
+
+function Field({ label, error, ...props }) {
+  return (
+    <label className="block">
+      <span className={labelClass}>{label}</span>
+      <input className={inputClass} {...props} />
+      {error ? <FieldError>{error}</FieldError> : null}
+    </label>
+  );
+}
+
+function SelectField({ label, error, options, ...props }) {
+  return (
+    <label className="block">
+      <span className={labelClass}>{label}</span>
+      <select className={selectClass} {...props}>
+        {options.map((option) => (
+          <option key={`${label}-${option.value || option.label}`} value={option.value}>
+            {option.label}
+          </option>
+        ))}
+      </select>
+      {error ? <FieldError>{error}</FieldError> : null}
+    </label>
+  );
+}
+
+function FieldError({ children }) {
+  return <span className="mt-2 block text-xs text-rose-300">{children}</span>;
+}
+
+function AccessBanner({ session, loginHref, registerHref, onLogout }) {
+  if (isUserSession(session)) {
+    return (
+      <div className="mb-6 rounded-2xl border border-emerald-500/20 bg-emerald-500/10 px-4 py-3 text-sm text-emerald-100">
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+          <div>
+            <p className="font-semibold">
+              Logged in as {session.username || session.email}
+            </p>
+            <p className="mt-1 text-xs text-emerald-100/80">
+              {session.email}
+              {session.contact ? ` / ${session.contact}` : ""}
+            </p>
+          </div>
+          <button
+            type="button"
+            onClick={onLogout}
+            className="rounded-full border border-emerald-400/20 px-4 py-2 text-xs font-semibold uppercase tracking-[0.18em] text-emerald-50 transition hover:bg-emerald-500/10"
+          >
+            Logout
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="mb-6 rounded-2xl border border-amber-500/20 bg-amber-500/10 px-4 py-4 text-sm text-amber-100">
+      <p className="font-semibold">
+        User login is required before submitting the contact form.
+      </p>
+      <p className="mt-2 text-xs leading-6 text-amber-100/85">
+        Register once, then your saved user profile will be used for contact requests.
+      </p>
+      <div className="mt-3 flex flex-wrap gap-3">
+        <Link
+          href={loginHref}
+          className="rounded-full bg-white px-4 py-2 text-xs font-semibold uppercase tracking-[0.18em] text-[#5b3d00] transition hover:bg-amber-50"
+        >
+          User Login
+        </Link>
+        <Link
+          href={registerHref}
+          className="rounded-full border border-amber-100/30 px-4 py-2 text-xs font-semibold uppercase tracking-[0.18em] text-amber-50 transition hover:bg-amber-500/10"
+        >
+          Register
+        </Link>
+      </div>
+    </div>
+  );
+}
+
+function MinimalField({ label, error, ...props }) {
+  return (
+    <label className="block">
+      <span className="text-xs font-bold uppercase tracking-[0.24em] text-[color:var(--text-muted)]">
+        {label}
+      </span>
+      <input
+        className="mt-2 w-full border-0 border-b border-[color:var(--border)] bg-transparent px-0 py-2 text-sm text-[color:var(--text-primary)] outline-none transition placeholder:text-[color:var(--text-muted)] focus:border-[color:var(--accent)] focus:ring-0"
+        {...props}
+      />
+      {error ? <FieldError>{error}</FieldError> : null}
+    </label>
+  );
+}
+
+function MinimalTextarea({ label, error, ...props }) {
+  return (
+    <label className="block">
+      <span className="text-xs font-bold uppercase tracking-[0.24em] text-[color:var(--text-muted)]">
+        {label}
+      </span>
+      <textarea
+        className="mt-2 w-full resize-none border-0 border-b border-[color:var(--border)] bg-transparent px-0 py-2 text-sm text-[color:var(--text-primary)] outline-none transition placeholder:text-[color:var(--text-muted)] focus:border-[color:var(--accent)] focus:ring-0"
+        rows={3}
+        {...props}
+      />
+      {error ? <FieldError>{error}</FieldError> : null}
+    </label>
+  );
+}
