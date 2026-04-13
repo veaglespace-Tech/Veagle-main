@@ -3,7 +3,7 @@ spring:
     name: VeagleSpaceTech
 
   datasource:
-    url: jdbc:mysql://localhost:3306/veagledb?createDatabaseIfNotExist=true&useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Kolkata
+    url: ${DB_URL:jdbc:mysql://localhost:3306/veagledb?createDatabaseIfNotExist=true&useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Kolkata}
     username: ${DB_USERNAME:root}
     password: ${DB_PASSWORD:Veagle@123}
     driver-class-name: com.mysql.cj.jdbc.Driver
@@ -12,6 +12,9 @@ spring:
     hibernate:
       ddl-auto: update
     show-sql: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQLDialect
 
   mail:
     host: smtp.gmail.com
@@ -24,6 +27,8 @@ spring:
           auth: true
           starttls:
             enable: true
+          ssl:
+            trust: smtp.gmail.com
 
   servlet:
     multipart:

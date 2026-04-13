@@ -50,6 +50,10 @@ const timelineOptions = [
   { value: "strategic-6-plus-months", label: "Strategic Long-term (6+ months)" },
   { value: "need-recommendation", label: "Need recommendation" },
 ];
+const accessBannerClass =
+  "mb-6 rounded-[1.35rem] border border-[color:var(--border-strong)] bg-[linear-gradient(135deg,rgba(25,94,226,0.18),rgba(18,22,30,0.94))] px-4 py-4 text-sm text-[color:var(--text-primary)] shadow-[color:var(--shadow-soft)] backdrop-blur-md";
+const compactActionButtonClass =
+  "min-h-0 px-4 py-2 text-xs uppercase tracking-[0.18em]";
 
 function validate(values) {
   const errors = {};
@@ -651,7 +655,7 @@ function AccessBanner({ session, loginHref, registerHref, onLogout }) {
           <button
             type="button"
             onClick={onLogout}
-            className={`${secondaryButtonClass} min-h-0 border-emerald-400/20 bg-transparent px-4 py-2 text-xs uppercase tracking-[0.18em] text-emerald-50 hover:bg-emerald-500/10`}
+            className={`${secondaryButtonClass} ${compactActionButtonClass}`}
           >
             Logout
           </button>
@@ -661,23 +665,23 @@ function AccessBanner({ session, loginHref, registerHref, onLogout }) {
   }
 
   return (
-    <div className="mb-6 rounded-2xl border border-amber-500/20 bg-amber-500/10 px-4 py-4 text-sm text-amber-100">
+    <div className={accessBannerClass}>
       <p className="font-semibold">
         Login is optional, but it auto-fills your details.
       </p>
-      <p className="mt-2 text-xs leading-6 text-amber-100/85">
+      <p className="mt-2 text-xs leading-6 text-[color:var(--text-secondary)]">
         You can submit as a guest, or sign in for faster form completion.
       </p>
       <div className="mt-3 flex flex-wrap gap-3">
         <Link
           href={loginHref}
-          className="inline-flex min-h-0 items-center justify-center rounded-full border border-[color:var(--border-strong)] bg-[color:var(--text-primary)] px-4 py-2 text-xs font-bold uppercase tracking-[0.18em] text-[color:var(--accent)] transition duration-300 hover:brightness-95"
+          className={`${primaryButtonClass} ${compactActionButtonClass}`}
         >
           User Login
         </Link>
         <Link
           href={registerHref}
-          className="inline-flex min-h-0 items-center justify-center rounded-full border border-[color:var(--border-strong)] bg-[color:var(--surface-strong)] px-4 py-2 text-xs font-bold uppercase tracking-[0.18em] text-[color:var(--text-primary)] transition duration-300 hover:bg-[color:var(--surface)]"
+          className={`${secondaryButtonClass} ${compactActionButtonClass}`}
         >
           Register
         </Link>

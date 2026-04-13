@@ -12,6 +12,10 @@ import {
   isUserSession,
   readStoredSession,
 } from "@/lib/auth-session";
+import {
+  primaryButtonClass,
+  secondaryButtonClass,
+} from "@/components/site/UiBits";
 import { postJobApplication } from "@/lib/backend";
 import { cn } from "@/lib/utils";
 
@@ -57,6 +61,10 @@ const fieldLabelClass =
   "text-[10px] font-semibold uppercase tracking-[0.2em] text-[color:var(--text-muted)]";
 const fieldInputClass =
   "mt-2 w-full rounded-[0.9rem] border border-[color:var(--border)] bg-[color:var(--surface-strong)] px-4 py-3 text-sm text-[color:var(--text-primary)] outline-none transition placeholder:text-[color:var(--text-muted)] focus:border-[color:var(--border-strong)] focus:ring-2 focus:ring-[color:var(--ring)]";
+const accessBannerClass =
+  "mb-6 rounded-[1.35rem] border border-[color:var(--border-strong)] bg-[linear-gradient(135deg,rgba(25,94,226,0.18),rgba(18,22,30,0.94))] px-4 py-4 text-sm text-[color:var(--text-primary)] shadow-[color:var(--shadow-soft)] backdrop-blur-md";
+const compactActionButtonClass =
+  "min-h-0 px-4 py-2 text-xs uppercase tracking-[0.18em]";
 
 export default function JobApplicationForm({
   jobs = [],
@@ -283,7 +291,10 @@ export default function JobApplicationForm({
         ) : null}
 
         <button
-          className="inline-flex w-full items-center justify-center rounded-full bg-[linear-gradient(135deg,var(--accent),var(--accent-strong))] px-6 py-3.5 text-sm font-bold text-[color:var(--button-ink)] transition hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-70"
+          className={cn(
+            primaryButtonClass,
+            "w-full disabled:cursor-not-allowed disabled:opacity-70"
+          )}
           type="submit"
           disabled={isSubmitting || !jobs.length}
         >
@@ -325,7 +336,7 @@ function AccessBanner({ session, loginHref, registerHref, onLogout }) {
           <button
             type="button"
             onClick={onLogout}
-            className="rounded-full border border-emerald-400/20 px-4 py-2 text-xs font-semibold uppercase tracking-[0.18em] text-emerald-50 transition hover:bg-emerald-500/10"
+            className={cn(secondaryButtonClass, compactActionButtonClass)}
           >
             Logout
           </button>
@@ -335,23 +346,23 @@ function AccessBanner({ session, loginHref, registerHref, onLogout }) {
   }
 
   return (
-    <div className="mb-6 rounded-2xl border border-amber-500/20 bg-amber-500/10 px-4 py-4 text-sm text-amber-100">
+    <div className={accessBannerClass}>
       <p className="font-semibold">
         Login is optional, but it auto-fills your application details.
       </p>
-      <p className="mt-2 text-xs leading-6 text-amber-100/85">
+      <p className="mt-2 text-xs leading-6 text-[color:var(--text-secondary)]">
         Apply as a guest, or sign in to reuse your saved profile.
       </p>
       <div className="mt-3 flex flex-wrap gap-3">
         <Link
           href={loginHref}
-          className="rounded-full bg-white px-4 py-2 text-xs font-semibold uppercase tracking-[0.18em] text-[#5b3d00] transition hover:bg-amber-50"
+          className={cn(primaryButtonClass, compactActionButtonClass)}
         >
           User Login
         </Link>
         <Link
           href={registerHref}
-          className="rounded-full border border-amber-100/30 px-4 py-2 text-xs font-semibold uppercase tracking-[0.18em] text-amber-50 transition hover:bg-amber-500/10"
+          className={cn(secondaryButtonClass, compactActionButtonClass)}
         >
           Register
         </Link>

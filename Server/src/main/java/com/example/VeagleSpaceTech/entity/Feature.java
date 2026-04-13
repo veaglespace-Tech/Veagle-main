@@ -20,4 +20,29 @@ public class Feature {
     @ManyToOne
     @JoinColumn(name = "service_id")
     private Services service;
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public Services getService() {
+		return service;
+	}
+
+	public void setService(Services service) {
+		this.service = service;
+	}
+    
 }

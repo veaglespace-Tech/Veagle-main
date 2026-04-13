@@ -5,6 +5,8 @@ import com.example.VeagleSpaceTech.DTO.response.CategoryResponseDTO;
 import com.example.VeagleSpaceTech.entity.Category;
 import com.example.VeagleSpaceTech.service.CategoryService;
 import lombok.RequiredArgsConstructor;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -15,7 +17,8 @@ import java.util.List;
 @RequiredArgsConstructor // if we use this then no need of @Autowire
 public class CategoryController {
 
-    private final CategoryService categoryService;
+	@Autowired
+    private  CategoryService categoryService;
 
     // GET ALL
     @GetMapping("/api/v1/categories")
