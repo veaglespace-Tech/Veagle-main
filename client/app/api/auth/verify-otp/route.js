@@ -44,12 +44,15 @@ export async function POST(request) {
     );
   }
 
+  const rawText = await response.text();
   let payload = null;
 
-  try {
-    payload = await response.json();
-  } catch {
-    payload = null;
+  if (rawText) {
+    try {
+      payload = JSON.parse(rawText);
+    } catch {
+      payload = null;
+    }
   }
 
   if (!response.ok) {
@@ -58,14 +61,21 @@ export async function POST(request) {
         error:
           payload?.message ||
           payload?.error ||
+          rawText ||
           "OTP verification failed. Please try again.",
       },
       { status: response.status }
     );
   }
 
+  if (typeof payload === "string") {
+    return Response.json({
+      message: payload,
+    });
+  }
+
   return Response.json({
     ...payload,
-    normalizedRole: normalizeRole(payload?.role),
+    normalizedRole: normalizeRole(payload?.normalizedRole || payload?.role),
   });
 }

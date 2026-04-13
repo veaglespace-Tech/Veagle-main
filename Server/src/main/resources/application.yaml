@@ -3,44 +3,35 @@ spring:
     name: VeagleSpaceTech
 
   datasource:
-    url: ${DB_URL:jdbc:mysql://localhost:3306/veagleDB?createDatabaseIfNotExist=true&useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Kolkata}
+    url: jdbc:mysql://localhost:3306/veagledb?createDatabaseIfNotExist=true&useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Kolkata
     username: ${DB_USERNAME:root}
-    password: ${DB_PASSWORD:root}
+    password: ${DB_PASSWORD:Veagle@123}
     driver-class-name: com.mysql.cj.jdbc.Driver
 
   jpa:
     hibernate:
       ddl-auto: update
     show-sql: true
-    properties:
-      hibernate:
-        dialect: org.hibernate.dialect.MySQLDialect
 
-
-  # Mail
-  mail: # ✅ MUST be inside spring
+  mail:
     host: smtp.gmail.com
     port: 587
-    username: singareakshay2004@gmail.com
-    password: rcckpmkrnkopufmv   # 🔐 IMPORTANT
+    username: ${MAIL_USER:singareakshay2004@gmail.com}
+    password: ${MAIL_PASS:rcckpmkrnkopufmv}
     properties:
       mail:
         smtp:
           auth: true
           starttls:
             enable: true
-          ssl:
-            trust: smtp.gmail.com
+
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 15MB
 
 jwt:
-  secret: mySuperSecretKeyForJwt1234567890123456
+  secret: ${JWT_SECRET:VeagleJwtSecretKey2026UltraSecure123!}
 
-
-# OAuth2
-
-#Client Id: 735312629615-mbccjjmkgcp3ieirq161l3br2debdo23.apps.googleusercontent.com -> for Google OAuth2
-
-#Client Id: Ov23lilMP2caQRCkvUUR  -> for Github OAuth2
-# Secrest Key:  57db9503a3bae308fa6dc791ef32a4777c0e39a5 -> github
-
-admin.secret: VeagleSpace
+admin:
+  secret: ${ADMIN_SECRET:admin123}

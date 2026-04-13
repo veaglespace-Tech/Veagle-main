@@ -106,8 +106,8 @@ export default function SiteHeader() {
               className={cn(
                 "font-headline text-sm font-medium tracking-tight transition-colors duration-300",
                 isActive(item.href)
-                  ? "border-b-2 border-[#195ee2] pb-1 text-[#195ee2]"
-                  : "text-[#d9e1f2] hover:text-white"
+                  ? "border-b-2 border-[color:var(--accent)] pb-1 text-[color:var(--accent)]"
+                  : "text-[color:var(--text-secondary)] hover:text-white"
               )}
             >
               {item.label}
@@ -120,8 +120,8 @@ export default function SiteHeader() {
               className={cn(
                 "inline-flex items-center gap-1 font-headline text-sm font-medium tracking-tight transition-colors duration-300",
                 isProductsActive
-                  ? "border-b-2 border-[#195ee2] pb-1 text-[#195ee2]"
-                  : "text-[#d9e1f2] hover:text-white"
+                  ? "border-b-2 border-[color:var(--accent)] pb-1 text-[color:var(--accent)]"
+                  : "text-[color:var(--text-secondary)] hover:text-white"
               )}
             >
               Products
@@ -137,7 +137,7 @@ export default function SiteHeader() {
                     className={cn(
                       "block rounded-xl px-3 py-2.5 font-headline text-sm font-medium transition",
                       isActive(item.href)
-                        ? "bg-[#195ee2] text-white"
+                        ? "bg-[color:var(--accent)] text-white"
                         : "text-[#c3c6d7] hover:bg-white/5 hover:text-white"
                     )}
                   >
@@ -155,8 +155,8 @@ export default function SiteHeader() {
               className={cn(
                 "font-headline text-sm font-medium tracking-tight transition-colors duration-300",
                 isActive(item.href)
-                  ? "border-b-2 border-[#195ee2] pb-1 text-[#195ee2]"
-                  : "text-[#d9e1f2] hover:text-white"
+                  ? "border-b-2 border-[color:var(--accent)] pb-1 text-[color:var(--accent)]"
+                  : "text-[color:var(--text-secondary)] hover:text-white"
               )}
             >
               {item.label}
@@ -168,7 +168,7 @@ export default function SiteHeader() {
           {isStaffSession(session) ? (
             <Link
               href="/portal"
-              className="font-headline text-sm font-medium text-[#d9e1f2] transition-colors hover:text-white"
+              className="font-headline text-sm font-medium text-[color:var(--text-secondary)] transition-colors hover:text-white"
             >
               Portal
             </Link>
@@ -177,14 +177,14 @@ export default function SiteHeader() {
             <button
               type="button"
               onClick={handleLogout}
-              className="font-headline text-sm font-medium text-[#d9e1f2] transition-colors hover:text-white"
+              className="font-headline text-sm font-medium text-[color:var(--text-secondary)] transition-colors hover:text-white"
             >
               Logout
             </button>
           ) : (
             <Link
               href="/login"
-              className="font-headline text-sm font-medium text-[#d9e1f2] transition-colors hover:text-white"
+              className="font-headline text-sm font-medium text-[color:var(--text-secondary)] transition-colors hover:text-white"
             >
               Login
             </Link>
@@ -219,7 +219,7 @@ export default function SiteHeader() {
                 className={cn(
                   "block rounded-xl px-4 py-3 font-headline text-sm font-medium transition",
                   isActive(item.href)
-                    ? "bg-[#195ee2] text-white"
+                    ? "bg-[color:var(--accent)] text-white"
                     : "bg-[color:var(--surface-strong)] text-[color:var(--text-primary)]"
                 )}
               >
@@ -228,7 +228,7 @@ export default function SiteHeader() {
             ))}
 
             <div className="rounded-xl border border-[color:var(--border)] bg-[color:var(--surface)] p-3">
-              <p className="px-2 pb-2 font-headline text-xs font-semibold uppercase tracking-[0.18em] text-[#9eb4ff]">
+              <p className="px-2 pb-2 font-headline text-xs font-semibold uppercase tracking-[0.18em] text-[color:var(--text-muted)]">
                 Products Menu
               </p>
               <div className="space-y-1">
@@ -240,7 +240,7 @@ export default function SiteHeader() {
                     className={cn(
                       "block rounded-lg px-3 py-2.5 font-headline text-sm font-medium transition",
                       isActive(item.href)
-                        ? "bg-[#195ee2] text-white"
+                        ? "bg-[color:var(--accent)] text-white"
                         : "text-[#c3c6d7] hover:bg-white/5 hover:text-white"
                     )}
                   >

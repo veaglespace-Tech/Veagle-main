@@ -186,7 +186,7 @@ export default function PortfolioPageContent({ content, portfolioData = [] }) {
         </div>
       </section>
 
-      <section className="sticky top-20 z-40 border-y border-white/[0.05] bg-[#131314]/88 px-4 py-5 backdrop-blur-md sm:px-6 lg:px-8">
+      <section className="sticky top-20 z-40 border-y border-white/[0.05] bg-[color:var(--page-bg)]/88 px-4 py-5 backdrop-blur-md sm:px-6 lg:px-8">
         <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-center gap-3">
           {filters.map((filter) => (
             <button

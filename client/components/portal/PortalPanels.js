@@ -37,7 +37,7 @@ export function OverviewPanel({ metrics, leads, visibleTasks }) {
       />
 
       <div className="grid gap-5 xl:grid-cols-[1.08fr_0.92fr]">
-        <div className="rounded-[1.8rem] border border-[color:var(--border)] bg-[linear-gradient(135deg,var(--accent),var(--accent-strong))] p-6 text-white shadow-[var(--shadow-accent)] sm:p-7">
+        <div className="rounded-[1.8rem] border border-[color:var(--border)] bg-[linear-gradient(135deg,var(--accent),var(--accent-strong))] p-6 text-white shadow-[color:var(--shadow-accent)] sm:p-7">
           <p className="text-xs font-bold uppercase tracking-[0.24em] text-white/70">
             Dashboard health
           </p>
@@ -166,7 +166,7 @@ export function ContentPanel({
       />
 
       <div className="grid gap-5 xl:grid-cols-[1.08fr_0.92fr]">
-        <div className="rounded-[1.8rem] border border-[color:var(--border)] bg-[linear-gradient(135deg,var(--accent),var(--accent-strong))] p-6 text-white shadow-[var(--shadow-accent)] sm:p-7">
+        <div className="rounded-[1.8rem] border border-[color:var(--border)] bg-[linear-gradient(135deg,var(--accent),var(--accent-strong))] p-6 text-white shadow-[color:var(--shadow-accent)] sm:p-7">
           <p className="text-xs font-bold uppercase tracking-[0.24em] text-white/70">
             Content workspace
           </p>

@@ -33,7 +33,7 @@ public class ClientController {
     }
 
     // ✅ CREATE (ADMIN)
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN','SADMIN')")
     @PostMapping("/api/v1/admin/clients")
     public ResponseEntity<ClientResponseDTO> createClient(
             @ModelAttribute ClientRequestDTO dto,
@@ -43,7 +43,7 @@ public class ClientController {
     }
 
     // ✅ UPDATE (ADMIN)
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN','SADMIN')")
     @PutMapping("/api/v1/admin/clients/{id}")
     public ResponseEntity<ClientResponseDTO> updateClient(
             @PathVariable Long id,
@@ -54,7 +54,7 @@ public class ClientController {
     }
 
     //  DELETE (ADMIN)
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN','SADMIN')")
     @DeleteMapping("/api/v1/admin/clients/{id}")
     public ResponseEntity<String> deleteClient(@PathVariable Long id) {
         clientService.deleteClient(id);

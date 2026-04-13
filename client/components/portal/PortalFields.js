@@ -19,23 +19,23 @@ export const portalShellClass =
 export const portalLayoutClass =
   "relative z-10 grid min-h-screen lg:grid-cols-[320px_minmax(0,1fr)] xl:grid-cols-[340px_minmax(0,1fr)]";
 export const portalSidebarClass =
-  "border-b border-[color:var(--border)] bg-[linear-gradient(180deg,#10141d,#171b24)] p-4 shadow-[var(--shadow-soft)] backdrop-blur-xl lg:sticky lg:top-0 lg:h-screen lg:overflow-y-auto lg:border-b-0 lg:border-r lg:p-6";
+  "border-b border-[color:var(--border)] bg-[linear-gradient(180deg,#10141d,#171b24)] p-4 shadow-[color:var(--shadow-soft)] backdrop-blur-xl lg:sticky lg:top-0 lg:h-screen lg:overflow-y-auto lg:border-b-0 lg:border-r lg:p-6";
 export const portalCardClass =
-  "rounded-[1.8rem] border border-[color:var(--border)] bg-[linear-gradient(180deg,rgba(26,29,35,0.96),rgba(20,23,29,0.94))] p-5 shadow-[var(--shadow-card)] backdrop-blur-sm sm:p-6";
+  "rounded-[1.8rem] border border-[color:var(--border)] bg-[linear-gradient(180deg,rgba(26,29,35,0.96),rgba(20,23,29,0.94))] p-5 shadow-[color:var(--shadow-card)] backdrop-blur-sm sm:p-6";
 export const portalSubcardClass =
-  "rounded-[1.4rem] border border-[color:var(--border)] bg-[linear-gradient(180deg,rgba(27,31,39,0.96),rgba(20,23,29,0.92))] p-4 shadow-[var(--shadow-soft)]";
+  "rounded-[1.4rem] border border-[color:var(--border)] bg-[linear-gradient(180deg,rgba(27,31,39,0.96),rgba(20,23,29,0.92))] p-4 shadow-[color:var(--shadow-soft)]";
 export const portalTabListClass = "grid gap-2 sm:grid-cols-2 lg:grid-cols-1";
 export const portalTabClass = (active) =>
   cn(
     "group flex w-full items-center gap-3 rounded-[1.3rem] border px-4 py-3.5 text-left text-sm font-semibold transition duration-300 [&_svg]:shrink-0",
     active
-      ? "border-[#4e85f3] bg-[linear-gradient(135deg,rgba(25,94,226,0.24),rgba(179,197,255,0.16))] text-white shadow-[var(--shadow-accent)]"
+      ? "border-[#4e85f3] bg-[linear-gradient(135deg,rgba(25,94,226,0.24),rgba(179,197,255,0.16))] text-white shadow-[color:var(--shadow-accent)]"
       : "border-[color:var(--border)] bg-[rgba(255,255,255,0.03)] text-[color:var(--text-secondary)] hover:-translate-y-0.5 hover:border-[color:var(--border-strong)] hover:bg-[rgba(25,94,226,0.08)] hover:text-white"
   );
 export const portalButtonPrimaryClass =
-  "inline-flex items-center justify-center gap-2 rounded-full border border-transparent bg-[linear-gradient(135deg,var(--accent),var(--accent-strong))] px-5 py-3 text-sm font-bold text-[color:var(--button-ink)] shadow-[var(--shadow-accent)] transition duration-300 hover:-translate-y-0.5 hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-60";
+  "inline-flex items-center justify-center gap-2 rounded-full border border-transparent bg-[linear-gradient(135deg,var(--accent),var(--accent-strong))] px-5 py-3 text-sm font-bold text-[color:var(--button-ink)] shadow-[color:var(--shadow-accent)] transition duration-300 hover:-translate-y-0.5 hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-60";
 export const portalButtonSecondaryClass =
-  "inline-flex items-center justify-center gap-2 rounded-full border border-[color:var(--border)] bg-[rgba(255,255,255,0.04)] px-5 py-3 text-sm font-semibold text-[color:var(--text-primary)] shadow-[var(--shadow-soft)] backdrop-blur-[12px] transition duration-300 hover:-translate-y-0.5 hover:border-[color:var(--border-strong)] hover:bg-[rgba(25,94,226,0.1)] disabled:cursor-not-allowed disabled:opacity-60";
+  "inline-flex items-center justify-center gap-2 rounded-full border border-[color:var(--border)] bg-[rgba(255,255,255,0.04)] px-5 py-3 text-sm font-semibold text-[color:var(--text-primary)] shadow-[color:var(--shadow-soft)] backdrop-blur-[12px] transition duration-300 hover:-translate-y-0.5 hover:border-[color:var(--border-strong)] hover:bg-[rgba(25,94,226,0.1)] disabled:cursor-not-allowed disabled:opacity-60";
 export const portalInputClass = inputClass;
 export const portalSelectClass = selectClass;
 export const portalTextareaClass = textareaClass;

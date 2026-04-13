@@ -99,7 +99,7 @@ function modeBadgeClasses(mode) {
   }
 
   if (mode === "Hybrid") {
-    return "bg-[#195ee2]/16 text-[#9db8ff]";
+    return "bg-[color:var(--accent)]/16 text-[#9db8ff]";
   }
 
   return "bg-[#ffb1c5]/16 text-[#ffc7d5]";
@@ -151,7 +151,7 @@ export default function CareerPageContent({ jobs, content }) {
   const filters = departmentChips(jobs);
 
   return (
-    <main className="overflow-hidden bg-[#131314] text-[#e4e2e2]">
+    <main className="overflow-hidden bg-[color:var(--page-bg)] text-[color:var(--text-secondary)]">
       <section className="relative flex min-h-[70vh] items-center justify-center overflow-hidden px-4 pb-16 pt-28 sm:px-6 sm:pt-32 lg:px-8 lg:pt-36">
         <div className="absolute inset-0">
           <Image

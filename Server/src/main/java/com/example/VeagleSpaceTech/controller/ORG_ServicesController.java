@@ -68,7 +68,7 @@ public class ORG_ServicesController {
     }
 
    //  Update Service From DB
-   @PreAuthorize("hasRole('ADMIN')")
+   @PreAuthorize("hasAnyRole('ADMIN','SADMIN')")
    @PutMapping(value = "/api/v1/admin/services/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
    public ResponseEntity<ServicesResponseDTO> updateService(
            @PathVariable Long id,
@@ -87,7 +87,7 @@ public class ORG_ServicesController {
    }
 
     // Delete Service From DB
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN','SADMIN')")
     @DeleteMapping("/api/v1/admin/services/{id}")
     public ResponseEntity<String> deletService(@PathVariable Long id){
         orgServicesService.deleted(id);

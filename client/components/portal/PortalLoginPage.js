@@ -193,7 +193,7 @@ export default function PortalLoginPage({
   }
 
   return (
-    <main className="relative flex min-h-screen flex-col items-center justify-center overflow-hidden bg-[#131314] px-6 py-10 font-sans text-[#e4e2e2]">
+    <main className="relative flex min-h-screen flex-col items-center justify-center overflow-hidden bg-[color:var(--page-bg)] px-6 py-10 font-sans text-[color:var(--text-secondary)]">
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_20%_30%,rgba(25,94,226,0.15),transparent_40%),radial-gradient(circle_at_80%_70%,rgba(179,197,255,0.1),transparent_40%)]" />
 
       <div className="pointer-events-none fixed bottom-0 right-0 hidden h-1/2 w-1/3 opacity-20 lg:block">
@@ -209,7 +209,7 @@ export default function PortalLoginPage({
 
       <div className="relative z-10 flex w-full max-w-[480px] flex-col items-center">
         <div className="mb-12 text-center">
-          <div className="mb-6 inline-flex h-16 w-16 items-center justify-center rounded-full bg-[#195ee2] shadow-[0_24px_50px_rgba(25,94,226,0.2)]">
+          <div className="mb-6 inline-flex h-16 w-16 items-center justify-center rounded-full bg-[color:var(--accent)] shadow-[0_24px_50px_rgba(25,94,226,0.2)]">
             <Rocket className="h-8 w-8 text-[#e1e6ff]" />
           </div>
           <h1 className="font-headline text-4xl font-bold tracking-[-0.04em] text-white">
@@ -221,7 +221,7 @@ export default function PortalLoginPage({
         </div>
 
         <div className="relative w-full overflow-hidden rounded-[3rem] bg-[rgba(52,53,53,0.6)] p-8 shadow-[0_30px_80px_rgba(0,0,0,0.35)] backdrop-blur-[12px] md:p-10">
-          <div className="absolute left-0 top-0 h-[2px] w-full bg-gradient-to-r from-transparent via-[#b3c5ff] to-transparent opacity-50" />
+          <div className="absolute left-0 top-0 h-[2px] w-full bg-gradient-to-r from-transparent via-[color:var(--accent-soft)] to-transparent opacity-50" />
 
           <form className="space-y-6" onSubmit={handleSubmit}>
             {availableRoles.length > 1 ? (
@@ -241,7 +241,7 @@ export default function PortalLoginPage({
                         onClick={() => setSelectedRole(role.id)}
                         className={
                           active
-                            ? "flex-1 rounded-full bg-[#195ee2] px-3 py-2 text-xs font-semibold text-[#e1e6ff] transition-all"
+                            ? "flex-1 rounded-full bg-[color:var(--accent)] px-3 py-2 text-xs font-semibold text-[#e1e6ff] transition-all"
                             : "flex-1 rounded-full bg-[#292a2a] px-3 py-2 text-xs font-medium text-[#c3c6d7] transition-colors hover:bg-[#343535]"
                         }
                       >
@@ -255,7 +255,7 @@ export default function PortalLoginPage({
                 </div>
               </div>
             ) : availableRoles[0] ? (
-              <div className="rounded-full border border-white/8 bg-[#1d222d] px-4 py-3 text-center text-[11px] font-semibold uppercase tracking-[0.24em] text-[#b3c5ff]">
+              <div className="rounded-full border border-white/8 bg-[#1d222d] px-4 py-3 text-center text-[11px] font-semibold uppercase tracking-[0.24em] text-[color:var(--accent-soft)]">
                 {availableRoles[0].label} access
               </div>
             ) : null}
@@ -272,7 +272,7 @@ export default function PortalLoginPage({
                   <AtSign className="absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-[#8d90a0]" />
                   <input
                     id="portal-identifier"
-                    className="w-full rounded-2xl border-none bg-[#292a2a] py-4 pl-12 pr-4 text-[#e4e2e2] outline-none transition placeholder:text-[#8d90a0]/50 focus:ring-2 focus:ring-[#b3c5ff]/50"
+                    className="w-full rounded-2xl border-none bg-[#292a2a] py-4 pl-12 pr-4 text-[color:var(--text-secondary)] outline-none transition placeholder:text-[#8d90a0]/50 focus:ring-2 focus:ring-[color:var(--accent-soft)]/50"
                     name="email"
                     type="email"
                     value={form.email}
@@ -294,7 +294,7 @@ export default function PortalLoginPage({
                   {otpMessage ? (
                     <input
                       id="portal-password"
-                      className="w-full rounded-2xl border-none bg-[#292a2a] py-4 pl-12 pr-4 text-[#e4e2e2] outline-none transition placeholder:text-[#8d90a0]/50 focus:ring-2 focus:ring-[#b3c5ff]/50"
+                      className="w-full rounded-2xl border-none bg-[#292a2a] py-4 pl-12 pr-4 text-[color:var(--text-secondary)] outline-none transition placeholder:text-[#8d90a0]/50 focus:ring-2 focus:ring-[color:var(--accent-soft)]/50"
                       name="otp"
                       type="text"
                       inputMode="numeric"
@@ -309,7 +309,7 @@ export default function PortalLoginPage({
                     <>
                       <input
                         id="portal-password"
-                        className="w-full rounded-2xl border-none bg-[#292a2a] py-4 pl-12 pr-12 text-[#e4e2e2] outline-none transition placeholder:text-[#8d90a0]/50 focus:ring-2 focus:ring-[#b3c5ff]/50"
+                        className="w-full rounded-2xl border-none bg-[#292a2a] py-4 pl-12 pr-12 text-[color:var(--text-secondary)] outline-none transition placeholder:text-[#8d90a0]/50 focus:ring-2 focus:ring-[color:var(--accent-soft)]/50"
                         name="password"
                         type={showPassword ? "text" : "password"}
                         value={form.password}
@@ -319,7 +319,7 @@ export default function PortalLoginPage({
                       <button
                         type="button"
                         onClick={() => setShowPassword((current) => !current)}
-                        className="absolute right-4 top-1/2 -translate-y-1/2 text-[#8d90a0] transition-colors hover:text-[#e4e2e2]"
+                        className="absolute right-4 top-1/2 -translate-y-1/2 text-[#8d90a0] transition-colors hover:text-[color:var(--text-secondary)]"
                         aria-label={showPassword ? "Hide password" : "Show password"}
                       >
                         {showPassword ? (
@@ -346,13 +346,13 @@ export default function PortalLoginPage({
                     type="checkbox"
                     checked={persistSession}
                     onChange={(event) => setPersistSession(event.target.checked)}
-                    className="peer h-4 w-4 appearance-none rounded bg-[#343535] checked:bg-[#195ee2]"
+                    className="peer h-4 w-4 appearance-none rounded bg-[#343535] checked:bg-[color:var(--accent)]"
                   />
                   <span className="pointer-events-none absolute inset-0 flex items-center justify-center text-[12px] font-bold text-[#e1e6ff] opacity-0 peer-checked:opacity-100">
                     x
                   </span>
                 </div>
-                <span className="text-[#c3c6d7] transition-colors group-hover:text-[#e4e2e2]">
+                <span className="text-[#c3c6d7] transition-colors group-hover:text-[color:var(--text-secondary)]">
                   Remember this device
                 </span>
               </label>
@@ -366,14 +366,14 @@ export default function PortalLoginPage({
                     setOtpPendingEmail("");
                     setError("");
                   }}
-                  className="text-[#b3c5ff] transition-colors hover:text-[#dbe1ff]"
+                  className="text-[color:var(--accent-soft)] transition-colors hover:text-[#dbe1ff]"
                 >
                   Use another account
                 </button>
               ) : (
                 <Link
                   href="/contact"
-                  className="text-[#b3c5ff] transition-colors hover:text-[#dbe1ff]"
+                  className="text-[color:var(--accent-soft)] transition-colors hover:text-[#dbe1ff]"
                 >
                   Need help?
                 </Link>
@@ -393,7 +393,7 @@ export default function PortalLoginPage({
             ) : null}
 
             <button
-              className="flex w-full items-center justify-center gap-2 rounded-full bg-gradient-to-r from-[#195ee2] to-[#0054d7] py-4 font-headline text-lg font-bold text-[#e1e6ff] shadow-[0_20px_40px_rgba(25,94,226,0.3)] transition-all hover:brightness-110 active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-70"
+              className="flex w-full items-center justify-center gap-2 rounded-full bg-gradient-to-r from-[color:var(--accent)] to-[color:var(--accent-strong)] py-4 font-headline text-lg font-bold text-[#e1e6ff] shadow-[0_20px_40px_rgba(25,94,226,0.3)] transition-all hover:brightness-110 active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-70"
               type="submit"
               disabled={isSubmitting}
             >

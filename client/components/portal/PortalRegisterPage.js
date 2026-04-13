@@ -133,11 +133,11 @@ export default function PortalRegisterPage() {
   }
 
   return (
-    <div className="min-h-screen overflow-x-hidden bg-[#131314] text-[#e4e2e2]">
+    <div className="min-h-screen overflow-x-hidden bg-[color:var(--page-bg)] text-[color:var(--text-secondary)]">
       <header className="fixed top-0 z-50 h-20 w-full bg-slate-950/60 shadow-[0_20px_40px_rgba(30,58,138,0.18)] backdrop-blur-xl">
         <div className="mx-auto flex h-full w-full max-w-screen-2xl items-center justify-between px-8">
           <div className="flex items-center gap-2">
-            <Rocket className="h-7 w-7 text-[#b3c5ff]" />
+            <Rocket className="h-7 w-7 text-[color:var(--accent-soft)]" />
             <h1 className="font-headline text-lg font-bold tracking-[-0.03em] text-white sm:text-xl">
               {COMPANY_NAME}
             </h1>
@@ -153,7 +153,7 @@ export default function PortalRegisterPage() {
 
       <main className="relative flex min-h-screen flex-grow items-center justify-center px-6 pb-12 pt-24">
         <div className="pointer-events-none absolute inset-0 overflow-hidden">
-          <div className="absolute -right-[10%] -top-[20%] h-[60%] w-[60%] rounded-full bg-[#195ee2]/10 blur-[120px]" />
+          <div className="absolute -right-[10%] -top-[20%] h-[60%] w-[60%] rounded-full bg-[color:var(--accent)]/10 blur-[120px]" />
           <div className="absolute -bottom-[10%] -left-[5%] h-[40%] w-[40%] rounded-full bg-[#10ae00]/5 blur-[100px]" />
         </div>
 
@@ -170,7 +170,7 @@ export default function PortalRegisterPage() {
             </div>
 
             <div className="relative z-10">
-              <div className="mb-6 inline-flex items-center rounded-full border border-[#195ee2]/20 bg-[#b3c5ff]/10 px-3 py-1 text-[10px] font-bold uppercase tracking-tight text-[#b3c5ff]">
+              <div className="mb-6 inline-flex items-center rounded-full border border-[color:var(--accent)]/20 bg-[color:var(--accent-soft)]/10 px-3 py-1 text-[10px] font-bold uppercase tracking-tight text-[color:var(--accent-soft)]">
                 Registration open
               </div>
               <h2 className="font-headline text-4xl font-bold leading-tight text-white">
@@ -188,7 +188,7 @@ export default function PortalRegisterPage() {
                 return (
                   <div key={item.title} className="flex items-start gap-4">
                     <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-white/5">
-                      <Icon className="h-5 w-5 text-[#b3c5ff]" />
+                      <Icon className="h-5 w-5 text-[color:var(--accent-soft)]" />
                     </div>
                     <div>
                       <h4 className="text-sm font-medium text-white">{item.title}</h4>
@@ -209,7 +209,7 @@ export default function PortalRegisterPage() {
                   <div
                     className={
                       index === 0
-                        ? "flex h-10 w-10 items-center justify-center rounded-full bg-[#195ee2] font-bold text-[#e1e6ff] shadow-[0_12px_24px_rgba(25,94,226,0.35)]"
+                        ? "flex h-10 w-10 items-center justify-center rounded-full bg-[color:var(--accent)] font-bold text-[#e1e6ff] shadow-[0_12px_24px_rgba(25,94,226,0.35)]"
                         : "flex h-10 w-10 items-center justify-center rounded-full border border-[#424654] bg-[#292a2a] font-bold text-[#c3c6d7]"
                     }
                   >
@@ -218,7 +218,7 @@ export default function PortalRegisterPage() {
                   <span
                     className={
                       index === 0
-                        ? "text-[10px] font-bold uppercase tracking-[0.24em] text-[#b3c5ff]"
+                        ? "text-[10px] font-bold uppercase tracking-[0.24em] text-[color:var(--accent-soft)]"
                         : "text-[10px] font-bold uppercase tracking-[0.24em] text-[#c3c6d7]"
                     }
                   >
@@ -272,7 +272,7 @@ export default function PortalRegisterPage() {
                   </label>
                   <div className="relative">
                     <input
-                      className="w-full rounded-2xl border-none bg-[#292a2a] px-4 py-3 text-[#e4e2e2] outline-none transition placeholder:text-[#8d90a0] focus:ring-2 focus:ring-[#195ee2]"
+                      className="w-full rounded-2xl border-none bg-[#292a2a] px-4 py-3 text-[color:var(--text-secondary)] outline-none transition placeholder:text-[#8d90a0] focus:ring-2 focus:ring-[color:var(--accent)]"
                       name="password"
                       type={showPassword ? "text" : "password"}
                       value={form.password}
@@ -306,16 +306,16 @@ export default function PortalRegisterPage() {
                       setError("");
                       setSuccess("");
                     }}
-                    className="h-5 w-5 rounded-md border-none bg-[#292a2a] text-[#195ee2] focus:ring-[#195ee2] focus:ring-offset-0 focus:ring-offset-[#131314]"
+                    className="h-5 w-5 rounded-md border-none bg-[#292a2a] text-[color:var(--accent)] focus:ring-[color:var(--accent)] focus:ring-offset-0 focus:ring-offset-[color:var(--page-bg)]"
                   />
                 </div>
                 <label className="text-xs leading-tight text-[#c3c6d7]">
                   I agree to the{" "}
-                  <Link href="/contact" className="text-[#b3c5ff] hover:underline">
+                  <Link href="/contact" className="text-[color:var(--accent-soft)] hover:underline">
                     website terms
                   </Link>{" "}
                   and{" "}
-                  <Link href="/contact" className="text-[#b3c5ff] hover:underline">
+                  <Link href="/contact" className="text-[color:var(--accent-soft)] hover:underline">
                     privacy policy
                   </Link>
                   .
@@ -338,7 +338,7 @@ export default function PortalRegisterPage() {
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className="flex w-full items-center justify-center gap-2 rounded-full bg-[#195ee2] py-4 font-bold text-[#e1e6ff] shadow-[0_18px_34px_rgba(25,94,226,0.24)] transition-all hover:brightness-110 active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-70"
+                  className="flex w-full items-center justify-center gap-2 rounded-full bg-[color:var(--accent)] py-4 font-bold text-[#e1e6ff] shadow-[0_18px_34px_rgba(25,94,226,0.24)] transition-all hover:brightness-110 active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-70"
                 >
                   <span>{isSubmitting ? "Creating account..." : "Create account"}</span>
                   <ArrowRight className="h-5 w-5" />
@@ -347,7 +347,7 @@ export default function PortalRegisterPage() {
 
               <p className="mt-8 text-center text-xs text-[#c3c6d7]">
                 Already registered?{" "}
-                <Link href={loginHref} className="font-bold text-[#b3c5ff] hover:underline">
+                <Link href={loginHref} className="font-bold text-[color:var(--accent-soft)] hover:underline">
                   Sign in
                 </Link>
               </p>
@@ -385,7 +385,7 @@ function Field({ label, ...props }) {
         {label}
       </label>
       <input
-        className="w-full rounded-2xl border-none bg-[#292a2a] px-4 py-3 text-[#e4e2e2] outline-none transition placeholder:text-[#8d90a0] focus:ring-2 focus:ring-[#195ee2]"
+        className="w-full rounded-2xl border-none bg-[#292a2a] px-4 py-3 text-[color:var(--text-secondary)] outline-none transition placeholder:text-[#8d90a0] focus:ring-2 focus:ring-[color:var(--accent)]"
         {...props}
       />
     </div>

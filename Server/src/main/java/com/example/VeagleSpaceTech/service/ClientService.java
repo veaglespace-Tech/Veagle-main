@@ -1,13 +1,12 @@
 package com.example.VeagleSpaceTech.service;
 
-import com.example.VeagleSpaceTech.repo.ClientRepository;
-import org.springframework.stereotype.Service;
-
 import com.example.VeagleSpaceTech.DTO.request.ClientRequestDTO;
 import com.example.VeagleSpaceTech.DTO.response.ClientResponseDTO;
 import com.example.VeagleSpaceTech.entity.Client;
 import com.example.VeagleSpaceTech.mapper.ClientMapper;
+import com.example.VeagleSpaceTech.repo.ClientRepository;
 import lombok.AllArgsConstructor;
+import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
@@ -17,21 +16,17 @@ import java.util.List;
 public class ClientService {
 
     private final ClientRepository clientRepository;
+    private final FileService fileService;
 
-    // ✅ CREATE
     public ClientResponseDTO createClient(ClientRequestDTO dto, MultipartFile logo) {
-
         String logoUrl = uploadLogo(logo);
 
         Client client = ClientMapper.toEntity(dto);
         client.setLogoUrl(logoUrl);
 
-        Client saved = clientRepository.save(client);
-
-        return ClientMapper.toDTO(saved);
+        return ClientMapper.toDTO(clientRepository.save(client));
     }
 
-    // ✅ GET ALL
     public List<ClientResponseDTO> getAllClients() {
         return clientRepository.findAll()
                 .stream()
@@ -39,7 +34,6 @@ public class ClientService {
                 .toList();
     }
 
-    // ✅ GET BY ID
     public ClientResponseDTO getClientById(Long id) {
         Client client = clientRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Client not found"));
@@ -47,38 +41,35 @@ public class ClientService {
         return ClientMapper.toDTO(client);
     }
 
-    // ✅ UPDATE
     public ClientResponseDTO updateClient(Long id, ClientRequestDTO dto, MultipartFile logo) {
-
         Client existing = clientRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Client not found"));
 
         existing.setName(dto.name());
         existing.setWebsiteUrl(dto.websiteUrl());
         existing.setDescription(dto.description());
-//        existing.setDisplayOrder(dto.displayOrder());
 
-        // update logo if provided
         if (logo != null && !logo.isEmpty()) {
-            String logoUrl = uploadLogo(logo);
-            existing.setLogoUrl(logoUrl);
+            fileService.delete(existing.getLogoUrl());
+            existing.setLogoUrl(uploadLogo(logo));
         }
 
-        Client updated = clientRepository.save(existing);
-
-        return ClientMapper.toDTO(updated);
+        return ClientMapper.toDTO(clientRepository.save(existing));
     }
 
-    // ✅ DELETE
     public void deleteClient(Long id) {
-        if (!clientRepository.existsById(id)) {
-            throw new RuntimeException("Client not found");
-        }
-        clientRepository.deleteById(id);
+        Client client = clientRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Client not found"));
+
+        clientRepository.delete(client);
+        fileService.delete(client.getLogoUrl());
     }
 
-    // 🔥 IMAGE UPLOAD (TEMP - same as portfolio)
     private String uploadLogo(MultipartFile logo) {
-        return "http://localhost:8080/uploads/client" + logo.getOriginalFilename();
+        if (logo == null || logo.isEmpty()) {
+            throw new RuntimeException("Client logo is required");
+        }
+
+        return fileService.uploadImage(logo, "clients");
     }
 }

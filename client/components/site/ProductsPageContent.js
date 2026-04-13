@@ -165,7 +165,7 @@ function renderHeroTitle(value) {
   return (
     <>
       {start}
-      <span className="text-[#9eb4ff]">{focus}</span>
+      <span className="text-[color:var(--text-muted)]">{focus}</span>
       {end}
     </>
   );
@@ -216,7 +216,7 @@ export default function ProductsPageContent({ products, categories, content }) {
     <main className={pageClass}>
       <header className="relative overflow-hidden pb-20 pt-32">
         <div className="absolute inset-0 opacity-40">
-          <div className="absolute inset-0 bg-gradient-to-br from-[#195ee2]/20 to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-br from-[color:var(--accent)]/20 to-transparent" />
           <Image
             src={pageArtwork.hero}
             alt="Products background"
@@ -229,7 +229,7 @@ export default function ProductsPageContent({ products, categories, content }) {
 
         <div className="relative z-10 mx-auto max-w-screen-2xl px-4 sm:px-6 lg:px-8">
           <div className="max-w-3xl">
-            <span className="inline-flex rounded-full bg-[#b3c5ff]/12 px-4 py-1.5 text-[11px] font-bold uppercase tracking-[0.22em] text-[#d3deff]">
+            <span className="inline-flex rounded-full bg-[color:var(--accent-soft)]/12 px-4 py-1.5 text-[11px] font-bold uppercase tracking-[0.22em] text-[#d3deff]">
               Fleet Catalog v2.0
             </span>
             <h1 className="mt-6 font-headline text-5xl font-black leading-[0.94] tracking-[-0.04em] text-white sm:text-7xl">
@@ -243,7 +243,7 @@ export default function ProductsPageContent({ products, categories, content }) {
         </div>
       </header>
 
-      <section className="sticky top-20 z-40 border-y border-white/6 bg-[#131314]/85 py-6 backdrop-blur-md">
+      <section className="sticky top-20 z-40 border-y border-white/6 bg-[color:var(--page-bg)]/85 py-6 backdrop-blur-md">
         <div className="mx-auto max-w-screen-2xl px-4 sm:px-6 lg:px-8">
           <div className="flex items-center gap-3 overflow-x-auto pb-2">
             {categoryFilters.map((filter) => {
@@ -283,7 +283,7 @@ export default function ProductsPageContent({ products, categories, content }) {
                 className="group flex h-full flex-col rounded-[1rem] border border-white/6 bg-[rgba(52,53,53,0.4)] p-6 backdrop-blur-[12px] transition duration-300 hover:bg-[#2b2f38]"
               >
                 <div className="mb-7 flex items-start justify-between gap-4">
-                  <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-[#b3c5ff]/10 text-[#9db5ff] transition duration-300 group-hover:scale-110">
+                  <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-[color:var(--accent-soft)]/10 text-[#9db5ff] transition duration-300 group-hover:scale-110">
                     <Icon className="h-6 w-6" />
                   </div>
                   <span
@@ -304,7 +304,7 @@ export default function ProductsPageContent({ products, categories, content }) {
                   <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#8f9bb3]">
                     {categoryName}
                   </span>
-                  <ArrowRight className="h-4.5 w-4.5 text-[#9eb4ff] transition duration-300 group-hover:translate-x-1" />
+                  <ArrowRight className="h-4.5 w-4.5 text-[color:var(--text-muted)] transition duration-300 group-hover:translate-x-1" />
                 </div>
               </article>
             );

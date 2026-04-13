@@ -95,7 +95,7 @@ export default function AboutPageContent({ content }) {
         </div>
       </section>
 
-      <section className="bg-[#131314] px-4 py-14 sm:px-6 lg:px-8 lg:py-20">
+      <section className="bg-[color:var(--page-bg)] px-4 py-14 sm:px-6 lg:px-8 lg:py-20">
         <div className="mx-auto grid max-w-screen-2xl gap-6 md:grid-cols-3">
           {milestones.length ? (
             milestones.map((item) => (
@@ -184,7 +184,7 @@ export default function AboutPageContent({ content }) {
         </div>
       </section>
 
-      <section className="bg-[#131314] px-4 py-16 sm:px-6 lg:px-8 lg:py-24">
+      <section className="bg-[color:var(--page-bg)] px-4 py-16 sm:px-6 lg:px-8 lg:py-24">
         <div className="mx-auto max-w-screen-2xl text-center">
           <h2 className="font-headline text-4xl font-black tracking-tight text-white sm:text-5xl">
             Core Principles

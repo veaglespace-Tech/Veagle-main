@@ -227,7 +227,7 @@ export default function HomePage({ content, services = [], products = [], jobs =
             </h2>
             <Link
               href="/services"
-              className="inline-flex items-center gap-2 text-sm font-bold uppercase tracking-[0.18em] text-[#b3c5ff] transition hover:gap-3"
+              className="inline-flex items-center gap-2 text-sm font-bold uppercase tracking-[0.18em] text-[color:var(--accent-soft)] transition hover:gap-3"
             >
               Explore All Sectors
               <ArrowRight className="h-4 w-4" />
@@ -254,14 +254,14 @@ export default function HomePage({ content, services = [], products = [], jobs =
                   <div className="relative z-10 flex h-full flex-col justify-end p-6">
                     <div className="mb-4 flex items-end justify-between gap-4">
                       <div>
-                        <p className="text-[11px] font-bold uppercase tracking-[0.22em] text-[#b3c5ff]">
+                        <p className="text-[11px] font-bold uppercase tracking-[0.22em] text-[color:var(--accent-soft)]">
                           {card.eyebrow}
                         </p>
                         <h3 className="mt-2 font-headline text-3xl font-black tracking-tight text-white">
                           {card.title}
                         </h3>
                       </div>
-                      <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-white/8 text-[#b3c5ff]">
+                      <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-white/8 text-[color:var(--accent-soft)]">
                         <Icon className="h-5 w-5" />
                       </div>
                     </div>
@@ -277,7 +277,7 @@ export default function HomePage({ content, services = [], products = [], jobs =
       <section className="bg-[#171a21] px-4 py-16 sm:px-6 lg:px-8 lg:py-24">
         <div className="mx-auto max-w-screen-2xl">
           <div className="mb-14 text-center">
-            <p className="text-[11px] font-bold uppercase tracking-[0.24em] text-[#9eb4ff]">
+            <p className="text-[11px] font-bold uppercase tracking-[0.24em] text-[color:var(--text-muted)]">
               Our Engineering Stack
             </p>
             <h2 className="mt-4 font-headline text-3xl font-black tracking-tight text-white sm:text-5xl">
@@ -296,7 +296,7 @@ export default function HomePage({ content, services = [], products = [], jobs =
                     <Icon className="h-6 w-6" />
                   </div>
                   <h3 className="font-headline text-2xl font-black tracking-tight text-white">{title}</h3>
-                  <p className="text-sm leading-8 text-[#c1cadf]">{description}</p>
+                  <p className="text-sm leading-8 text-[color:var(--text-secondary)]">{description}</p>
                 </article>
               );
             })}
@@ -326,7 +326,7 @@ export default function HomePage({ content, services = [], products = [], jobs =
                 <h3 className="mt-5 font-headline text-xl font-black tracking-tight text-white">
                   {item.title}
                 </h3>
-                <p className="mt-3 text-sm leading-7 text-[#bec8de]">{item.description}</p>
+                <p className="mt-3 text-sm leading-7 text-[color:var(--text-muted)]">{item.description}</p>
               </article>
             );
           })}
@@ -349,7 +349,7 @@ export default function HomePage({ content, services = [], products = [], jobs =
         <div className="relative mx-auto max-w-screen-2xl">
           <div className="grid gap-8 xl:grid-cols-[0.88fr_1.12fr] xl:items-end">
             <div>
-              <p className="text-[11px] font-bold uppercase tracking-[0.24em] text-[#9eb4ff]">
+              <p className="text-[11px] font-bold uppercase tracking-[0.24em] text-[color:var(--text-muted)]">
                 Our Clients
               </p>
               <h2 className="mt-4 max-w-3xl font-headline text-3xl font-black leading-tight tracking-[-0.03em] text-white sm:text-5xl">
@@ -361,7 +361,7 @@ export default function HomePage({ content, services = [], products = [], jobs =
               </p>
               <Link
                 href="/clients"
-                className="mt-6 inline-flex items-center gap-2 text-sm font-bold uppercase tracking-[0.18em] text-[#b3c5ff] transition hover:gap-3"
+                className="mt-6 inline-flex items-center gap-2 text-sm font-bold uppercase tracking-[0.18em] text-[color:var(--accent-soft)] transition hover:gap-3"
               >
                 Explore Client Network
                 <ArrowRight className="h-4 w-4" />
@@ -395,7 +395,7 @@ export default function HomePage({ content, services = [], products = [], jobs =
         <div className="mx-auto max-w-screen-2xl">
           <div className="mb-14 flex items-center gap-4">
             <div className="h-px flex-1 bg-white/10" />
-            <h2 className="font-headline text-xl font-black uppercase tracking-[0.28em] text-[#9eb4ff]">
+            <h2 className="font-headline text-xl font-black uppercase tracking-[0.28em] text-[color:var(--text-muted)]">
               The Flight Plan
             </h2>
             <div className="h-px flex-1 bg-white/10" />
@@ -403,13 +403,13 @@ export default function HomePage({ content, services = [], products = [], jobs =
           <div className="grid gap-10 md:grid-cols-4">
             {process.map((step, index) => (
               <article key={step.title} className="text-center">
-                <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full border border-[#9eb4ff]/40 bg-[#121722] font-headline text-lg font-black text-white">
+                <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full border border-[color:var(--text-muted)]/40 bg-[#121722] font-headline text-lg font-black text-white">
                   0{index + 1}
                 </div>
                 <h3 className="mt-5 font-headline text-xl font-black tracking-tight text-white">
                   {step.title}
                 </h3>
-                <p className="mt-3 text-sm leading-7 text-[#bec8de]">{step.description}</p>
+                <p className="mt-3 text-sm leading-7 text-[color:var(--text-muted)]">{step.description}</p>
               </article>
             ))}
           </div>
@@ -445,7 +445,7 @@ export default function HomePage({ content, services = [], products = [], jobs =
                   </p>
                   <Link
                     href="/products"
-                    className="mt-5 inline-flex items-center gap-2 text-sm font-bold uppercase tracking-[0.16em] text-[#9eb4ff]"
+                    className="mt-5 inline-flex items-center gap-2 text-sm font-bold uppercase tracking-[0.16em] text-[color:var(--text-muted)]"
                   >
                     Review Module
                     <ArrowRight className="h-4 w-4" />

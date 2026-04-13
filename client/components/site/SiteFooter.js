@@ -1,7 +1,10 @@
+"use client";
+
 import Link from "next/link";
 import { Globe2, Mail, MapPin, Phone, Rocket } from "lucide-react";
 
 import BrandMark from "@/components/BrandMark";
+import { socialLinksData } from "@/components/site/StickySocialBar";
 import {
   COMPANY_ADDRESS,
   COMPANY_ADDRESS_QUERY,
@@ -21,51 +24,7 @@ const quickLinks = [
   { href: "/contact", label: "Contact" },
 ];
 
-const socialLinks = [
-  { href: COMPANY_LINKEDIN, label: "LinkedIn", icon: LinkedInIcon },
-  { href: COMPANY_INSTAGRAM, label: "Instagram", icon: InstagramIcon },
-  { href: "https://www.veaglespace.com", label: "Website", icon: Globe2 },
-];
 
-function InstagramIcon(props) {
-  return (
-    <svg
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="1.8"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      aria-hidden="true"
-      {...props}
-    >
-      <rect x="4" y="4" width="16" height="16" rx="4.5" />
-      <circle cx="12" cy="12" r="3.7" />
-      <circle cx="17.25" cy="6.75" r="0.9" fill="currentColor" stroke="none" />
-    </svg>
-  );
-}
-
-function LinkedInIcon(props) {
-  return (
-    <svg
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="1.8"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      aria-hidden="true"
-      {...props}
-    >
-      <rect x="4" y="4" width="16" height="16" rx="3.5" />
-      <circle cx="8" cy="8.1" r="0.9" fill="currentColor" stroke="none" />
-      <path d="M8 10.6v5.4" />
-      <path d="M12 16v-3.1c0-1.45.92-2.32 2.16-2.32 1.24 0 1.84.82 1.84 2.4V16" />
-      <path d="M12 10.6v1.15" />
-    </svg>
-  );
-}
 
 function FooterLink({ href, label, external = false }) {
   const className =
@@ -136,24 +95,21 @@ export default function SiteFooter({ content, services }) {
             Engineering dynamic websites, complex software systems, and high-performance ERP workflows for modern businesses.
           </p>
           <div className="flex space-x-4">
-            <a
-              href="https://www.veaglespace.com"
-              target="_blank"
-              rel="noreferrer"
-              aria-label="Website"
-              className="flex h-10 w-10 items-center justify-center rounded-full bg-[color:var(--surface-container-high)] text-[color:var(--accent)] transition-all hover:bg-[color:var(--accent)] hover:text-[color:var(--button-ink)]"
-            >
-              <Globe2 className="h-5 w-5" />
-            </a>
-            <a
-              href={COMPANY_LINKEDIN}
-              target="_blank"
-              rel="noreferrer"
-              aria-label="LinkedIn"
-              className="flex h-10 w-10 items-center justify-center rounded-full bg-[color:var(--surface-container-high)] text-[color:var(--accent)] transition-all hover:bg-[color:var(--accent)] hover:text-[color:var(--button-ink)]"
-            >
-              <Rocket className="h-5 w-5" />
-            </a>
+            {socialLinksData.map((social) => {
+              const Icon = social.icon;
+              return (
+                <a
+                  key={social.label}
+                  href={social.href}
+                  target="_blank"
+                  rel="noreferrer"
+                  aria-label={social.label}
+                  className="flex h-10 w-10 items-center justify-center rounded-full bg-[color:var(--surface-container-high)] text-[color:var(--accent)] transition-all hover:bg-[color:var(--accent)] hover:text-[color:var(--button-ink)]"
+                >
+                  <Icon className="h-5 w-5" />
+                </a>
+              );
+            })}
           </div>
         </div>
 

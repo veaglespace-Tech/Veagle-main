@@ -3,28 +3,28 @@ import { ArrowRight } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 
-export const pageClass = "relative min-h-[calc(100vh-5rem)] overflow-hidden bg-[#131314] text-[#e4e2e2]";
+export const pageClass = "relative min-h-[calc(100vh-5rem)] overflow-hidden bg-[color:var(--page-bg)] text-[color:var(--text-secondary)]";
 export const containerClass = "mx-auto w-full max-w-screen-2xl px-4 sm:px-6 lg:px-8";
 export const sectionClass = "relative py-16 sm:py-20 lg:py-24";
 export const firstSectionClass = "relative overflow-hidden pb-16 pt-32 sm:pb-20 sm:pt-36 lg:pb-24 lg:pt-40";
 export const ctaShellClass = "overflow-hidden !rounded-[2.25rem] sm:!rounded-[2.6rem]";
 export const surfaceCardClass =
-  "rounded-[1.75rem] border border-[color:var(--border)] bg-[color:var(--surface)] p-5 shadow-[var(--shadow-card)] backdrop-blur-sm sm:p-7";
+  "rounded-[1.75rem] border border-[color:var(--border)] bg-[color:var(--surface)] p-5 shadow-[color:var(--shadow-card)] backdrop-blur-sm sm:p-7";
 export const mutedCardClass =
-  "rounded-[1.5rem] border border-[color:var(--border)] bg-[color:var(--surface-muted)] p-5 shadow-[var(--shadow-soft)] sm:p-6";
+  "rounded-[1.5rem] border border-[color:var(--border)] bg-[color:var(--surface-muted)] p-5 shadow-[color:var(--shadow-soft)] sm:p-6";
 export const eyebrowClass =
-  "inline-flex items-center gap-2 rounded-full border border-[color:var(--border-strong)] bg-[color:var(--accent-contrast)] px-4 py-2 text-[11px] font-bold uppercase tracking-[0.24em] text-[#b3c5ff]";
+  "inline-flex items-center gap-2 rounded-full border border-[color:var(--border-strong)] bg-[color:var(--accent-contrast)] px-4 py-2 text-[11px] font-bold uppercase tracking-[0.24em] text-[color:var(--accent-soft)]";
 export const chipClass =
   "inline-flex items-center rounded-full border border-[color:var(--border)] bg-[color:var(--surface-strong)] px-3 py-1.5 text-xs font-semibold tracking-[0.08em] text-[color:var(--text-secondary)]";
 export const buttonBaseClass =
   "inline-flex min-h-[3.15rem] items-center justify-center gap-2 rounded-full px-6 py-3.5 text-center text-sm font-bold leading-none transition duration-300 sm:px-7";
 export const primaryButtonClass = cn(
   buttonBaseClass,
-  "border border-transparent bg-[linear-gradient(135deg,var(--accent),var(--accent-strong))] text-[color:var(--button-ink)] shadow-[var(--shadow-accent)] hover:-translate-y-0.5 hover:brightness-110 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[color:var(--ring)]"
+  "border border-transparent bg-[linear-gradient(135deg,var(--accent),var(--accent-strong))] text-[color:var(--button-ink)] shadow-[color:var(--shadow-accent)] hover:-translate-y-0.5 hover:brightness-110 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[color:var(--ring)]"
 );
 export const secondaryButtonClass = cn(
   buttonBaseClass,
-  "border border-[color:var(--border-strong)] bg-[rgba(21,27,35,0.82)] text-[color:var(--text-primary)] shadow-[var(--shadow-soft)] backdrop-blur-[12px] hover:-translate-y-0.5 hover:border-[color:var(--border-strong)] hover:bg-[rgba(25,94,226,0.12)] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[color:var(--ring)]"
+  "border border-[color:var(--border-strong)] bg-[rgba(21,27,35,0.82)] text-[color:var(--text-primary)] shadow-[color:var(--shadow-soft)] backdrop-blur-[12px] hover:-translate-y-0.5 hover:border-[color:var(--border-strong)] hover:bg-[rgba(25,94,226,0.12)] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[color:var(--ring)]"
 );
 export const buttonGroupClass =
   "flex flex-col gap-4 sm:flex-row sm:flex-wrap sm:items-center";
@@ -32,7 +32,7 @@ export const filterButtonClass = (active) =>
   cn(
     "inline-flex min-h-11 items-center justify-center rounded-full px-6 py-2.5 text-center text-sm font-semibold transition duration-300",
     active
-      ? "border border-transparent bg-[linear-gradient(135deg,var(--accent),var(--accent-strong))] text-[color:var(--button-ink)] shadow-[var(--shadow-accent)]"
+      ? "border border-transparent bg-[linear-gradient(135deg,var(--accent),var(--accent-strong))] text-[color:var(--button-ink)] shadow-[color:var(--shadow-accent)]"
       : "border border-[color:var(--border)] bg-[color:var(--surface-strong)] text-[color:var(--text-secondary)] hover:border-[color:var(--border-strong)] hover:bg-[rgba(25,94,226,0.1)] hover:text-[color:var(--text-primary)]"
   );
 export const labelClass =
@@ -42,7 +42,7 @@ export const inputClass =
 export const selectClass = cn(inputClass, "appearance-none");
 export const textareaClass = cn(inputClass, "min-h-[150px] resize-y");
 export const tableShellClass =
-  "overflow-x-auto rounded-[1.5rem] border border-[color:var(--border)] bg-[color:var(--surface)] shadow-[var(--shadow-soft)]";
+  "overflow-x-auto rounded-[1.5rem] border border-[color:var(--border)] bg-[color:var(--surface)] shadow-[color:var(--shadow-soft)]";
 export const tableClass =
   "min-w-[680px] w-full border-collapse text-sm [&_th]:border-b [&_th]:border-[color:var(--border)] [&_th]:px-4 [&_th]:py-4 [&_th]:text-left [&_th]:align-top [&_th]:text-[11px] [&_th]:font-semibold [&_th]:uppercase [&_th]:tracking-[0.2em] [&_th]:text-[color:var(--text-muted)] [&_td]:border-b [&_td]:border-[color:var(--border)] [&_td]:px-4 [&_td]:py-4 [&_td]:align-top [&_tr:last-child_td]:border-b-0";
 

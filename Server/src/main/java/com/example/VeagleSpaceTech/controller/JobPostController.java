@@ -52,14 +52,14 @@ public class JobPostController {
     }
 
     // Add a Job in DB
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN','SADMIN')")
     @PostMapping("/api/v1/admin/jobs")
     public ResponseEntity<JobPostResponseDTO> addJob(@RequestBody JobPostRequestDTO request) {
         return ResponseEntity.status(201).body(jobPostService.addJob(request));
     }
 
     // Update Job From DB
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN','SADMIN')")
     @PutMapping("/api/v1/admin/jobs/{id}")
     public ResponseEntity<JobPostResponseDTO> update(
             @RequestBody JobPostRequestDTO request,
@@ -68,7 +68,7 @@ public class JobPostController {
         return ResponseEntity.ok(jobPostService.update(request, id));
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN','SADMIN')")
     @PatchMapping("/api/v1/admin/jobs/{id}/status")
     public ResponseEntity<String> changeStatus(
             @PathVariable Long id,
@@ -79,7 +79,7 @@ public class JobPostController {
     }
 
     // Delete Job From DB
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN','SADMIN')")
     @DeleteMapping("/api/v1/admin/jobs/{id}")
     public ResponseEntity<String> delete(@PathVariable Long id) {
         jobPostService.delete(id);

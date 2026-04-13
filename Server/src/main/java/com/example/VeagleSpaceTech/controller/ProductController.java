@@ -27,7 +27,7 @@ public class ProductController {
     }
 
     //Add Product
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN','SADMIN')")
     @PostMapping(value = "/api/v1/admin/products", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<ProductResponseDTO> addProduct(
             @RequestPart("request") String requestJson,
@@ -46,7 +46,7 @@ public class ProductController {
     }
 
     // Update Product
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN','SADMIN')")
     @PutMapping(value = "/api/v1/admin/products/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<ProductResponseDTO> updateProduct(
             @PathVariable Long id,
@@ -68,7 +68,7 @@ public class ProductController {
     }
 
     // For only Status Updation
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN','SADMIN')")
     @PatchMapping("/api/v1/admin/products/{id}/status")
     public ResponseEntity<String> updateProductStatus(
             @PathVariable Long id,
@@ -80,7 +80,7 @@ public class ProductController {
     }
 
     // Delete Product
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN','SADMIN')")
     @DeleteMapping("/api/v1/admin/products/{id}")
     public ResponseEntity<String> deleteProduct(@PathVariable("id") Long id){
 //        System.out.println("\n ID: "+id);

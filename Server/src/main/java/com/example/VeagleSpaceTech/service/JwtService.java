@@ -10,6 +10,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.security.Key;
+import java.nio.charset.StandardCharsets;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -97,12 +98,31 @@ public boolean validateToken(String token, UserDetails userDetails) {
     }
 
     private Key getSignKey() {
-        byte[] keyBytes = Decoders.BASE64.decode(encodeSecret());
+        byte[] keyBytes = resolveSecretKeyBytes();
         return Keys.hmacShaKeyFor(keyBytes);
     }
 
-    //  Encode secret (only once)
-    private String encodeSecret() {
-        return java.util.Base64.getEncoder().encodeToString(SECRET_KEY.getBytes());
+    private byte[] resolveSecretKeyBytes() {
+        String normalizedSecret = SECRET_KEY == null ? "" : SECRET_KEY.trim();
+
+        if (normalizedSecret.isEmpty()) {
+            throw new IllegalStateException("JWT secret is missing. Set jwt.secret or JWT_SECRET to a value with at least 32 bytes.");
+        }
+
+        try {
+            byte[] decodedSecret = Decoders.BASE64.decode(normalizedSecret);
+            if (decodedSecret.length >= 32) {
+                return decodedSecret;
+            }
+        } catch (IllegalArgumentException ignored) {
+            // Not a Base64 secret; fall back to the raw string bytes below.
+        }
+
+        byte[] rawSecret = normalizedSecret.getBytes(StandardCharsets.UTF_8);
+        if (rawSecret.length < 32) {
+            throw new IllegalStateException("JWT secret must be at least 32 bytes for HS256. Update jwt.secret or JWT_SECRET.");
+        }
+
+        return rawSecret;
     }
 }

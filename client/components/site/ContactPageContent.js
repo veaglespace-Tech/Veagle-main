@@ -71,7 +71,7 @@ function renderHeroTitle(value) {
 
     if (lowered === "website" || lowered === "software") {
       return (
-        <span key={key} className="text-[#b3c5ff]">
+        <span key={key} className="text-[color:var(--accent-soft)]">
           {part}
         </span>
       );

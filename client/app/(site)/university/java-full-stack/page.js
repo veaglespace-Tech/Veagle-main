@@ -128,7 +128,7 @@ export default async function JavaFullStackPage() {
   const careerCards = buildCareerCards(benefits);
 
   return (
-    <main className="overflow-hidden bg-[#131314] text-[#e4e2e2]">
+    <main className="overflow-hidden bg-[color:var(--page-bg)] text-[color:var(--text-secondary)]">
       <section className="relative flex min-h-[78vh] items-center overflow-hidden px-4 pb-12 pt-28 sm:px-6 sm:pt-32 lg:px-8 lg:pt-36">
         <div className="absolute inset-0">
           <Image
@@ -159,7 +159,7 @@ export default async function JavaFullStackPage() {
             <div className="mt-9 flex flex-wrap gap-4">
               <Link
                 href="/contact"
-                className="inline-flex items-center justify-center rounded-full bg-[#b3c5ff] px-7 py-3.5 text-sm font-bold text-[#133374] transition hover:brightness-110"
+                className="inline-flex items-center justify-center rounded-full bg-[color:var(--accent-soft)] px-7 py-3.5 text-sm font-bold text-[#133374] transition hover:brightness-110"
               >
                 Enquire
               </Link>

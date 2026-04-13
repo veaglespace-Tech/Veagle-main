@@ -1,5 +1,12 @@
 import { requirePortalRole } from "@/lib/portal/token";
-import { readCmsContent, writeCmsContent } from "@/lib/cms/local-store";
+import { API_BASE_URL } from "@/lib/site";
+
+async function readPayload(response) {
+  const contentType = response.headers.get("content-type") || "";
+  return contentType.includes("application/json")
+    ? response.json()
+    : response.text();
+}
 
 export async function GET(request) {
   const access = requirePortalRole(request);
@@ -7,8 +14,12 @@ export async function GET(request) {
     return access.response;
   }
 
-  const content = await readCmsContent();
-  return Response.json(content);
+  const response = await fetch(`${API_BASE_URL}/api/v1/site-content`, {
+    cache: "no-store",
+  });
+  const payload = await readPayload(response);
+
+  return Response.json(payload, { status: response.status });
 }
 
 export async function PUT(request) {
@@ -18,6 +29,16 @@ export async function PUT(request) {
   }
 
   const body = await request.json();
-  const content = await writeCmsContent(body);
-  return Response.json(content);
+  const response = await fetch(`${API_BASE_URL}/api/v1/admin/site-content`, {
+    method: "PUT",
+    headers: {
+      Authorization: `Bearer ${access.token}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(body),
+    cache: "no-store",
+  });
+  const payload = await readPayload(response);
+
+  return Response.json(payload, { status: response.status });
 }

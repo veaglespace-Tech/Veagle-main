@@ -80,7 +80,7 @@ export default function ServicesPageContent({ services, content }) {
               <h1 className="max-w-4xl font-headline text-4xl font-black leading-[0.94] tracking-[-0.05em] text-white sm:text-5xl lg:text-[4.6rem]">
                 {heroTitle}
               </h1>
-              <p className="max-w-2xl text-base leading-8 text-[#c7d2e5] sm:text-lg">
+              <p className="max-w-2xl text-base leading-8 text-[color:var(--text-secondary)] sm:text-lg">
                 {heroDescription}
               </p>
             </div>

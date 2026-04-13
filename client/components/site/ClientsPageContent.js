@@ -302,7 +302,7 @@ export default function ClientsPageContent({ content, clientsData = [] }) {
           <div className="mx-auto max-w-4xl text-center">
             <div className="inline-flex items-center gap-2 rounded-full border border-[#3257b8]/40 bg-[#1a2240]/45 px-4 py-2">
               <span className="h-2.5 w-2.5 rounded-full bg-[#56e240] shadow-[0_0_14px_rgba(86,226,64,0.55)]" />
-              <span className="text-[11px] font-bold uppercase tracking-[0.24em] text-[#b3c5ff]">
+              <span className="text-[11px] font-bold uppercase tracking-[0.24em] text-[color:var(--accent-soft)]">
                 Client Network Active
               </span>
             </div>

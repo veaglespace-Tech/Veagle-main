@@ -208,7 +208,7 @@ export default function LeadCaptureForm({
 
   if (appearance === "architect") {
     return (
-      <div className="relative overflow-hidden rounded-2xl bg-[color:var(--surface-container-high)] p-8 shadow-[var(--shadow-soft)] sm:p-10">
+      <div className="relative overflow-hidden rounded-2xl bg-[color:var(--surface-container-high)] p-8 shadow-[color:var(--shadow-soft)] sm:p-10">
         <div className="absolute right-0 top-0 h-32 w-32 rounded-full bg-[color:var(--accent)]/5 blur-2xl" />
 
         <div className="relative">

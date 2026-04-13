@@ -32,27 +32,27 @@ public class JobApplicationController {
                 new JobApplicationRequestDTO(name, email, phone, null, jobId, null);
 
         return ResponseEntity.ok(
-                jobApplicationService.applyToJob(request, file, email)
+                jobApplicationService.applyToJob(request, file)
         );
     }
 
     // Admin apis
     // Get All Job Applications
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN','SADMIN')")
     @GetMapping("/api/v1/admin/applications")
     public ResponseEntity<List<JobApplicationResponseDTO>> getAllApplications() {
         return ResponseEntity.status(200).body(jobApplicationService.getAll());
     }
 
     // Get Job Application By Id
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN','SADMIN')")
     @GetMapping("/api/v1/admin/applications/job/{jobId}")
     public ResponseEntity<List<JobApplicationResponseDTO>> getByJob(@PathVariable Long jobId) {
         return ResponseEntity.status(200).body(jobApplicationService.getByJob(jobId));
     }
 
     // Update Job Application Status
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN','SADMIN')")
     @PatchMapping("/api/v1/admin/applications/{id}/status")
     public ResponseEntity<JobApplicationResponseDTO> updateStatus(
             @PathVariable Long id,

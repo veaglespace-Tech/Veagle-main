@@ -1,13 +1,12 @@
 package com.example.VeagleSpaceTech.service;
 
+import com.example.VeagleSpaceTech.DTO.request.PortfolioRequestDTO;
+import com.example.VeagleSpaceTech.DTO.response.PortfolioResponseDTO;
+import com.example.VeagleSpaceTech.entity.Portfolio;
 import com.example.VeagleSpaceTech.mapper.PortfolioMapper;
 import com.example.VeagleSpaceTech.repo.PortfolioRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
-import com.example.VeagleSpaceTech.DTO.request.PortfolioRequestDTO;
-import com.example.VeagleSpaceTech.DTO.response.PortfolioResponseDTO;
-import com.example.VeagleSpaceTech.entity.Portfolio;
-
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
@@ -17,21 +16,17 @@ import java.util.List;
 public class PortfolioService {
 
     private final PortfolioRepository portfolioRepository;
+    private final FileService fileService;
 
-    // ✅ CREATE
     public PortfolioResponseDTO createPortfolio(PortfolioRequestDTO dto, MultipartFile image) {
-
         String imageUrl = uploadImage(image);
 
         Portfolio portfolio = PortfolioMapper.toEntity(dto);
         portfolio.setImageUrl(imageUrl);
 
-        Portfolio saved = portfolioRepository.save(portfolio);
-
-        return PortfolioMapper.toDTO(saved);
+        return PortfolioMapper.toDTO(portfolioRepository.save(portfolio));
     }
 
-    //  GET ALL
     public List<PortfolioResponseDTO> getAllPortfolios() {
         return portfolioRepository.findAll()
                 .stream()
@@ -39,7 +34,6 @@ public class PortfolioService {
                 .toList();
     }
 
-    //  GET BY ID
     public PortfolioResponseDTO getPortfolioById(Long id) {
         Portfolio portfolio = portfolioRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Portfolio not found"));
@@ -47,9 +41,7 @@ public class PortfolioService {
         return PortfolioMapper.toDTO(portfolio);
     }
 
-    //  UPDATE
     public PortfolioResponseDTO updatePortfolio(Long id, PortfolioRequestDTO dto, MultipartFile image) {
-
         Portfolio existing = portfolioRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Portfolio not found"));
 
@@ -59,25 +51,26 @@ public class PortfolioService {
         existing.setGithubUrl(dto.githubUrl());
 
         if (image != null && !image.isEmpty()) {
-            String imageUrl = uploadImage(image);
-            existing.setImageUrl(imageUrl);
+            fileService.delete(existing.getImageUrl());
+            existing.setImageUrl(uploadImage(image));
         }
 
-        Portfolio updated = portfolioRepository.save(existing);
-
-        return PortfolioMapper.toDTO(updated);
+        return PortfolioMapper.toDTO(portfolioRepository.save(existing));
     }
 
-    // ✅ DELETE
     public void deletePortfolio(Long id) {
-        if (!portfolioRepository.existsById(id)) {
-            throw new RuntimeException("Portfolio not found");
-        }
-        portfolioRepository.deleteById(id);
+        Portfolio portfolio = portfolioRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Portfolio not found"));
+
+        portfolioRepository.delete(portfolio);
+        fileService.delete(portfolio.getImageUrl());
     }
 
-    // IMAGE UPLOAD (TEMP)
     private String uploadImage(MultipartFile image) {
-        return "http://localhost:8080/uploads/portfolio" + image.getOriginalFilename();
+        if (image == null || image.isEmpty()) {
+            throw new RuntimeException("Portfolio image is required");
+        }
+
+        return fileService.uploadImage(image, "portfolio");
     }
 }

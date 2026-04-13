@@ -31,7 +31,7 @@ public class PortfolioController {
     }
 
     //  CREATE
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN','SADMIN')")
     @PostMapping("/api/v1/admin/portfolio")
     public ResponseEntity<PortfolioResponseDTO> createPortfolio(
             @ModelAttribute PortfolioRequestDTO dto,
@@ -41,7 +41,7 @@ public class PortfolioController {
     }
 
     // ✅ UPDATE
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN','SADMIN')")
     @PutMapping("/api/v1/admin/portfolio/{id}")
     public ResponseEntity<PortfolioResponseDTO> updatePortfolio(
             @PathVariable Long id,
@@ -52,7 +52,7 @@ public class PortfolioController {
     }
 
     // ✅ DELETE
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN','SADMIN')")
     @DeleteMapping("/api/v1/admin/portfolio/{id}")
     public ResponseEntity<String> deletePortfolio(@PathVariable Long id) {
         portfolioService.deletePortfolio(id);

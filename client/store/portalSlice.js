@@ -166,7 +166,7 @@ const portalSlice = createSlice({
         state.users = action.payload.users || [];
         if (action.payload.fallbackUsed) {
           state.notice =
-            "Some backend dashboard data is unavailable right now. Showing saved CMS data and empty lists where APIs did not respond.";
+            "Some backend dashboard data is unavailable right now. Showing empty sections where APIs did not respond.";
         }
       })
       .addCase(loadPortalDashboard.rejected, (state, action) => {

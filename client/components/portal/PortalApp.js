@@ -127,7 +127,7 @@ const tabs = [
 
 const tabDescriptions = {
   overview: "Monitor leads, allocations and entity counts from one admin-grade control center.",
-  content: "Update homepage marketing content and public website blocks without backend changes.",
+  content: "Update homepage marketing content and public website blocks through the backend-backed CMS.",
   services: "Manage dynamic service content that powers both list pages and detail pages.",
   products: "Organize the product showcase with better grouping and status control.",
   categories: "Keep product categories clean so the public catalog remains structured.",

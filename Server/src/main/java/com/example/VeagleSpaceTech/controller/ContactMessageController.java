@@ -26,19 +26,19 @@ public class ContactMessageController {
     }
 
     // Get All Messages
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN','SADMIN')")
     @GetMapping("/api/v1/admin/contacts")
     public ResponseEntity<List<ContactResponseDTO>> getContactMessages(){
         return ResponseEntity.status(200).body(service.getContactMessages());
     }
     // Fetch Only for Read or Not Read
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN','SADMIN')")
     @GetMapping("/api/v1/admin/contacts/unread")
     public ResponseEntity<List<ContactResponseDTO>> getUnreadContactMessages(){
         return ResponseEntity.status(200).body(service.getUnreadContactMessages());
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN','SADMIN')")
     @PatchMapping("/api/v1/admin/contacts/{id}/read")
     public ResponseEntity<String> markAsRead(@PathVariable Long id){
 
@@ -48,7 +48,7 @@ public class ContactMessageController {
     }
 
     // Delete Messages
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN','SADMIN')")
     @DeleteMapping("/api/v1/admin/contacts/{id}")
     public ResponseEntity<String> deleteContactMessages(@PathVariable Long id){
         service.deleteContactMessage(id);

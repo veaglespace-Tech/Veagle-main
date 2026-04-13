@@ -33,7 +33,7 @@ export default function BrandMark({
 
   const brand = (
     <div className={`flex items-center ${styles.wrapper} ${className}`.trim()}>
-      <div className="relative h-11 w-11 shrink-0 overflow-hidden rounded-xl border border-[color:var(--border)] bg-white/80 shadow-[var(--shadow-soft)] sm:h-12 sm:w-12">
+      <div className="relative h-11 w-11 shrink-0 overflow-hidden rounded-xl border border-[color:var(--border)] bg-white/80 shadow-[color:var(--shadow-soft)] sm:h-12 sm:w-12">
         <Image
           src="/veagle-logo.webp"
           alt={COMPANY_BRAND_NAME}

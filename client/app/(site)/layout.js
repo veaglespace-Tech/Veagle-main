@@ -1,6 +1,7 @@
 import SiteFooter from "@/components/site/SiteFooter";
 import SiteHeader from "@/components/site/SiteHeader";
 import { getServices } from "@/lib/backend";
+import StickySocialBar from "@/components/site/StickySocialBar";
 import { getSiteContent } from "@/lib/cms/store";
 
 export default async function SiteLayout({ children }) {
@@ -9,6 +10,7 @@ export default async function SiteLayout({ children }) {
   return (
     <div className="relative min-h-screen">
       <SiteHeader />
+      <StickySocialBar />
       {children}
       <SiteFooter content={content} services={services} />
     </div>
