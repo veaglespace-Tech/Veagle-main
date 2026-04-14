@@ -9,11 +9,14 @@ export async function requestJson(url, options = {}) {
     : await response.text();
 
   if (!response.ok) {
-    throw new Error(
+    const error = new Error(
       typeof payload === "string"
         ? payload
         : payload.error || payload.message || "Request failed"
     );
+    error.status = response.status;
+    error.payload = payload;
+    throw error;
   }
 
   return payload;
@@ -84,6 +87,17 @@ export async function fetchPortalDashboard(session) {
     portfolio,
     applications,
     users,
+    authExpired:
+      primaryResults.some(
+        (result) =>
+          result.status === "rejected" &&
+          (result.reason?.status === 401 || result.reason?.status === 403)
+      ) ||
+      results.some(
+        (result) =>
+          result.status === "rejected" &&
+          (result.reason?.status === 401 || result.reason?.status === 403)
+      ),
     fallbackUsed:
       primaryResults.some((result) => result.status === "rejected") ||
       results.some((result) => result.status === "rejected"),

@@ -70,9 +70,14 @@ export default function JobApplicationForm({
   jobs = [],
   className = "",
   showSelectedCard = true,
+  preSelectedJobId,
 }) {
   const pathname = usePathname();
-  const defaultJobId = jobs[0]?.id ? String(jobs[0].id) : "";
+  const defaultJobId = preSelectedJobId
+    ? String(preSelectedJobId)
+    : jobs[0]?.id
+      ? String(jobs[0].id)
+      : "";
   const [form, setForm] = useState({
     ...initialState,
     jobId: defaultJobId,
@@ -91,6 +96,11 @@ export default function JobApplicationForm({
   const registerHref = buildRegisterHref(pathname || "/career");
 
   useEffect(() => {
+    if (preSelectedJobId) {
+      setForm((current) => ({ ...current, jobId: String(preSelectedJobId) }));
+      return;
+    }
+
     setForm((current) => {
       if (!defaultJobId) {
         return current.jobId ? { ...current, jobId: "" } : current;
@@ -99,7 +109,7 @@ export default function JobApplicationForm({
       const exists = jobs.some((job) => String(job.id) === current.jobId);
       return exists ? current : { ...current, jobId: defaultJobId };
     });
-  }, [defaultJobId, jobs]);
+  }, [defaultJobId, jobs, preSelectedJobId]);
 
   useEffect(() => {
     function syncSession() {
@@ -146,6 +156,14 @@ export default function JobApplicationForm({
 
     startTransition(async () => {
       try {
+        if (!isUserSession(session)) {
+          setStatus({
+            type: "error",
+            message: "Authentication required. Please sign in to submit your application.",
+          });
+          return;
+        }
+
         const payload = new FormData();
         payload.append("name", form.name.trim());
         payload.append("email", form.email.trim());
@@ -161,9 +179,9 @@ export default function JobApplicationForm({
         setForm({
           ...initialState,
           jobId: defaultJobId,
-          name: session.username || "",
-          email: session.email || "",
-          phone: session.contact || "",
+          name: session?.username || "",
+          email: session?.email || "",
+          phone: session?.contact || "",
         });
       } catch (error) {
         setStatus({
@@ -346,25 +364,25 @@ function AccessBanner({ session, loginHref, registerHref, onLogout }) {
   }
 
   return (
-    <div className={accessBannerClass}>
-      <p className="font-semibold">
-        Login is optional, but it auto-fills your application details.
+    <div className={cn(accessBannerClass, "border-amber-500/30 bg-amber-500/5")}>
+      <p className="font-semibold text-amber-200">
+        Registration and Login required
       </p>
-      <p className="mt-2 text-xs leading-6 text-[color:var(--text-secondary)]">
-        Apply as a guest, or sign in to reuse your saved profile.
+      <p className="mt-2 text-xs leading-6 text-amber-100/70">
+        To maintain candidate security and protocol integrity, you must be signed in to submit a job application.
       </p>
-      <div className="mt-3 flex flex-wrap gap-3">
+      <div className="mt-4 flex flex-wrap gap-3">
         <Link
           href={loginHref}
-          className={cn(primaryButtonClass, compactActionButtonClass)}
+          className={cn(primaryButtonClass, compactActionButtonClass, "bg-amber-600 hover:bg-amber-500")}
         >
-          User Login
+          Sign In
         </Link>
         <Link
           href={registerHref}
-          className={cn(secondaryButtonClass, compactActionButtonClass)}
+          className={cn(secondaryButtonClass, compactActionButtonClass, "border-amber-500/30 text-amber-200")}
         >
-          Register
+          Create Profile
         </Link>
       </div>
     </div>

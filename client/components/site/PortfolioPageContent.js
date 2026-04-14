@@ -33,9 +33,9 @@ function getCardLayout(index) {
 function getFocusStyles(index) {
   if (index % 4 === 0) {
     return {
-      badge: "text-[#b7c9ff]",
-      title: "text-white",
-      copy: "text-[#c6d3ea]",
+      badge: "text-[color:var(--accent)]",
+      title: "text-[color:var(--text-primary)]",
+      copy: "text-[color:var(--text-secondary)]",
       overlay:
         "bg-[linear-gradient(180deg,rgba(6,10,17,0)_12%,rgba(7,11,18,0.92)_100%)]",
     };
@@ -43,9 +43,9 @@ function getFocusStyles(index) {
 
   if (index % 4 === 1) {
     return {
-      badge: "text-[#ffc7d7]",
-      title: "text-white",
-      copy: "text-[#ced7ea]",
+      badge: "text-[color:var(--accent)]/90",
+      title: "text-[color:var(--text-primary)]",
+      copy: "text-[color:var(--text-secondary)]",
       overlay:
         "bg-[linear-gradient(180deg,rgba(6,10,17,0.06),rgba(6,10,17,0.94))]",
     };
@@ -53,18 +53,18 @@ function getFocusStyles(index) {
 
   if (index % 4 === 2) {
     return {
-      badge: "text-[#8de379]",
-      title: "text-white",
-      copy: "text-[#c8d2e7]",
+      badge: "text-[color:var(--accent)]/80",
+      title: "text-[color:var(--text-primary)]",
+      copy: "text-[color:var(--text-secondary)]",
       overlay:
         "bg-[linear-gradient(180deg,rgba(6,10,17,0.02),rgba(6,10,17,0.94))]",
     };
   }
 
   return {
-    badge: "text-[#9dd1ff]",
-    title: "text-white",
-    copy: "text-[#c8d2e7]",
+    badge: "text-[color:var(--accent)]/70",
+    title: "text-[color:var(--text-primary)]",
+    copy: "text-[color:var(--text-secondary)]",
     overlay:
       "bg-[linear-gradient(180deg,rgba(6,10,17,0.06),rgba(6,10,17,0.9))]",
   };
@@ -173,15 +173,15 @@ export default function PortfolioPageContent({ content, portfolioData = [] }) {
         </div>
 
         <div className="relative z-10 mx-auto w-full max-w-5xl text-center">
-          <span className="inline-flex items-center rounded-full border border-[#8aa5ff]/28 bg-[#1b2440]/55 px-4 py-2 text-[11px] font-semibold uppercase tracking-[0.24em] text-[#c4d4ff]">
+          <span className="inline-flex items-center rounded-full border border-[color:var(--accent)]/28 bg-[color:var(--surface-strong)] px-4 py-2 text-[10px] font-black uppercase tracking-[0.24em] text-[color:var(--text-muted)]">
             {portfolio.eyebrow || "Portfolio"}
           </span>
           <h1 className="mt-8 font-headline text-5xl font-black leading-[0.93] tracking-[-0.045em] text-white sm:text-7xl lg:text-8xl">
             {portfolio.title || "Project Showcase"}
           </h1>
-          <p className="mx-auto mt-7 max-w-3xl text-base leading-8 text-[#c0cbe2] sm:text-lg">
+          <p className="mx-auto mt-7 max-w-3xl text-base leading-8 text-[color:var(--text-secondary)] sm:text-lg">
             {portfolio.description ||
-              "Publish your real case studies from the dashboard. This page now stays empty until portfolio entries are added."}
+              "Explore a curated selection of our high-performance software deployments and digital product architectures."}
           </p>
         </div>
       </section>
@@ -195,7 +195,7 @@ export default function PortfolioPageContent({ content, portfolioData = [] }) {
               onClick={() => setActiveFilter(filter)}
               className={cn(
                 filterButtonClass(activeFilter === filter),
-                "text-xs uppercase tracking-[0.18em]"
+                "text-[10px] font-black uppercase tracking-[0.18em]"
               )}
             >
               {filter}
@@ -233,7 +233,7 @@ export default function PortfolioPageContent({ content, portfolioData = [] }) {
                   <div className="absolute right-5 top-5 rounded-full border border-white/14 bg-[#1f2634]/70 px-4 py-2 backdrop-blur-md">
                     <div className="flex items-center gap-2">
                       <span className="h-2 w-2 animate-pulse rounded-full bg-[#56e240]" />
-                      <span className="text-[10px] font-semibold uppercase tracking-[0.18em] text-[#dce6ff]">
+                      <span className="text-[9px] font-black uppercase tracking-[0.18em] text-[color:var(--text-primary)]">
                         Protocol: {protocolName(study)}
                       </span>
                     </div>
@@ -244,13 +244,13 @@ export default function PortfolioPageContent({ content, portfolioData = [] }) {
                   className={`absolute bottom-0 left-0 right-0 ${isCompact ? "p-6" : "p-7 sm:p-8"}`}
                 >
                   {isLargeLead ? (
-                    <p className={`text-[10px] font-bold uppercase tracking-[0.22em] ${styles.badge}`}>
-                      {study.subtitle || "Industrial Intelligence"}
+                    <p className={`text-[10px] font-black uppercase tracking-[0.22em] ${styles.badge}`}>
+                      {study.subtitle || "Enterprise Intelligence"}
                     </p>
                   ) : null}
 
                   {!isLargeLead ? (
-                    <p className={`text-[10px] font-bold uppercase tracking-[0.22em] ${styles.badge}`}>
+                    <p className={`text-[10px] font-black uppercase tracking-[0.22em] ${styles.badge}`}>
                       {study.category}
                     </p>
                   ) : null}
@@ -263,7 +263,7 @@ export default function PortfolioPageContent({ content, portfolioData = [] }) {
                     {study.title}
                   </h2>
 
-                  <p className={`mt-3 max-w-2xl text-sm leading-7 ${styles.copy}`}>
+                  <p className={`mt-3 max-w-2xl text-[13px] leading-7 ${styles.copy}`}>
                     {study.summary}
                   </p>
 
@@ -272,7 +272,7 @@ export default function PortfolioPageContent({ content, portfolioData = [] }) {
                       {(study.tags || []).slice(0, 2).map((tag) => (
                         <span
                           key={`${study.id}-${tag}`}
-                          className="rounded-full border border-white/14 bg-white/[0.06] px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.14em] text-[#d2dcf0]"
+                          className="rounded-full border border-white/14 bg-white/[0.06] px-3 py-1 text-[9px] font-black uppercase tracking-[0.14em] text-[color:var(--text-muted)]"
                         >
                           {tag}
                         </span>
@@ -285,10 +285,10 @@ export default function PortfolioPageContent({ content, portfolioData = [] }) {
                       href="/contact"
                       className={cn(
                         secondaryButtonClass,
-                        "mt-6 w-full border-white/10 bg-[rgba(21,27,35,0.82)] px-6 py-3 text-xs uppercase tracking-[0.18em]"
+                        "mt-6 w-full border-white/10 bg-[rgba(21,27,35,0.82)] px-6 py-3 text-[10px] font-black uppercase tracking-[0.18em]"
                       )}
                     >
-                      Orbit Details
+                      Module Specifications
                     </Link>
                   ) : null}
 
@@ -298,14 +298,14 @@ export default function PortfolioPageContent({ content, portfolioData = [] }) {
                         href={study.linkUrl}
                         target="_blank"
                         rel="noreferrer"
-                        className="mt-4 inline-flex items-center gap-2 text-xs font-bold uppercase tracking-[0.18em] text-[#c9d7ff]"
+                        className="mt-4 inline-flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.18em] text-[color:var(--accent)]"
                       >
                         {study.linkLabel || "View Case Study"}
                         <ArrowUpRight className="h-3.5 w-3.5" />
                       </a>
                     ) : (
-                      <div className="mt-4 inline-flex items-center gap-2 text-xs font-bold uppercase tracking-[0.18em] text-[#c9d7ff]">
-                        View Case Study
+                      <div className="mt-4 inline-flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.18em] text-[color:var(--accent)]">
+                        Launch Details
                         <ArrowUpRight className="h-3.5 w-3.5" />
                       </div>
                     )
@@ -314,11 +314,11 @@ export default function PortfolioPageContent({ content, portfolioData = [] }) {
                   {isWideStat ? (
                     <div className="mt-6 sm:absolute sm:bottom-8 sm:right-8 sm:mt-0">
                       <div className="w-fit rounded-[1rem] border border-white/14 bg-[#1f2634]/72 px-5 py-4 text-center backdrop-blur-md">
-                        <p className="font-headline text-3xl font-black tracking-tight text-[#dbe4ff]">
+                        <p className="font-headline text-3xl font-black tracking-tight text-[color:var(--text-primary)]">
                           {throughputValue(study)}
                         </p>
-                        <p className="mt-1 text-[10px] font-semibold uppercase tracking-[0.18em] text-[#9dabc6]">
-                          Throughput boost
+                        <p className="mt-1 text-[9px] font-black uppercase tracking-[0.18em] text-[color:var(--text-muted)]">
+                          Operational Efficiency
                         </p>
                       </div>
                     </div>
@@ -331,10 +331,10 @@ export default function PortfolioPageContent({ content, portfolioData = [] }) {
           {!filteredProjects.length ? (
             <div className="md:col-span-12 rounded-[1.2rem] border border-dashed border-white/14 bg-[#1a1d23] px-6 py-14 text-center">
               <h3 className="font-headline text-2xl font-black tracking-tight text-white">
-                No portfolio projects yet
+                Project Vault Empty
               </h3>
-              <p className="mt-3 text-sm leading-7 text-[#b7c3d9]">
-                Add portfolio entries from the dashboard CMS and they will appear here automatically.
+              <p className="mt-3 text-sm leading-7 text-[color:var(--text-muted)]">
+                Initialize your portfolio database via the admin panel to populate this showcase.
               </p>
             </div>
           ) : null}
@@ -347,15 +347,15 @@ export default function PortfolioPageContent({ content, portfolioData = [] }) {
             <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,rgba(179,197,255,0.2),transparent_45%)]" />
             <div className="relative z-10 mx-auto max-w-3xl">
               <h2 className="font-headline text-3xl font-black leading-tight tracking-[-0.03em] text-white sm:text-5xl">
-                {portfolio.ctaTitle || "Ready to publish your next project story?"}
+                {portfolio.ctaTitle || "Architect your next digital milestone"}
               </h2>
-              <p className="mx-auto mt-5 max-w-2xl text-sm leading-8 text-[#c4cee1] sm:text-base">
+              <p className="mx-auto mt-5 max-w-2xl text-sm leading-8 text-[color:var(--text-secondary)] sm:text-base">
                 {portfolio.ctaDescription ||
-                  "Use the dashboard CMS to add real portfolio data instead of hardcoded showcase cards."}
+                  "Share your vision for the next iteration of your business and we will transform it into a precision-engineered reality."}
               </p>
               <div className="mt-8">
                 <PrimaryLink href="/contact">
-                  Create your next launch
+                  Initiate Engagement
                   <Rocket className="h-4 w-4" />
                 </PrimaryLink>
               </div>

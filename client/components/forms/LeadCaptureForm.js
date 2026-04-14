@@ -23,6 +23,7 @@ import {
   textareaClass,
 } from "@/components/site/UiBits";
 import { postContact } from "@/lib/backend";
+import { cn } from "@/lib/utils";
 
 const initialState = {
   name: "",
@@ -50,6 +51,7 @@ const timelineOptions = [
   { value: "strategic-6-plus-months", label: "Strategic Long-term (6+ months)" },
   { value: "need-recommendation", label: "Need recommendation" },
 ];
+
 const accessBannerClass =
   "mb-6 rounded-[1.35rem] border border-[color:var(--border-strong)] bg-[linear-gradient(135deg,rgba(25,94,226,0.18),rgba(18,22,30,0.94))] px-4 py-4 text-sm text-[color:var(--text-primary)] shadow-[color:var(--shadow-soft)] backdrop-blur-md";
 const compactActionButtonClass =
@@ -156,6 +158,14 @@ export default function LeadCaptureForm({
 
     if (Object.keys(nextErrors).length > 0) {
       setErrors(nextErrors);
+      return;
+    }
+
+    if (!isUserSession(session)) {
+      setStatus({
+        type: "error",
+        message: "Authentication required. Please sign in to submit your project brief.",
+      });
       return;
     }
 
@@ -272,7 +282,7 @@ export default function LeadCaptureForm({
             {status.message ? (
               <div
                 className={
-              status.type === "success"
+                  status.type === "success"
                     ? "rounded-xl border border-emerald-500/20 bg-emerald-500/10 px-4 py-3 text-sm text-emerald-200"
                     : "rounded-xl border border-rose-500/20 bg-rose-500/10 px-4 py-3 text-sm text-rose-200"
                 }
@@ -482,7 +492,7 @@ export default function LeadCaptureForm({
         <h3 className="mt-4 font-headline text-2xl font-black tracking-tighter text-white sm:text-3xl">
           {compact ? "Tell us what needs to improve." : "Share the requirement and we will shape the right next step."}
         </h3>
-        <p className="mt-3 text-sm leading-7 text-blue-50">
+        <p className="mt-3 text-sm leading-7 text-blue-50/80">
           {compact
             ? "Use this form for website, software, dashboard, SEO or admin workflow requirements."
             : "Add business context, service priority and project expectations so the team can respond with more clarity."}
@@ -599,7 +609,7 @@ export default function LeadCaptureForm({
           <p className="text-xs leading-6 text-[color:var(--text-muted)]">
             Submitted enquiries are stored for dashboard review and follow-up.
           </p>
-          <button className={`${primaryButtonClass} w-full sm:w-auto`} type="submit" disabled={isSubmitting}>
+          <button className={cn(primaryButtonClass, "w-full sm:w-auto")} type="submit" disabled={isSubmitting}>
             {isSubmitting ? "Submitting..." : "Submit requirement"}
           </button>
         </div>
@@ -655,7 +665,7 @@ function AccessBanner({ session, loginHref, registerHref, onLogout }) {
           <button
             type="button"
             onClick={onLogout}
-            className={`${secondaryButtonClass} ${compactActionButtonClass}`}
+            className={cn(secondaryButtonClass, compactActionButtonClass)}
           >
             Logout
           </button>
@@ -666,24 +676,24 @@ function AccessBanner({ session, loginHref, registerHref, onLogout }) {
 
   return (
     <div className={accessBannerClass}>
-      <p className="font-semibold">
-        Login is optional, but it auto-fills your details.
+      <p className="font-semibold text-amber-200">
+        Registration and Login required
       </p>
-      <p className="mt-2 text-xs leading-6 text-[color:var(--text-secondary)]">
-        You can submit as a guest, or sign in for faster form completion.
+      <p className="mt-2 text-xs leading-6 text-amber-100/70">
+        To maintain project security and data integrity, you must be signed in to submit a technical requirement.
       </p>
-      <div className="mt-3 flex flex-wrap gap-3">
+      <div className="mt-4 flex flex-wrap gap-3">
         <Link
           href={loginHref}
-          className={`${primaryButtonClass} ${compactActionButtonClass}`}
+          className={cn(primaryButtonClass, compactActionButtonClass, "bg-amber-600 hover:bg-amber-500 border-transparent text-white font-bold")}
         >
-          User Login
+          Sign In
         </Link>
         <Link
           href={registerHref}
-          className={`${secondaryButtonClass} ${compactActionButtonClass}`}
+          className={cn(secondaryButtonClass, compactActionButtonClass, "border-amber-500/30 text-amber-200 font-bold bg-amber-500/5 hover:bg-amber-500/10")}
         >
-          Register
+          Create Profile
         </Link>
       </div>
     </div>

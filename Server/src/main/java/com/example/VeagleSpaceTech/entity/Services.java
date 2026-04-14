@@ -24,6 +24,16 @@ public class Services { // Organization Services
     @Column(columnDefinition = "TEXT")
     private String description;
 
+    private String detailTitle;
+
+    @Lob
+    @Column(columnDefinition = "TEXT")
+    private String detailDescription;
+
+    @Lob
+    @Column(columnDefinition = "LONGTEXT")
+    private String pageContent;
+
     private String imageUrl;
 
     @OneToMany(mappedBy = "service", cascade = CascadeType.ALL, orphanRemoval = true)
@@ -59,6 +69,30 @@ public class Services { // Organization Services
 
 	public void setImageUrl(String imageUrl) {
 		this.imageUrl = imageUrl;
+	}
+
+	public String getDetailTitle() {
+		return detailTitle;
+	}
+
+	public void setDetailTitle(String detailTitle) {
+		this.detailTitle = detailTitle;
+	}
+
+	public String getDetailDescription() {
+		return detailDescription;
+	}
+
+	public void setDetailDescription(String detailDescription) {
+		this.detailDescription = detailDescription;
+	}
+
+	public String getPageContent() {
+		return pageContent;
+	}
+
+	public void setPageContent(String pageContent) {
+		this.pageContent = pageContent;
 	}
 
 	public List<Feature> getFeatures() {

@@ -35,7 +35,12 @@ async function fetchJson(path, fallback, options = {}) {
       throw new Error(`Backend responded with ${response.status}`);
     }
 
-    return await response.json();
+    const text = await response.text();
+    try {
+      return JSON.parse(text);
+    } catch {
+      return text;
+    }
   } catch {
     return fallback;
   }
@@ -69,8 +74,26 @@ export async function getServices(keyword = "") {
 }
 
 export async function getServiceBySlug(slug) {
+  if (!slug) return null;
+
   const services = await getServices();
-  return services.find((service) => service.slug === slug) || null;
+  if (!services || services.length === 0) return null;
+
+  const decodedSlug = decodeURIComponent(slug).toLowerCase();
+  
+  // 1. Try finding by ID first if slug looks like a number
+  if (/^\d+$/.test(decodedSlug)) {
+    const byId = services.find((s) => String(s.id) === decodedSlug);
+    if (byId) return byId;
+  }
+
+  // 2. Try exact slug match or slugified title match
+  return services.find((service) => {
+    const sSlug = (service.slug || "").toLowerCase();
+    const tSlug = slugify(service.title || "").toLowerCase();
+    
+    return sSlug === decodedSlug || tSlug === decodedSlug;
+  }) || null;
 }
 
 export async function getProducts() {
@@ -109,10 +132,11 @@ export async function postContact(payload) {
     throw new Error(message || "Unable to send your message right now.");
   }
 
+  const text = await response.text();
   try {
-    return await response.json();
+    return JSON.parse(text);
   } catch {
-    return response.text();
+    return text;
   }
 }
 
@@ -132,13 +156,23 @@ export async function postJobApplication(formData, token) {
     throw new Error(message || "Unable to submit application right now.");
   }
 
-  return response.json();
+  const text = await response.text();
+  try {
+    return JSON.parse(text);
+  } catch {
+    return text;
+  }
 }
 
 export async function safeReadMessage(response) {
   try {
-    const data = await response.json();
-    return data?.message || data?.error || null;
+    const text = await response.text();
+    try {
+      const data = JSON.parse(text);
+      return data?.message || data?.error || text;
+    } catch {
+      return text || null;
+    }
   } catch {
     return null;
   }

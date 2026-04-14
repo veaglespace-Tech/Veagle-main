@@ -9,8 +9,8 @@ import BrandMark from "@/components/BrandMark";
 import {
   clearStoredSession,
   isStaffSession,
-  PORTAL_STORAGE_KEY,
   PORTAL_SESSION_EVENT,
+  readStoredSession,
 } from "@/lib/auth-session";
 import {
   primaryButtonClass,
@@ -55,7 +55,8 @@ function getSessionSnapshot() {
     return "";
   }
 
-  return window.localStorage.getItem(PORTAL_STORAGE_KEY) || "";
+  const session = readStoredSession();
+  return session ? JSON.stringify(session) : "";
 }
 
 export default function SiteHeader() {

@@ -1,5 +1,8 @@
 "use client";
 
+import Image from "next/image";
+import { useEffect, useMemo, useState } from "react";
+import PageBuilder from "@/components/portal/PageBuilder";
 import { Save } from "lucide-react";
 
 import {
@@ -11,6 +14,7 @@ import {
   ItemCard,
   ListEditor,
   MetricTile,
+  portalCardClass,
   portalButtonPrimaryClass,
   portalButtonSecondaryClass,
   portalSelectClass,
@@ -23,96 +27,98 @@ import {
   TextAreaField,
 } from "@/components/portal/PortalFields";
 import { backendAssetUrl } from "@/lib/backend";
-import { formatDate } from "@/lib/utils";
+import { authHeaders, requestJson } from "@/lib/portal-api";
+import { API_BASE_URL } from "@/lib/site";
+import { cn, formatDate } from "@/lib/utils";
 
 export function OverviewPanel({ metrics, leads, visibleTasks }) {
   const newLeadCount = leads.filter((lead) => lead.status === "new").length;
   const openTaskCount = visibleTasks.filter((task) => task.status !== "done").length;
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4">
       <DashboardIntro
-        title="Control your website, operations and allocation flow from one dashboard"
-        description="Public content, backend entities, incoming leads and admin assignments are all visible here."
+        title="Command center"
+        description="Public content, entities, leads and assignments are all visible here."
       />
 
-      <div className="grid gap-5 xl:grid-cols-[1.08fr_0.92fr]">
-        <div className="rounded-[1.8rem] border border-[color:var(--border)] bg-[linear-gradient(135deg,var(--accent),var(--accent-strong))] p-6 text-white shadow-[color:var(--shadow-accent)] sm:p-7">
-          <p className="text-xs font-bold uppercase tracking-[0.24em] text-white/70">
-            Dashboard health
+      <div className="grid gap-4 xl:grid-cols-[1.1fr_0.9fr]">
+        <div className="rounded-[1.2rem] border border-[color:var(--border)] bg-[linear-gradient(135deg,var(--accent),var(--accent-strong))] p-4 text-white shadow-[color:var(--shadow-accent)] sm:p-5">
+          <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-white/70">
+            Systems Status
           </p>
-          <h2 className="mt-4 font-headline text-3xl font-black tracking-tighter text-white">
-            Keep public content, leads and allocations moving together.
+          <h2 className="mt-2.5 font-headline text-2xl font-black tracking-tighter text-white">
+            Maintain deployment integrity across all channels.
           </h2>
-          <p className="mt-4 max-w-2xl text-sm leading-7 text-blue-50">
-            This overview gives you the operational picture first so you can decide whether to update the website, respond to leads or assign internal work.
+          <p className="mt-2.5 max-w-2xl text-[11px] leading-5 text-blue-50/90">
+            Current operational picture for website updates, lead qualification and admin tasking.
           </p>
         </div>
 
-        <div className="grid gap-4 sm:grid-cols-2">
+        <div className="grid gap-3 sm:grid-cols-2">
           <div className={portalSubcardClass}>
-            <p className="text-[11px] font-bold uppercase tracking-[0.2em] text-[color:var(--text-muted)]">
+            <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-[color:var(--text-muted)]">
               New leads
             </p>
-            <p className="mt-3 font-headline text-3xl font-black tracking-tight text-[color:var(--text-primary)]">
+            <p className="mt-2 font-headline text-2xl font-black tracking-tight text-[color:var(--text-primary)]">
               {newLeadCount}
             </p>
-            <p className="mt-2 text-sm leading-6 text-[color:var(--text-secondary)]">
-              Contact requests waiting for qualification or follow-up.
+            <p className="mt-1.5 text-[11px] leading-5 text-[color:var(--text-secondary)]">
+              Contact requests waiting for follow-up.
             </p>
           </div>
           <div className={portalSubcardClass}>
-            <p className="text-[11px] font-bold uppercase tracking-[0.2em] text-[color:var(--text-muted)]">
+            <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-[color:var(--text-muted)]">
               Open allocations
             </p>
-            <p className="mt-3 font-headline text-3xl font-black tracking-tight text-[color:var(--text-primary)]">
+            <p className="mt-2 font-headline text-2xl font-black tracking-tight text-[color:var(--text-primary)]">
               {openTaskCount}
             </p>
-            <p className="mt-2 text-sm leading-6 text-[color:var(--text-secondary)]">
-              Website or content actions still in progress or not started yet.
+            <p className="mt-1.5 text-[11px] leading-5 text-[color:var(--text-secondary)]">
+              Website or content actions in progress.
             </p>
           </div>
         </div>
       </div>
 
-      <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+      <div className="grid gap-3.5 md:grid-cols-2 xl:grid-cols-3">
         {metrics.map((metric) => (
           <MetricTile key={metric.label} label={metric.label} value={metric.value} />
         ))}
       </div>
 
-      <div className="grid gap-6 xl:grid-cols-[1.05fr_0.95fr]">
+      <div className="grid gap-5 xl:grid-cols-[1.05fr_0.95fr]">
         <Card title="Latest leads">
-          <div className="space-y-3">
+          <div className="space-y-2.5">
             {leads.slice(0, 4).map((lead) => (
               <div key={lead.id} className={portalSubcardClass}>
                 <div className="flex items-start justify-between gap-3">
                   <div className="min-w-0">
-                    <p className="font-semibold text-[color:var(--text-primary)]">{lead.name}</p>
-                    <p className="break-all text-sm text-[color:var(--text-secondary)]">{lead.email}</p>
+                    <p className="text-[13px] font-bold text-[color:var(--text-primary)]">{lead.name}</p>
+                    <p className="break-all text-[11px] text-[color:var(--text-muted)]">{lead.email}</p>
                   </div>
                   <StatusBadge value={lead.status} />
                 </div>
-                <p className="mt-3 text-sm leading-7 text-[color:var(--text-secondary)]">{lead.message}</p>
+                <p className="mt-2 line-clamp-1 text-[11px] leading-5 text-[color:var(--text-secondary)]">{lead.message}</p>
               </div>
             ))}
           </div>
         </Card>
 
         <Card title="My allocations">
-          <div className="space-y-3">
+          <div className="space-y-2.5">
             {visibleTasks.slice(0, 4).map((task) => (
               <div key={task.id} className={portalSubcardClass}>
                 <div className="flex items-start justify-between gap-3">
                   <div className="min-w-0">
-                    <p className="font-semibold text-[color:var(--text-primary)]">{task.title}</p>
-                    <p className="break-words text-sm text-[color:var(--text-secondary)]">
+                    <p className="text-[13px] font-bold text-[color:var(--text-primary)]">{task.title}</p>
+                    <p className="break-words text-[11px] text-[color:var(--text-muted)]">
                       {task.section} / {task.assignedTo || "Unassigned"}
                     </p>
                   </div>
                   <StatusBadge value={task.status} />
                 </div>
-                <p className="mt-3 text-sm leading-7 text-[color:var(--text-secondary)]">
+                <p className="mt-2 line-clamp-1 text-[11px] leading-5 text-[color:var(--text-secondary)]">
                   {task.summary || "No summary added yet."}
                 </p>
               </div>
@@ -159,46 +165,46 @@ export function ContentPanel({
     (content.clients?.marquee?.length || 0);
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-5">
       <DashboardIntro
-        title="Edit homepage and all public page content"
-        description="This CMS layer now powers homepage, about, clients, career, services, products, portfolio and university content without touching the Spring Boot backend."
+        title="Public content manager"
+        description="Unified CMS for homepage, about, clients, career, services, products, portfolio and university content."
       />
 
-      <div className="grid gap-5 xl:grid-cols-[1.08fr_0.92fr]">
-        <div className="rounded-[1.8rem] border border-[color:var(--border)] bg-[linear-gradient(135deg,var(--accent),var(--accent-strong))] p-6 text-white shadow-[color:var(--shadow-accent)] sm:p-7">
-          <p className="text-xs font-bold uppercase tracking-[0.24em] text-white/70">
-            Content workspace
+      <div className="grid gap-4 xl:grid-cols-[1.1fr_0.9fr]">
+        <div className="rounded-[1.4rem] border border-[color:var(--border)] bg-[linear-gradient(135deg,var(--accent),var(--accent-strong))] p-5 text-white shadow-[color:var(--shadow-accent)] sm:p-6">
+          <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-white/70">
+            Deployment Hub
           </p>
-          <h2 className="mt-4 font-headline text-3xl font-black tracking-tighter text-white">
-            Keep homepage sections, proof and CTA blocks aligned from one place.
+          <h2 className="mt-3 font-headline text-2xl font-black tracking-tighter text-white">
+            Centralized content architecture.
           </h2>
-          <p className="mt-4 max-w-2xl text-sm leading-7 text-blue-50">
-            Homepage messaging, page intros, client marquees, career copy and university content stay in one clean CMS layer so public updates remain simple for admin teams.
+          <p className="mt-2.5 max-w-2xl text-[11px] leading-6 text-blue-50/80">
+            Control messaging, client proof and university assets from one secure administrative layer.
           </p>
         </div>
 
-        <div className="grid gap-4 sm:grid-cols-2">
+        <div className="grid gap-3 sm:grid-cols-2">
           <div className={portalSubcardClass}>
-            <p className="text-[11px] font-bold uppercase tracking-[0.2em] text-[color:var(--text-muted)]">
+            <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-[color:var(--text-muted)]">
               Content blocks
             </p>
-            <p className="mt-3 font-headline text-3xl font-black tracking-tight text-[color:var(--text-primary)]">
+            <p className="mt-2 font-headline text-2xl font-black tracking-tight text-[color:var(--text-primary)]">
               {contentBlockCount}
             </p>
-            <p className="mt-2 text-sm leading-6 text-[color:var(--text-secondary)]">
-              Structured homepage sections available for updates.
+            <p className="mt-1.5 text-[11px] leading-5 text-[color:var(--text-secondary)]">
+              Managed frontend modules.
             </p>
           </div>
           <div className={portalSubcardClass}>
-            <p className="text-[11px] font-bold uppercase tracking-[0.2em] text-[color:var(--text-muted)]">
+            <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-[color:var(--text-muted)]">
               Proof blocks
             </p>
-            <p className="mt-3 font-headline text-3xl font-black tracking-tight text-[color:var(--text-primary)]">
+            <p className="mt-2 font-headline text-2xl font-black tracking-tight text-[color:var(--text-primary)]">
               {proofBlockCount}
             </p>
-            <p className="mt-2 text-sm leading-6 text-[color:var(--text-secondary)]">
-              Testimonials and FAQs supporting SEO and trust.
+            <p className="mt-1.5 text-[11px] leading-5 text-[color:var(--text-secondary)]">
+              Testimonials and trust assets.
             </p>
           </div>
         </div>
@@ -668,6 +674,7 @@ function NestedStringListSection({
 }
 
 export function ServicesPanel({
+  session,
   services,
   serviceForm,
   setServiceForm,
@@ -676,45 +683,331 @@ export function ServicesPanel({
   deleteService,
   busyAction,
 }) {
+  const [activeBuilderService, setActiveBuilderService] = useState(null);
+
+  const previewUrl = useMemo(
+    () => (serviceForm.file ? URL.createObjectURL(serviceForm.file) : ""),
+    [serviceForm.file]
+  );
+
+  useEffect(() => {
+    return () => {
+      if (previewUrl) {
+        URL.revokeObjectURL(previewUrl);
+      }
+    };
+  }, [previewUrl]);
+
+  const handleBuilderSave = async (serviceItem, pageContentJson) => {
+    const formData = new FormData();
+    const servicePayload = {
+      title: serviceItem.title,
+      description: serviceItem.description,
+      detailTitle: serviceItem.detailTitle,
+      detailDescription: serviceItem.detailDescription,
+      pageContent: pageContentJson,
+      features: (serviceItem.features || []).map((f) => ({
+        name: typeof f === "string" ? f : f.name,
+      })),
+    };
+    formData.append("data", JSON.stringify(servicePayload));
+    
+    try {
+      await requestJson(`${API_BASE_URL}/api/v1/admin/services/${serviceItem.id}`, {
+        method: "PUT",
+        headers: authHeaders(session.token, false),
+        body: formData,
+      });
+      setActiveBuilderService(null);
+    } catch(e) {
+      console.error("Save failed", e);
+    }
+  };
+
+  if (activeBuilderService) {
+    return (
+      <PageBuilder 
+        service={activeBuilderService} 
+        onCancel={() => setActiveBuilderService(null)} 
+        onSave={handleBuilderSave}
+      />
+    );
+  }
+
+  const activeImage = previewUrl || backendAssetUrl(serviceForm.imageUrl) || "";
+  const filledFeatures = (serviceForm.features || []).map((item) => item.trim()).filter(Boolean);
+  const detailHeading = serviceForm.detailTitle?.trim() || serviceForm.title || "Service detail";
+  const detailCopy =
+    serviceForm.detailDescription?.trim() ||
+    serviceForm.description ||
+    "Add detail-page copy from the dashboard so the opened page shows your actual service message.";
+
   return (
     <div className="space-y-6">
-      <DashboardIntro title="Manage services" description="These items power the public services page and service detail pages." />
+      <DashboardIntro
+        title="Manage services"
+        description="Public cards for service delivery. Use the Builder for custom detail layouts."
+      />
+
+      <div className="grid gap-4 xl:grid-cols-[1.1fr_0.9fr]">
+        <div className="rounded-[1.4rem] border border-[color:var(--border)] bg-[linear-gradient(135deg,var(--accent),var(--accent-strong))] p-5 text-white shadow-[color:var(--shadow-accent)] sm:p-6">
+          <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-white/70">
+            Delivery workspace
+          </p>
+          <h2 className="mt-3 font-headline text-2xl font-black tracking-tighter text-white">
+            Architect your public service presence.
+          </h2>
+          <p className="mt-2.5 max-w-2xl text-[11px] leading-6 text-blue-50/80">
+            Define entry points and deep layout architectures for each service module.
+          </p>
+        </div>
+
+        <div className="grid gap-3 sm:grid-cols-2">
+          <div className={portalSubcardClass}>
+            <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-[color:var(--text-muted)]">
+              Live services
+            </p>
+            <p className="mt-2 font-headline text-2xl font-black tracking-tight text-[color:var(--text-primary)]">
+              {services.length}
+            </p>
+            <p className="mt-1.5 text-[11px] leading-5 text-[color:var(--text-secondary)]">
+              Public service modules.
+            </p>
+          </div>
+          <div className={portalSubcardClass}>
+            <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-[color:var(--text-muted)]">
+              Detail Status
+            </p>
+            <p className="mt-2 font-headline text-2xl font-black tracking-tight text-[color:var(--text-primary)]">
+              {detailCopy.trim() ? "Active" : "Null"}
+            </p>
+            <p className="mt-1.5 text-[11px] leading-5 text-[color:var(--text-secondary)]">
+              Primary content node.
+            </p>
+          </div>
+        </div>
+      </div>
 
       <Card title={serviceForm.id ? "Edit service" : "Add new service"}>
         <div className="grid gap-4 md:grid-cols-2">
-          <InputField label="Title" value={serviceForm.title} onChange={(value) => setServiceForm((current) => ({ ...current, title: value }))} />
-          <InputField label="Features (comma separated)" value={serviceForm.featuresText} onChange={(value) => setServiceForm((current) => ({ ...current, featuresText: value }))} />
+          <InputField
+            label="Title"
+            value={serviceForm.title}
+            onChange={(value) => setServiceForm((current) => ({ ...current, title: value }))}
+          />
+          <FileField
+            label="Service image"
+            onChange={(file) => setServiceForm((current) => ({ ...current, file }))}
+          />
         </div>
         <div className="mt-4">
-          <TextAreaField label="Description" value={serviceForm.description} onChange={(value) => setServiceForm((current) => ({ ...current, description: value }))} />
+          <TextAreaField
+            label="Description"
+            value={serviceForm.description}
+            onChange={(value) => setServiceForm((current) => ({ ...current, description: value }))}
+          />
         </div>
-        <div className="mt-4">
-          <FileField label="Service image" onChange={(file) => setServiceForm((current) => ({ ...current, file }))} />
+        <div className="mt-5 space-y-3">
+          <div className="flex items-center justify-between gap-3">
+            <div>
+              <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-[color:var(--text-muted)]">
+                Bullet points
+              </p>
+              <p className="mt-1 text-[11px] text-[color:var(--text-secondary)]">
+                Service highlights for cards and detail page.
+              </p>
+            </div>
+            <button
+              type="button"
+              className={cn(portalButtonSecondaryClass, "min-h-0 py-1.5 text-[10px]")}
+              onClick={() =>
+                setServiceForm((current) => ({
+                  ...current,
+                  features: [...(current.features || []), ""],
+                }))
+              }
+            >
+              Add point
+            </button>
+          </div>
+
+          <div className="space-y-2.5">
+            {(serviceForm.features || []).map((feature, index) => (
+              <div key={`service-feature-${index}`} className={portalSubcardClass}>
+                <div className="flex flex-col gap-3 md:flex-row md:items-end">
+                  <div className="flex-1">
+                    <InputField
+                      label={`Point ${index + 1}`}
+                      value={feature}
+                      onChange={(value) =>
+                        setServiceForm((current) => ({
+                          ...current,
+                          features: (current.features || []).map((item, itemIndex) =>
+                            itemIndex === index ? value : item
+                          ),
+                        }))
+                      }
+                    />
+                  </div>
+                  <button
+                    type="button"
+                    className={cn(portalButtonSecondaryClass, "min-h-0 py-2 text-[10px] text-rose-400 hover:bg-rose-500/10")}
+                    onClick={() =>
+                      setServiceForm((current) => {
+                        const nextFeatures = (current.features || []).filter(
+                          (_, itemIndex) => itemIndex !== index
+                        );
+
+                        return {
+                          ...current,
+                          features: nextFeatures.length ? nextFeatures : [""],
+                        };
+                      })
+                    }
+                  >
+                    Remove
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
-        <div className="mt-5 flex flex-col gap-3 sm:flex-row">
-          <button type="button" className={portalButtonPrimaryClass} onClick={saveService} disabled={busyAction === "service"}>
+        <div className="mt-6 flex flex-col gap-3 sm:flex-row">
+          <button
+            type="button"
+            className={portalButtonPrimaryClass}
+            onClick={saveService}
+            disabled={busyAction === "service"}
+          >
             {busyAction === "service" ? "Saving..." : "Save service"}
           </button>
-          <button type="button" className={portalButtonSecondaryClass} onClick={() => setServiceForm({ id: "", title: "", description: "", featuresText: "", file: null })}>
+          <button
+            type="button"
+            className={portalButtonSecondaryClass}
+            onClick={() =>
+              setServiceForm({
+                id: "",
+                title: "",
+                description: "",
+                detailTitle: "",
+                detailDescription: "",
+                features: [""],
+                file: null,
+                imageUrl: "",
+              })
+            }
+          >
             Reset
           </button>
         </div>
       </Card>
 
-      <GridList
-        items={services}
-        renderItem={(item) => (
-          <ItemCard
-            title={item.title}
-            subtitle={`${item.features?.length || 0} features`}
-            description={item.description}
-            tags={(item.features || []).map((feature) => feature.name)}
-            onEdit={() => beginServiceEdit(item)}
-            onDelete={() => deleteService(item.id)}
-            busyDelete={busyAction === `service-delete-${item.id}`}
-          />
-        )}
-      />
+      <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+        {services.map((item, index) => {
+          const cardImage = backendAssetUrl(item.imageUrl);
+
+          return (
+            <article
+              key={item.id}
+              className="overflow-hidden rounded-[1.2rem] border border-[color:var(--border)] bg-[linear-gradient(180deg,#171b24,#1d222d)] shadow-[color:var(--shadow-card)] transition duration-300 hover:-translate-y-1 hover:border-[color:var(--border-strong)]"
+            >
+              <div className="p-2.5">
+                <div className="relative overflow-hidden rounded-[1rem] border border-[rgba(93,126,194,0.18)] bg-[#101622] p-2.5">
+                  <div className="absolute -right-5 -top-5 h-16 w-16 rounded-full bg-[rgba(43,98,237,0.22)] blur-[1px]" />
+                  <div className="relative rounded-[0.8rem] border border-[rgba(93,126,194,0.14)] bg-[#0d1420] p-2.5">
+                    <div className="relative flex min-h-[110px] items-center justify-center overflow-hidden rounded-[0.7rem] border border-[rgba(93,126,194,0.1)] bg-[linear-gradient(180deg,#0f1724,#111b29)]">
+                      {cardImage ? (
+                        <Image
+                          alt={item.title}
+                          className="object-contain p-2.5"
+                          fill
+                          sizes="(max-width: 1280px) 100vw, 33vw"
+                          src={cardImage}
+                          unoptimized
+                        />
+                      ) : (
+                        <div className="h-14 w-18 rounded-[0.6rem] border border-[rgba(93,126,194,0.15)] bg-[rgba(255,255,255,0.02)]" />
+                      )}
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div className="space-y-3.5 px-3.5 pb-4">
+                <div className="flex items-center justify-between gap-3">
+                  <span className="text-[9px] font-bold uppercase tracking-[0.22em] text-[#8ba8ff]">
+                    ID 0{index + 1}
+                  </span>
+                  <span className="rounded-full border border-emerald-400/20 bg-emerald-400/10 px-2.5 py-0.5 text-[9px] font-bold uppercase tracking-[0.2em] text-emerald-200">
+                    Live
+                  </span>
+                </div>
+
+                <div>
+                  <h3 className="font-headline text-base font-black tracking-tight text-white leading-tight">
+                    {item.title}
+                  </h3>
+                  <p className="mt-1.5 line-clamp-2 text-[12px] leading-6 text-[#d6e0f3]">
+                    {item.description}
+                  </p>
+                </div>
+
+                <div className="flex flex-wrap gap-1.5">
+                  {(item.features || []).slice(0, 3).map((feature) => (
+                    <span
+                      key={`${item.id}-${feature.id || feature.name}`}
+                      className="rounded-full border border-[color:var(--border)] bg-[rgba(255,255,255,0.03)] px-2.5 py-0.5 text-[10px] font-semibold text-[color:var(--text-secondary)]"
+                    >
+                      {feature.name}
+                    </span>
+                  ))}
+                </div>
+
+                <div className="flex flex-wrap gap-1.5">
+                  <button
+                    type="button"
+                    className={`${portalButtonSecondaryClass} bg-[#2051db] text-white border-transparent hover:bg-[#2860f0] min-h-0 py-1.5 text-[10px]`}
+                    onClick={() => setActiveBuilderService(item)}
+                  >
+                    Builder
+                  </button>
+                  <button
+                    type="button"
+                    className={cn(portalButtonSecondaryClass, "min-h-0 py-1.5 text-[10px]")}
+                    onClick={() => beginServiceEdit(item)}
+                  >
+                    Edit
+                  </button>
+                  <button
+                    type="button"
+                    className={cn(portalButtonSecondaryClass, "min-h-0 py-1.5 text-[10px] text-rose-400")}
+                    onClick={() => deleteService(item.id)}
+                    disabled={busyAction === `service-delete-${item.id}`}
+                  >
+                    {busyAction === `service-delete-${item.id}` ? "..." : "Delete"}
+                  </button>
+                </div>
+
+                <div className="inline-flex items-center gap-1.5 text-[10px] font-black uppercase tracking-[0.2em] text-white/40">
+                  Review module
+                  <span className="text-sm">→</span>
+                </div>
+              </div>
+            </article>
+          );
+        })}
+      </div>
+
+      {!services.length ? (
+        <div className={portalSubcardClass}>
+          <p className="font-headline text-xl font-black tracking-tight text-[color:var(--text-primary)]">
+            No services added yet
+          </p>
+          <p className="mt-2 text-sm leading-7 text-[color:var(--text-secondary)]">
+            Add your first service and it will start showing as a compact visual card on the public website.
+          </p>
+        </div>
+      ) : null}
     </div>
   );
 }
@@ -731,10 +1024,10 @@ export function ProductsPanel({
   busyAction,
 }) {
   return (
-    <div className="space-y-6">
-      <DashboardIntro title="Manage products" description="Products and their categories flow directly into the public showcase." />
+    <div className="space-y-5">
+      <DashboardIntro title="Product catalog" description="Manage entities and categories exported to the public showcase." />
 
-      <Card title={productForm.id ? "Edit product" : "Add new product"}>
+      <Card title={productForm.id ? "Edit product" : "New product"}>
         <div className="grid gap-4 md:grid-cols-2">
           <InputField label="Title" value={productForm.title} onChange={(value) => setProductForm((current) => ({ ...current, title: value }))} />
           <SelectField label="Category" value={productForm.categoryId} options={categories.map((item) => ({ label: item.name, value: String(item.id) }))} onChange={(value) => setProductForm((current) => ({ ...current, categoryId: value }))} />
@@ -743,8 +1036,8 @@ export function ProductsPanel({
           <TextAreaField label="Description" value={productForm.description} onChange={(value) => setProductForm((current) => ({ ...current, description: value }))} />
         </div>
         <div className="mt-4 grid gap-4 md:grid-cols-2">
-          <FileField label="Product image" onChange={(file) => setProductForm((current) => ({ ...current, file }))} />
-          <SelectField label="Status" value={String(productForm.isActive)} options={[{ label: "Active", value: "true" }, { label: "Inactive", value: "false" }]} onChange={(value) => setProductForm((current) => ({ ...current, isActive: value === "true" }))} />
+          <FileField label="Visual asset" onChange={(file) => setProductForm((current) => ({ ...current, file }))} />
+          <SelectField label="Deployment status" value={String(productForm.isActive)} options={[{ label: "Active", value: "true" }, { label: "Inactive", value: "false" }]} onChange={(value) => setProductForm((current) => ({ ...current, isActive: value === "true" }))} />
         </div>
         <div className="mt-5 flex flex-col gap-3 sm:flex-row">
           <button type="button" className={portalButtonPrimaryClass} onClick={saveProduct} disabled={busyAction === "product"}>
@@ -786,13 +1079,13 @@ export function CategoriesPanel({
   busyAction,
 }) {
   return (
-    <div className="space-y-6">
-      <DashboardIntro title="Manage categories" description="Categories organize the product experience and public grouping logic." />
+    <div className="space-y-5">
+      <DashboardIntro title="Taxonomy control" description="Manage grouping logic for the product showcase." />
 
-      <Card title={categoryForm.id ? "Edit category" : "Add new category"}>
+      <Card title={categoryForm.id ? "Edit category" : "New category"}>
         <div className="grid gap-4 md:grid-cols-2">
           <InputField label="Name" value={categoryForm.name} onChange={(value) => setCategoryForm((current) => ({ ...current, name: value }))} />
-          <TextAreaField label="Description" value={categoryForm.description} onChange={(value) => setCategoryForm((current) => ({ ...current, description: value }))} />
+          <TextAreaField label="Context" value={categoryForm.description} onChange={(value) => setCategoryForm((current) => ({ ...current, description: value }))} />
         </div>
         <div className="mt-5 flex flex-col gap-3 sm:flex-row">
           <button type="button" className={portalButtonPrimaryClass} onClick={saveCategory} disabled={busyAction === "category"}>
@@ -822,10 +1115,10 @@ export function CategoriesPanel({
 
 export function JobsPanel({ jobs, jobForm, setJobForm, saveJob, beginJobEdit, deleteJob, busyAction }) {
   return (
-    <div className="space-y-6">
-      <DashboardIntro title="Manage careers and job posts" description="Keep the public careers page updated with live openings." />
+    <div className="space-y-5">
+      <DashboardIntro title="Talent acquisition" description="Maintain recruitment pipeline openings." />
 
-      <Card title={jobForm.id ? "Edit job" : "Create job"}>
+      <Card title={jobForm.id ? "Edit post" : "New post"}>
         <div className="grid gap-4 md:grid-cols-2">
           <InputField label="Job title" value={jobForm.title} onChange={(value) => setJobForm((current) => ({ ...current, title: value }))} />
           <InputField label="Location" value={jobForm.location} onChange={(value) => setJobForm((current) => ({ ...current, location: value }))} />
@@ -834,11 +1127,11 @@ export function JobsPanel({ jobs, jobForm, setJobForm, saveJob, beginJobEdit, de
           <TextAreaField label="Description" value={jobForm.description} onChange={(value) => setJobForm((current) => ({ ...current, description: value }))} />
         </div>
         <div className="mt-4">
-          <TextAreaField label="Skills" value={jobForm.skills} onChange={(value) => setJobForm((current) => ({ ...current, skills: value }))} />
+          <TextAreaField label="Primary skills" value={jobForm.skills} onChange={(value) => setJobForm((current) => ({ ...current, skills: value }))} />
         </div>
         <div className="mt-5 flex flex-col gap-3 sm:flex-row">
           <button type="button" className={portalButtonPrimaryClass} onClick={saveJob} disabled={busyAction === "job"}>
-            {busyAction === "job" ? "Saving..." : "Save job"}
+            {busyAction === "job" ? "Saving..." : "Save post"}
           </button>
           <button type="button" className={portalButtonSecondaryClass} onClick={() => setJobForm({ id: "", title: "", description: "", location: "", skills: "" })}>
             Reset
@@ -866,27 +1159,27 @@ export function JobsPanel({ jobs, jobForm, setJobForm, saveJob, beginJobEdit, de
 
 export function LeadsPanel({ leads, busyAction, updateLeadStatus }) {
   return (
-    <div className="space-y-6">
-      <DashboardIntro title="Review incoming leads" description="Contact-form submissions now flow into the backend contact inbox so the team can respond from one place." />
+    <div className="space-y-5">
+      <DashboardIntro title="Capture inbox" description="Contact-form leads qualifying pipeline." />
 
-      <Card title="Leads table">
-        <div className="space-y-4 md:hidden">
+      <Card title="Operational leads">
+        <div className="space-y-3.5 md:hidden">
           {leads.map((lead) => (
             <div key={lead.id} className={portalSubcardClass}>
               <div className="flex flex-wrap items-start justify-between gap-3">
                 <div className="min-w-0">
-                  <p className="font-semibold text-[color:var(--text-primary)]">{lead.name}</p>
-                  <p className="break-all text-sm text-[color:var(--text-secondary)]">{lead.email}</p>
+                  <p className="text-[13px] font-bold text-[color:var(--text-primary)]">{lead.name}</p>
+                  <p className="break-all text-[11px] text-[color:var(--text-muted)]">{lead.email}</p>
                 </div>
                 <StatusBadge value={lead.status} />
               </div>
 
-              <div className="mt-4 space-y-2 text-sm text-[color:var(--text-secondary)]">
+              <div className="mt-3 text-[12px] text-[color:var(--text-secondary)]">
                 <p>{lead.serviceInterest || "General enquiry"}</p>
-                <p className="text-xs text-[color:var(--text-muted)]">{formatDate(lead.createdAt)}</p>
+                <p className="mt-1 text-[10px] text-[color:var(--text-muted)]">{formatDate(lead.createdAt)}</p>
               </div>
 
-              <p className="mt-4 text-sm leading-7 text-[color:var(--text-secondary)]">{lead.message}</p>
+              <p className="mt-3 text-[12px] leading-6 text-[color:var(--text-secondary)]">{lead.message} </p>
 
               <div className="mt-4">
                 <select
@@ -909,9 +1202,9 @@ export function LeadsPanel({ leads, busyAction, updateLeadStatus }) {
           <table className={portalTableClass}>
             <thead>
               <tr>
-                <th>Name</th>
-                <th>Service</th>
-                <th>Message</th>
+                <th>Lead</th>
+                <th>Context</th>
+                <th>Requirement</th>
                 <th>Status</th>
               </tr>
             </thead>
@@ -919,14 +1212,14 @@ export function LeadsPanel({ leads, busyAction, updateLeadStatus }) {
               {leads.map((lead) => (
                 <tr key={lead.id}>
                   <td>
-                    <p className="font-semibold text-[color:var(--text-primary)]">{lead.name}</p>
-                    <p className="text-sm text-[color:var(--text-secondary)]">{lead.email}</p>
+                    <p className="text-[13px] font-bold text-[color:var(--text-primary)]">{lead.name}</p>
+                    <p className="text-[11px] text-[color:var(--text-muted)]">{lead.email}</p>
                   </td>
                   <td>
-                    <p className="text-sm text-[color:var(--text-secondary)]">{lead.serviceInterest || "General enquiry"}</p>
-                    <p className="text-xs text-[color:var(--text-muted)]">{formatDate(lead.createdAt)}</p>
+                    <p className="text-[12px] text-[color:var(--text-secondary)]">{lead.serviceInterest || "General enquiry"}</p>
+                    <p className="text-[10px] text-[color:var(--text-muted)]">{formatDate(lead.createdAt)}</p>
                   </td>
-                  <td className="max-w-md text-sm leading-7 text-[color:var(--text-secondary)]">{lead.message}</td>
+                  <td className="max-w-md text-[12px] leading-6 text-[color:var(--text-secondary)]">{lead.message}</td>
                   <td>
                     <select
                       className={portalSelectClass}
@@ -963,11 +1256,11 @@ export function TasksPanel({
   busyAction,
 }) {
   return (
-    <div className="space-y-6">
-      <DashboardIntro title="Allocate update work" description="Superadmin can assign website work to admins. Admins can track and update status." />
+    <div className="space-y-5">
+      <DashboardIntro title="Admin allocations" description="Superadmin assignment flow and tracking." />
 
       {sessionRole === "SADMIN" ? (
-        <Card title={taskForm.id ? "Edit task allocation" : "Create task allocation"}>
+        <Card title={taskForm.id ? "Update allocation" : "New allocation"}>
           <div className="grid gap-4 md:grid-cols-2">
             <InputField label="Task title" value={taskForm.title} onChange={(value) => setTaskForm((current) => ({ ...current, title: value }))} />
             <InputField label="Section" value={taskForm.section} onChange={(value) => setTaskForm((current) => ({ ...current, section: value }))} />
@@ -1028,10 +1321,10 @@ export function TeamPanel({
   busyAction,
 }) {
   return (
-    <div className="space-y-6">
-      <DashboardIntro title="Manage admins and users" description="Superadmin can create admins, update access and decide who receives website work." />
+    <div className="space-y-5">
+      <DashboardIntro title="Access control" description="Manage administrative privileges and user status." />
 
-      <Card title={userForm.id ? "Edit user" : "Create user"}>
+      <Card title={userForm.id ? "Edit user" : "New user"}>
         <div className="grid gap-4 md:grid-cols-2">
           <InputField label="Username" value={userForm.username} onChange={(value) => setUserForm((current) => ({ ...current, username: value }))} />
           <InputField label="Email" value={userForm.email} onChange={(value) => setUserForm((current) => ({ ...current, email: value }))} />
@@ -1039,7 +1332,7 @@ export function TeamPanel({
           <SelectField label="Role" value={userForm.role} options={[{ label: "Admin", value: "ADMIN" }, { label: "User", value: "USER" }]} onChange={(value) => setUserForm((current) => ({ ...current, role: value }))} />
         </div>
         <div className="mt-4">
-          <InputField label={userForm.id ? "New password (optional)" : "Password"} type="password" value={userForm.password} onChange={(value) => setUserForm((current) => ({ ...current, password: value }))} />
+          <InputField label={userForm.id ? "Password override" : "Password"} type="password" value={userForm.password} onChange={(value) => setUserForm((current) => ({ ...current, password: value }))} />
         </div>
         <div className="mt-5 flex flex-col gap-3 sm:flex-row">
           <button type="button" className={portalButtonPrimaryClass} onClick={saveUser} disabled={busyAction === "user"}>
@@ -1051,26 +1344,26 @@ export function TeamPanel({
         </div>
       </Card>
 
-      <Card title="Team table">
-        <div className="space-y-4 md:hidden">
+      <Card title="Team roster">
+        <div className="space-y-3.5 md:hidden">
           {users.map((user) => (
             <div key={user.id} className={portalSubcardClass}>
               <div className="flex flex-wrap items-start justify-between gap-3">
                 <div className="min-w-0">
-                  <p className="font-semibold text-[color:var(--text-primary)]">{user.username}</p>
-                  <p className="break-all text-sm text-[color:var(--text-secondary)]">{user.email}</p>
+                  <p className="text-[13px] font-bold text-[color:var(--text-primary)]">{user.username}</p>
+                  <p className="break-all text-[11px] text-[color:var(--text-muted)]">{user.email}</p>
                 </div>
                 <StatusBadge value={user.status || "active"} />
               </div>
-              <p className="mt-3 text-sm text-[color:var(--text-secondary)]">{user.role}</p>
+              <p className="mt-2 text-[11px] text-[color:var(--text-secondary)]">{user.role}</p>
               <div className="mt-4 flex flex-wrap gap-2">
-                <button type="button" className={`${portalButtonSecondaryClass} w-full sm:w-auto`} onClick={() => beginUserEdit(user)}>
+                <button type="button" className={`${portalButtonSecondaryClass} py-1.5 text-[10px] w-full sm:w-auto`} onClick={() => beginUserEdit(user)}>
                   Edit
                 </button>
-                <button type="button" className={`${portalButtonSecondaryClass} w-full sm:w-auto`} onClick={() => toggleUserStatus(user.id)} disabled={busyAction === `user-status-${user.id}`}>
-                  Toggle status
+                <button type="button" className={`${portalButtonSecondaryClass} py-1.5 text-[10px] w-full sm:w-auto`} onClick={() => toggleUserStatus(user.id)} disabled={busyAction === `user-status-${user.id}`}>
+                  Status
                 </button>
-                <button type="button" className={`${portalButtonSecondaryClass} w-full sm:w-auto`} onClick={() => deleteUser(user.id)} disabled={busyAction === `user-delete-${user.id}`}>
+                <button type="button" className={`${portalButtonSecondaryClass} py-1.5 text-[10px] w-full sm:w-auto text-rose-400`} onClick={() => deleteUser(user.id)} disabled={busyAction === `user-delete-${user.id}`}>
                   Delete
                 </button>
               </div>
@@ -1092,22 +1385,22 @@ export function TeamPanel({
               {users.map((user) => (
                 <tr key={user.id}>
                   <td>
-                    <p className="font-semibold text-[color:var(--text-primary)]">{user.username}</p>
-                    <p className="text-sm text-[color:var(--text-secondary)]">{user.email}</p>
+                    <p className="text-[13px] font-bold text-[color:var(--text-primary)]">{user.username}</p>
+                    <p className="text-[11px] text-[color:var(--text-muted)]">{user.email}</p>
                   </td>
-                  <td>{user.role}</td>
+                  <td className="text-[12px]">{user.role}</td>
                   <td>
                     <StatusBadge value={user.status || "active"} />
                   </td>
                   <td>
-                    <div className="flex flex-wrap gap-2">
-                      <button type="button" className={`${portalButtonSecondaryClass} w-full sm:w-auto`} onClick={() => beginUserEdit(user)}>
+                    <div className="flex flex-wrap gap-1.5">
+                      <button type="button" className={`${portalButtonSecondaryClass} py-1 text-[10px]`} onClick={() => beginUserEdit(user)}>
                         Edit
                       </button>
-                      <button type="button" className={`${portalButtonSecondaryClass} w-full sm:w-auto`} onClick={() => toggleUserStatus(user.id)} disabled={busyAction === `user-status-${user.id}`}>
-                        Toggle status
+                      <button type="button" className={`${portalButtonSecondaryClass} py-1 text-[10px]`} onClick={() => toggleUserStatus(user.id)} disabled={busyAction === `user-status-${user.id}`}>
+                        Status
                       </button>
-                      <button type="button" className={`${portalButtonSecondaryClass} w-full sm:w-auto`} onClick={() => deleteUser(user.id)} disabled={busyAction === `user-delete-${user.id}`}>
+                      <button type="button" className={`${portalButtonSecondaryClass} py-1 text-[10px] text-rose-400`} onClick={() => deleteUser(user.id)} disabled={busyAction === `user-delete-${user.id}`}>
                         Delete
                       </button>
                     </div>
@@ -1132,15 +1425,15 @@ export function ClientsPanel({
   busyAction,
 }) {
   return (
-    <div className="space-y-6">
-      <DashboardIntro title="Manage client proof" description="Control the client logos and reference links that power the public trust page." />
+    <div className="space-y-5">
+      <DashboardIntro title="Trust management" description="Control client logos and portfolio references." />
 
-      <Card title={clientForm.id ? "Edit client" : "Add new client"}>
+      <Card title={clientForm.id ? "Update client" : "New client"}>
         <div className="grid gap-4 md:grid-cols-2">
           <InputField label="Client name" value={clientForm.name} onChange={(value) => setClientForm((current) => ({ ...current, name: value }))} />
           <InputField label="Website URL" value={clientForm.websiteUrl} onChange={(value) => setClientForm((current) => ({ ...current, websiteUrl: value }))} />
-          <InputField label="Display order" value={clientForm.displayOrder} onChange={(value) => setClientForm((current) => ({ ...current, displayOrder: value.replace(/\D/g, "") }))} />
-          <FileField label="Client logo" onChange={(file) => setClientForm((current) => ({ ...current, file }))} />
+          <InputField label="Order" value={clientForm.displayOrder} onChange={(value) => setClientForm((current) => ({ ...current, displayOrder: value.replace(/\D/g, "") }))} />
+          <FileField label="Asset logo" onChange={(file) => setClientForm((current) => ({ ...current, file }))} />
         </div>
         <div className="mt-4">
           <TextAreaField label="Description" value={clientForm.description} onChange={(value) => setClientForm((current) => ({ ...current, description: value }))} />
@@ -1160,9 +1453,9 @@ export function ClientsPanel({
         renderItem={(item) => (
           <ItemCard
             title={item.name}
-            subtitle={item.websiteUrl || "No website linked"}
+            subtitle={item.websiteUrl || "External"}
             description={item.description}
-            tags={item.logoUrl ? ["Logo added"] : []}
+            tags={item.logoUrl ? ["Asset active"] : []}
             onEdit={() => beginClientEdit(item)}
             onDelete={() => deleteClient(item.id)}
             busyDelete={busyAction === `client-delete-${item.id}`}
@@ -1183,18 +1476,18 @@ export function PortfolioPanel({
   busyAction,
 }) {
   return (
-    <div className="space-y-6">
-      <DashboardIntro title="Manage portfolio projects" description="Publish work samples with project links, GitHub references and backend-hosted visuals." />
+    <div className="space-y-5">
+      <DashboardIntro title="Project showcase" description="Publish technical work samples and GitHub repositories." />
 
-      <Card title={portfolioForm.id ? "Edit portfolio project" : "Add new portfolio project"}>
+      <Card title={portfolioForm.id ? "Update project" : "New project"}>
         <div className="grid gap-4 md:grid-cols-2">
-          <InputField label="Project title" value={portfolioForm.title} onChange={(value) => setPortfolioForm((current) => ({ ...current, title: value }))} />
-          <InputField label="Live project URL" value={portfolioForm.projectUrl} onChange={(value) => setPortfolioForm((current) => ({ ...current, projectUrl: value }))} />
-          <InputField label="GitHub URL" value={portfolioForm.githubUrl} onChange={(value) => setPortfolioForm((current) => ({ ...current, githubUrl: value }))} />
-          <FileField label="Project image" onChange={(file) => setPortfolioForm((current) => ({ ...current, file }))} />
+          <InputField label="Title" value={portfolioForm.title} onChange={(value) => setPortfolioForm((current) => ({ ...current, title: value }))} />
+          <InputField label="Deployment URL" value={portfolioForm.projectUrl} onChange={(value) => setPortfolioForm((current) => ({ ...current, projectUrl: value }))} />
+          <InputField label="Repository URL" value={portfolioForm.githubUrl} onChange={(value) => setPortfolioForm((current) => ({ ...current, githubUrl: value }))} />
+          <FileField label="Visual asset" onChange={(file) => setPortfolioForm((current) => ({ ...current, file }))} />
         </div>
         <div className="mt-4">
-          <TextAreaField label="Description" value={portfolioForm.description} onChange={(value) => setPortfolioForm((current) => ({ ...current, description: value }))} />
+          <TextAreaField label="Context" value={portfolioForm.description} onChange={(value) => setPortfolioForm((current) => ({ ...current, description: value }))} />
         </div>
         <div className="mt-5 flex flex-col gap-3 sm:flex-row">
           <button type="button" className={portalButtonPrimaryClass} onClick={savePortfolio} disabled={busyAction === "portfolio"}>
@@ -1211,11 +1504,11 @@ export function PortfolioPanel({
         renderItem={(item) => (
           <ItemCard
             title={item.title}
-            subtitle={item.projectUrl || item.githubUrl || "No project link added"}
+            subtitle={item.projectUrl || item.githubUrl || "No target"}
             description={item.description}
             tags={[
               ...(item.projectUrl ? ["Live"] : []),
-              ...(item.githubUrl ? ["GitHub"] : []),
+              ...(item.githubUrl ? ["Repo"] : []),
             ]}
             onEdit={() => beginPortfolioEdit(item)}
             onDelete={() => deletePortfolio(item.id)}
@@ -1233,25 +1526,24 @@ export function ApplicationsPanel({
   updateApplicationStatus,
 }) {
   return (
-    <div className="space-y-6">
-      <DashboardIntro title="Track job applications" description="Applications from the career page land here with resume links and a simple shortlist workflow." />
+    <div className="space-y-5">
+      <DashboardIntro title="Recruitment tracking" description="Manage job candidate applications and status." />
 
-      <Card title="Applications table">
-        <div className="space-y-4 md:hidden">
+      <Card title="Candidate pipeline">
+        <div className="space-y-3.5 md:hidden">
           {applications.map((application) => (
             <div key={application.id} className={portalSubcardClass}>
               <div className="flex flex-wrap items-start justify-between gap-3">
                 <div className="min-w-0">
-                  <p className="font-semibold text-[color:var(--text-primary)]">{application.name}</p>
-                  <p className="break-all text-sm text-[color:var(--text-secondary)]">{application.email}</p>
+                  <p className="text-[13px] font-bold text-[color:var(--text-primary)]">{application.name}</p>
+                  <p className="break-all text-[11px] text-[color:var(--text-muted)]">{application.email}</p>
                 </div>
                 <StatusBadge value={application.status} />
               </div>
 
-              <div className="mt-4 space-y-2 text-sm text-[color:var(--text-secondary)]">
+              <div className="mt-3 space-y-1 text-[12px] text-[color:var(--text-secondary)]">
                 <p>{application.jobTitle || "General application"}</p>
-                <p>{application.phone || "No phone shared"}</p>
-                <p className="text-xs text-[color:var(--text-muted)]">{formatDate(application.createdAt)}</p>
+                <p className="text-[10px] text-[color:var(--text-muted)]">{formatDate(application.createdAt)}</p>
               </div>
 
               {application.resumeUrl ? (
@@ -1260,9 +1552,9 @@ export function ApplicationsPanel({
                     href={backendAssetUrl(application.resumeUrl) || application.resumeUrl}
                     target="_blank"
                     rel="noreferrer"
-                    className="text-sm font-semibold text-[color:var(--accent)] hover:underline"
+                    className="text-[12px] font-bold text-[color:var(--accent)] hover:underline"
                   >
-                    View resume
+                    Review Resume
                   </a>
                 </div>
               ) : null}
@@ -1288,22 +1580,22 @@ export function ApplicationsPanel({
             <thead>
               <tr>
                 <th>Candidate</th>
-                <th>Job</th>
-                <th>Resume</th>
-                <th>Status</th>
+                <th>Target Post</th>
+                <th>Asset</th>
+                <th>Protocol</th>
               </tr>
             </thead>
             <tbody>
               {applications.map((application) => (
                 <tr key={application.id}>
                   <td>
-                    <p className="font-semibold text-[color:var(--text-primary)]">{application.name}</p>
-                    <p className="text-sm text-[color:var(--text-secondary)]">{application.email}</p>
-                    <p className="text-xs text-[color:var(--text-muted)]">{application.phone || "No phone shared"}</p>
+                    <p className="text-[13px] font-bold text-[color:var(--text-primary)]">{application.name}</p>
+                    <p className="text-[11px] text-[color:var(--text-muted)]">{application.email}</p>
+                    <p className="text-[10px] font-semibold text-[color:var(--text-muted)] mt-1">{application.phone || "No contact shared"}</p>
                   </td>
                   <td>
-                    <p className="text-sm text-[color:var(--text-secondary)]">{application.jobTitle || "General application"}</p>
-                    <p className="text-xs text-[color:var(--text-muted)]">{formatDate(application.createdAt)}</p>
+                    <p className="text-[12px] text-[color:var(--text-secondary)]">{application.jobTitle || "General application"}</p>
+                    <p className="text-[10px] text-[color:var(--text-muted)] mt-1">{formatDate(application.createdAt)}</p>
                   </td>
                   <td>
                     {application.resumeUrl ? (
@@ -1311,12 +1603,12 @@ export function ApplicationsPanel({
                         href={backendAssetUrl(application.resumeUrl) || application.resumeUrl}
                         target="_blank"
                         rel="noreferrer"
-                        className="text-sm font-semibold text-[color:var(--accent)] hover:underline"
+                        className="text-[12px] font-bold text-[color:var(--accent)] hover:underline"
                       >
-                        View resume
+                        Launch Resume
                       </a>
                     ) : (
-                      <span className="text-sm text-[color:var(--text-secondary)]">Unavailable</span>
+                      <span className="text-[11px] font-bold text-[color:var(--text-muted)] opacity-50 uppercase tracking-widest">Missing</span>
                     )}
                   </td>
                   <td>

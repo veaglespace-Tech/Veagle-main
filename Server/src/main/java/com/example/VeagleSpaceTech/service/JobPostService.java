@@ -1,25 +1,12 @@
 package com.example.VeagleSpaceTech.service;
 
-import com.example.VeagleSpaceTech.DTO.request.JobApplicationRequestDTO;
 import com.example.VeagleSpaceTech.DTO.request.JobPostRequestDTO;
-import com.example.VeagleSpaceTech.DTO.response.JobApplicationResponseDTO;
 import com.example.VeagleSpaceTech.DTO.response.JobPostResponseDTO;
-import com.example.VeagleSpaceTech.entity.JobApplication;
-import com.example.VeagleSpaceTech.entity.User;
-import com.example.VeagleSpaceTech.enums.ApplicationStatus;
 import com.example.VeagleSpaceTech.enums.JobStatus;
-import com.example.VeagleSpaceTech.enums.UserStatus;
-import com.example.VeagleSpaceTech.repo.JobApplicationRepo;
 import com.example.VeagleSpaceTech.repo.JobPostRepo;
 import com.example.VeagleSpaceTech.entity.JobPost;
-import com.example.VeagleSpaceTech.repo.UserRepo;
-import org.jspecify.annotations.Nullable;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -28,13 +15,6 @@ public class JobPostService {
 
     @Autowired
     private JobPostRepo jobPostRepo;
-
-    @Autowired
-    private UserRepo userRepo;
-
-    // For Storing Files (Resume)
-    @Autowired
-    private FileService fileService;
 
 
     public JobPostResponseDTO addJob(JobPostRequestDTO request) {

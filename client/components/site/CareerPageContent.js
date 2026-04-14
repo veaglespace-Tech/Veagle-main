@@ -1,4 +1,7 @@
+"use client";
+
 import Image from "next/image";
+import { useRef, useState } from "react";
 import {
   ArrowUpRight,
   CheckCircle2,
@@ -16,8 +19,8 @@ const highlightIcons = [Rocket, TrendingUp, ShieldCheck];
 function renderHeroTitle(value) {
   const title =
     value ||
-    "Join a team that builds software, websites and practical digital experiences.";
-  const marker = "practical digital experiences";
+    "Build the next generation of enterprise software and digital ecosystems.";
+  const marker = "digital ecosystems";
   const index = title.toLowerCase().indexOf(marker);
 
   if (index === -1) {
@@ -31,7 +34,7 @@ function renderHeroTitle(value) {
   return (
     <>
       {start}
-      <span className="text-[#1f67f3]">{focus}</span>
+      <span className="text-[color:var(--accent)]">{focus}</span>
       {end}
     </>
   );
@@ -99,7 +102,7 @@ function modeBadgeClasses(mode) {
   }
 
   if (mode === "Hybrid") {
-    return "bg-[color:var(--accent)]/16 text-[#9db8ff]";
+    return "bg-[color:var(--accent)]/16 text-[color:var(--accent)]";
   }
 
   return "bg-[#ffb1c5]/16 text-[#ffc7d5]";
@@ -147,8 +150,16 @@ export default function CareerPageContent({ jobs, content }) {
     Array.isArray(career?.reasons) && career.reasons.length
       ? career.reasons.slice(0, 3)
       : [];
-  const selectedJob = jobs[0] || null;
+  const [selectedJob, setSelectedJob] = useState(jobs[0] || null);
+  const formRef = useRef(null);
   const filters = departmentChips(jobs);
+
+  function handleJobClick(job) {
+    setSelectedJob(job);
+    if (formRef.current) {
+      formRef.current.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+  }
 
   return (
     <main className="overflow-hidden bg-[color:var(--page-bg)] text-[color:var(--text-secondary)]">
@@ -167,15 +178,15 @@ export default function CareerPageContent({ jobs, content }) {
         </div>
 
         <div className="relative z-10 mx-auto w-full max-w-5xl text-center">
-          <span className="inline-flex items-center rounded-full border border-white/12 bg-[#1a1d24]/70 px-4 py-2 text-[11px] font-semibold uppercase tracking-[0.24em] text-[#b9c9f0]">
+          <span className="inline-flex items-center rounded-full border border-white/12 bg-[color:var(--surface-strong)] px-4 py-2 text-[10px] font-black uppercase tracking-[0.24em] text-[color:var(--text-muted)]">
             {career.eyebrow || "Orbital careers"}
           </span>
           <h1 className="mx-auto mt-8 max-w-4xl font-headline text-4xl font-black leading-[0.93] tracking-[-0.045em] text-white sm:text-6xl lg:text-7xl">
             {renderHeroTitle(career.title)}
           </h1>
-          <p className="mx-auto mt-6 max-w-2xl text-base leading-8 text-[#c3cee3] sm:text-lg">
+          <p className="mx-auto mt-6 max-w-2xl text-base leading-8 text-[color:var(--text-secondary)] sm:text-lg">
             {career.description ||
-              "Add careers-page copy from the dashboard and publish live openings from the backend jobs API."}
+              "Join an engineering culture that prioritizes architectural excellence and technical innovation."}
           </p>
         </div>
       </section>
@@ -189,15 +200,15 @@ export default function CareerPageContent({ jobs, content }) {
               return (
                 <article
                   key={item.title}
-                  className="rounded-[1.2rem] border border-white/8 bg-[#1b1f27]/90 p-6 transition hover:border-[#6a8fff]/35 hover:bg-[#202632]"
+                  className="rounded-[1.2rem] border border-white/8 bg-[#1b1f27]/90 p-6 transition hover:border-[color:var(--accent)]/35 hover:bg-[#202632]"
                 >
-                  <div className="mb-6 flex h-11 w-11 items-center justify-center rounded-2xl bg-white/[0.04] text-[#9cb6ff]">
+                  <div className="mb-6 flex h-11 w-11 items-center justify-center rounded-2xl bg-white/[0.04] text-[color:var(--accent)]">
                     <Icon className="h-5 w-5" />
                   </div>
-                  <h2 className="font-headline text-2xl font-black tracking-tight text-white">
+                  <h2 className="font-headline text-2xl font-black tracking-tight text-[color:var(--text-primary)]">
                     {item.title}
                   </h2>
-                  <p className="mt-4 text-sm leading-7 text-[#bec9de]">{item.description}</p>
+                  <p className="mt-4 text-sm leading-7 text-[color:var(--text-muted)]">{item.description}</p>
                 </article>
               );
             })}
@@ -209,11 +220,11 @@ export default function CareerPageContent({ jobs, content }) {
         <div className="mx-auto w-full max-w-screen-2xl">
           <div className="mb-10 flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
             <div>
-              <h2 className="font-headline text-4xl font-black tracking-tight text-white sm:text-5xl">
+              <h2 className="font-headline text-4xl font-black tracking-tight text-[color:var(--text-primary)] sm:text-5xl">
                 Open Positions
               </h2>
-              <p className="mt-4 max-w-xl text-sm leading-7 text-[#aebad2]">
-                Find your role in our product and engineering teams. New openings from dashboard will appear here automatically.
+              <p className="mt-4 max-w-xl text-sm leading-7 text-[color:var(--text-muted)]">
+                Identify your specialty within our engineering and product nodes. Select a role to begin the application protocol.
               </p>
             </div>
             {filters.length ? (
@@ -221,7 +232,7 @@ export default function CareerPageContent({ jobs, content }) {
                 {filters.map((item) => (
                   <span
                     key={item.name}
-                    className="rounded-full border border-white/10 bg-white/[0.05] px-5 py-2 text-[11px] font-semibold uppercase tracking-[0.2em] text-[#c5d1e8]"
+                    className="rounded-full border border-white/10 bg-white/[0.05] px-5 py-2 text-[10px] font-black uppercase tracking-[0.2em] text-[color:var(--text-secondary)]"
                   >
                     {item.name} ({item.count})
                   </span>
@@ -235,25 +246,37 @@ export default function CareerPageContent({ jobs, content }) {
               {jobs.map((job) => {
                 const mode = resolveWorkMode(job.location);
                 const tags = splitSkills(job.skills);
+                const isSelected = selectedJob?.id === job.id;
 
                 return (
-                  <article
+                  <button
                     key={job.id}
-                    className="group flex flex-col justify-between gap-6 rounded-[1.15rem] border border-white/8 bg-[#191d24]/92 p-6 transition duration-300 hover:border-[#6f95ff]/40 hover:bg-[#1f2530] md:flex-row md:items-center md:gap-8"
+                    type="button"
+                    onClick={() => handleJobClick(job)}
+                    className={`group flex w-full flex-col justify-between gap-6 rounded-[1.15rem] border p-6 text-left transition duration-300 md:flex-row md:items-center md:gap-8 ${
+                      isSelected
+                        ? "border-[color:var(--accent)]/60 bg-[#1f2530] shadow-[0_0_30px_rgba(25,94,226,0.15)]"
+                        : "border-white/8 bg-[#191d24]/92 hover:border-[color:var(--accent)]/40 hover:bg-[#1f2530]"
+                    }`}
                   >
                     <div className="space-y-3">
                       <div className="flex flex-wrap items-center gap-3">
                         <span
-                          className={`rounded-[0.6rem] px-2.5 py-1 text-[10px] font-bold uppercase tracking-[0.18em] ${modeBadgeClasses(mode)}`}
+                          className={`rounded-[0.6rem] px-2.5 py-1 text-[10px] font-black uppercase tracking-[0.18em] ${modeBadgeClasses(mode)}`}
                         >
                           {mode}
                         </span>
-                        <span className="text-[11px] font-semibold uppercase tracking-[0.14em] text-[#8793ad]">
+                        <span className="text-[10px] font-black uppercase tracking-[0.14em] text-[color:var(--text-muted)]">
                           {formatPostedLabel(job.createdAt)}
                         </span>
+                        {isSelected ? (
+                          <span className="rounded-[0.6rem] bg-[color:var(--accent)]/20 px-2.5 py-1 text-[10px] font-black uppercase tracking-[0.18em] text-[color:var(--accent)]">
+                            Selected
+                          </span>
+                        ) : null}
                       </div>
 
-                      <h3 className="font-headline text-2xl font-black tracking-tight text-white">
+                      <h3 className="font-headline text-2xl font-black tracking-tight text-[color:var(--text-primary)]">
                         {job.title}
                       </h3>
 
@@ -262,7 +285,7 @@ export default function CareerPageContent({ jobs, content }) {
                           {tags.map((tag) => (
                             <span
                               key={`${job.id}-${tag}`}
-                              className="rounded-[0.55rem] border border-white/8 bg-white/[0.04] px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.14em] text-[#c2cde2]"
+                              className="rounded-[0.55rem] border border-white/8 bg-white/[0.04] px-2.5 py-1 text-[10px] font-black uppercase tracking-[0.14em] text-[color:var(--text-muted)]"
                             >
                               {tag}
                             </span>
@@ -271,25 +294,25 @@ export default function CareerPageContent({ jobs, content }) {
                       ) : null}
 
                       {job.description ? (
-                        <p className="max-w-3xl text-sm leading-7 text-[#b8c4d9]">{job.description}</p>
+                        <p className="max-w-3xl text-sm leading-7 text-[color:var(--text-secondary)]">{job.description}</p>
                       ) : null}
                     </div>
 
                     <div className="flex items-center justify-between gap-5 md:flex-col md:items-end md:justify-center">
                       <div className="text-left md:text-right">
-                        <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-[#8390a8]">
+                        <p className="text-[9px] font-black uppercase tracking-[0.18em] text-[color:var(--text-muted)]">
                           Location
                         </p>
-                        <p className="mt-2 flex items-center gap-2 text-sm font-medium text-white md:justify-end">
-                          <MapPin className="h-4 w-4 text-[#86a1e4]" />
+                        <p className="mt-2 flex items-center gap-2 text-sm font-medium text-[color:var(--text-primary)] md:justify-end">
+                          <MapPin className="h-4 w-4 text-[color:var(--accent)]" />
                           {job.location}
                         </p>
                       </div>
-                      <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-white/12 text-[#d4ddf2] transition duration-300 group-hover:scale-105 group-hover:bg-[#2a61dd] group-hover:text-white">
+                      <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-white/12 text-[color:var(--text-primary)] transition duration-300 group-hover:scale-105 group-hover:bg-[color:var(--accent)] group-hover:text-white">
                         <ArrowUpRight className="h-4.5 w-4.5" />
                       </span>
                     </div>
-                  </article>
+                  </button>
                 );
               })}
             </div>
@@ -298,7 +321,7 @@ export default function CareerPageContent({ jobs, content }) {
               <h3 className="font-headline text-2xl font-black tracking-tight text-white">
                 No open positions yet
               </h3>
-              <p className="mx-auto mt-3 max-w-xl text-sm leading-7 text-[#b3bfd5]">
+              <p className="mx-auto mt-3 max-w-xl text-sm leading-7 text-[color:var(--text-muted)]">
                 Add jobs from the dashboard and this section will update automatically.
               </p>
             </div>
@@ -307,39 +330,39 @@ export default function CareerPageContent({ jobs, content }) {
       </section>
 
       <section className="px-4 py-16 sm:px-6 lg:px-8 lg:py-24">
-        <div className="mx-auto grid w-full max-w-screen-xl gap-10 lg:grid-cols-[0.96fr_1.04fr] lg:items-start">
+        <div ref={formRef} id="apply-section" className="mx-auto grid w-full max-w-screen-xl gap-10 lg:grid-cols-[0.96fr_1.04fr] lg:items-start">
           <div>
-            <h2 className="font-headline text-4xl font-black tracking-tight text-white sm:text-5xl">
-              {career.applyTitle || "Apply with confidence"}
+            <h2 className="font-headline text-4xl font-black tracking-tight text-[color:var(--text-primary)] sm:text-5xl">
+              {career.applyTitle || "Application Protocol"}
             </h2>
-            <p className="mt-5 text-sm leading-8 text-[#bcc8de]">
+            <p className="mt-5 text-sm leading-8 text-[color:var(--text-secondary)]">
               {career.applyDescription ||
-                "Share your profile and role preference through our cleaner application flow. Hiring data remains connected with the existing backend process."}
+                "Submit your credentials through our priority candidate assessment channel. Our engineering leads review each profile for architectural alignment."}
             </p>
 
             <div className="mt-10 overflow-hidden rounded-[1.2rem] border border-white/8 bg-[linear-gradient(150deg,#2b5fd4,#1d47ab)] p-6 shadow-[0_24px_70px_rgba(2,7,22,0.35)]">
-              <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-[#dce6ff]">
-                Selected Position
+              <p className="text-[10px] font-black uppercase tracking-[0.22em] text-[color:var(--text-primary)]/70">
+                Active Selection
               </p>
               <h3 className="mt-2 font-headline text-3xl font-black tracking-tight text-white">
-                {selectedJob?.title || "Position will appear here"}
+                {selectedJob?.title || "Pending Selection"}
               </h3>
-              <p className="mt-2 text-sm text-[#e4ecff]">
-                {selectedJob?.location || "Choose a role from the application form."}
+              <p className="mt-2 text-sm text-[color:var(--text-secondary)]">
+                {selectedJob?.location || "Choose a role above to proceed with the application."}
               </p>
 
               <div className="mt-6 space-y-3">
                 {reasons.length ? (
                   reasons.map((item) => (
-                    <div key={item} className="flex items-center gap-3 text-sm text-[#e8efff]">
-                      <CheckCircle2 className="h-4.5 w-4.5 text-[#c5d6ff]" />
+                    <div key={item} className="flex items-center gap-3 text-sm text-[color:var(--text-secondary)]">
+                      <CheckCircle2 className="h-4.5 w-4.5 text-[color:var(--text-primary)]/60" />
                       <span>{item}</span>
                     </div>
                   ))
                 ) : (
-                  <div className="flex items-center gap-3 text-sm text-[#e8efff]">
-                    <CheckCircle2 className="h-4.5 w-4.5 text-[#c5d6ff]" />
-                    <span>Add career highlights from the dashboard to complete this section.</span>
+                  <div className="flex items-center gap-3 text-sm text-[color:var(--text-secondary)]">
+                    <CheckCircle2 className="h-4.5 w-4.5 text-[color:var(--text-primary)]/60" />
+                    <span>Global talent sourcing protocols active.</span>
                   </div>
                 )}
               </div>
@@ -349,6 +372,7 @@ export default function CareerPageContent({ jobs, content }) {
           <JobApplicationForm
             jobs={jobs}
             showSelectedCard={false}
+            preSelectedJobId={selectedJob?.id}
           />
         </div>
       </section>

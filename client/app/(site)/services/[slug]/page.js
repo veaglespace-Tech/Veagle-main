@@ -4,7 +4,8 @@ import { buildPageMetadata } from "@/lib/seo";
 import { COMPANY_NAME } from "@/lib/site";
 
 export async function generateMetadata({ params }) {
-  const service = await getServiceBySlug(params.slug);
+  const { slug } = await params;
+  const service = await getServiceBySlug(slug);
   const title = service?.title ? `${service.title}` : "Service detail";
   const description = service?.description
     ? service.description
@@ -13,7 +14,7 @@ export async function generateMetadata({ params }) {
   return buildPageMetadata({
     title,
     description,
-    path: `/services/${params.slug}`,
+    path: `/services/${slug}`,
     keywords: [
       `${COMPANY_NAME} services`,
       "dynamic website service",
@@ -25,8 +26,9 @@ export async function generateMetadata({ params }) {
 }
 
 export default async function ServiceDetailPage({ params }) {
+  const { slug } = await params;
   const [service, services] = await Promise.all([
-    getServiceBySlug(params.slug),
+    getServiceBySlug(slug),
     getServices(),
   ]);
 

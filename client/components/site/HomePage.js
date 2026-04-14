@@ -22,8 +22,9 @@ import {
   pageClass,
 } from "@/components/site/UiBits";
 import { resolveClientProfile } from "@/lib/fallback-data";
+import { backendAssetUrl } from "@/lib/backend";
 import { COMPANY_BRAND_NAME } from "@/lib/site";
-import { pageArtwork } from "@/lib/visuals";
+import { pageArtwork, resolveServiceIllustration } from "@/lib/visuals";
 
 const competenceIcons = [Globe2, ShoppingCart, Code2];
 const whyIcons = [Sparkles, Database, Layers3, Megaphone];
@@ -36,7 +37,7 @@ function MarqueeRow({ items = [], showLabel = true }) {
 
   if (!values.length) {
     return (
-      <div className="rounded-[1.4rem] border border-dashed border-white/10 bg-white/[0.03] px-6 py-10 text-center text-sm text-[#a5afc6]">
+      <div className="rounded-[1.4rem] border border-dashed border-white/10 bg-white/[0.03] px-6 py-10 text-center text-sm text-[color:var(--text-muted)]">
         Add client names or logos from the dashboard to populate this trust strip.
       </div>
     );
@@ -98,6 +99,8 @@ function MarqueeRow({ items = [], showLabel = true }) {
 }
 
 function discoveryCards({ services, products, jobs }) {
+  const serviceImage = services[0]?.imageUrl || resolveServiceIllustration(services[0]?.title);
+  const productImage = products[0]?.imageUrl || "/Digital Products.png";
   return [
     {
       key: "services",
@@ -105,7 +108,7 @@ function discoveryCards({ services, products, jobs }) {
       title: "Services",
       description: `${services.length} active entries with cleaner discovery and direct enquiry flow.`,
       href: "/services",
-      image: services[0]?.imageUrl || pageArtwork.services,
+      image: serviceImage,
       icon: discoveryIcons[0],
     },
     {
@@ -114,7 +117,7 @@ function discoveryCards({ services, products, jobs }) {
       title: "Products",
       description: `${products.length} dashboard-managed product modules grouped for stronger presentation.`,
       href: "/products",
-      image: products[0]?.imageUrl || "/veagle-art-suite.svg",
+      image: productImage,
       icon: discoveryIcons[1],
     },
     {
@@ -129,7 +132,17 @@ function discoveryCards({ services, products, jobs }) {
   ];
 }
 
-export default function HomePage({ content, services = [], products = [], jobs = [] }) {
+function normalizeBackendClients(items = []) {
+  return items
+    .map((client) => ({
+      name: client?.name || "",
+      href: client?.websiteUrl || "/contact",
+      image: backendAssetUrl(client?.logoUrl),
+    }))
+    .filter((item) => item.name);
+}
+
+export default function HomePage({ content, services = [], products = [], jobs = [], clientsData = [] }) {
   const hero = content?.hero || {};
   const finalCta = content?.finalCta || {};
   const clients = content?.clients || {};
@@ -142,14 +155,17 @@ export default function HomePage({ content, services = [], products = [], jobs =
   const featuredProducts = products.slice(0, 3);
   const competenceRows = featuredServices.length ? featuredServices : differentiators.slice(0, 3);
   const systemsCards = discoveryCards({ services, products, jobs });
-  const clientMarquee =
-    Array.isArray(clients?.logos) && clients.logos.length ? clients.logos : [];
-  const marqueeLabels =
-    clientMarquee.length
-      ? clientMarquee
-      : Array.isArray(clients?.marquee) && clients.marquee.length
-        ? clients.marquee
-        : [];
+
+  /* --- Build marquee from backend clients FIRST, fallback to CMS --- */
+  const backendClients = normalizeBackendClients(Array.isArray(clientsData) ? clientsData : []);
+  const cmsLogos = Array.isArray(clients?.logos) && clients.logos.length ? clients.logos : [];
+  const cmsMarquee = Array.isArray(clients?.marquee) && clients.marquee.length ? clients.marquee : [];
+  const marqueeLabels = backendClients.length
+    ? backendClients
+    : cmsLogos.length
+      ? cmsLogos
+      : cmsMarquee;
+
   const clientProof =
     Array.isArray(clients?.proof) && clients.proof.length
       ? clients.proof.slice(0, 3)
@@ -176,10 +192,10 @@ export default function HomePage({ content, services = [], products = [], jobs =
         </div>
 
         <div className="relative z-10 mx-auto w-full max-w-screen-xl text-center">
-          <div className="inline-flex items-center gap-2 rounded-full border border-white/14 bg-[#1a1d24]/80 px-4 py-2 backdrop-blur-sm">
-            <span className="h-2.5 w-2.5 rounded-full bg-[#56e240] shadow-[0_0_10px_rgba(86,226,64,0.55)]" />
-            <span className="text-[11px] font-semibold uppercase tracking-[0.24em] text-[#d6dcf0]">
-              System Status: GO
+          <div className="inline-flex items-center gap-2 rounded-full border border-white/14 bg-[color:var(--surface-strong)] px-4 py-2 backdrop-blur-sm">
+            <span className="h-2 w-2 rounded-full bg-[#8ba8ff] shadow-[0_0_10px_rgba(139,168,255,0.4)]" />
+            <span className="text-[10px] font-bold uppercase tracking-[0.24em] text-[color:var(--text-secondary)]">
+              System Ready: 2026-A1
             </span>
           </div>
 
@@ -190,9 +206,9 @@ export default function HomePage({ content, services = [], products = [], jobs =
             </span>
           </h1>
 
-          <p className="mx-auto mt-6 max-w-3xl text-base leading-8 text-[#d3dbef] sm:text-lg">
+          <p className="mx-auto mt-6 max-w-3xl text-base leading-8 text-[color:var(--text-secondary)] sm:text-lg">
             {hero.description ||
-              `${COMPANY_BRAND_NAME} builds dynamic websites, software products, ERP systems and business-ready dashboard experiences.`}
+              `${COMPANY_BRAND_NAME} architects high-performance software, dynamic web experiences, and scalable ERP systems for modern global brands.`}
           </p>
 
           <div className="mt-8 flex flex-col items-center gap-4 sm:flex-row sm:flex-wrap sm:justify-center">
@@ -207,10 +223,10 @@ export default function HomePage({ content, services = [], products = [], jobs =
           <div className="mx-auto mt-12 grid max-w-4xl gap-px overflow-hidden rounded-2xl border border-white/12 bg-white/8 sm:grid-cols-2 lg:grid-cols-4">
             {stats.map((item) => (
               <div key={`${item.value}-${item.label}`} className="bg-[#151922]/80 px-5 py-7 text-left">
-                <p className="font-headline text-3xl font-black tracking-tight text-[#c6d5ff]">
+                <p className="font-headline text-3xl font-black tracking-tight text-[color:var(--text-primary)]">
                   {item.value}
                 </p>
-                <p className="mt-2 text-[11px] font-semibold uppercase tracking-[0.22em] text-[#8f97aa]">
+                <p className="mt-2 text-[10px] font-bold uppercase tracking-[0.22em] text-[color:var(--text-muted)]">
                   {item.label}
                 </p>
               </div>
@@ -265,7 +281,7 @@ export default function HomePage({ content, services = [], products = [], jobs =
                         <Icon className="h-5 w-5" />
                       </div>
                     </div>
-                    <p className="text-sm leading-7 text-[#c7cfe2]">{card.description}</p>
+                    <p className="text-sm leading-7 text-[color:var(--text-secondary)]">{card.description}</p>
                   </div>
                 </Link>
               );
@@ -295,7 +311,7 @@ export default function HomePage({ content, services = [], products = [], jobs =
                   <div className="flex h-14 w-14 items-center justify-center rounded-2xl border border-white/15 bg-[#1f2533] text-[#9fb7ff]">
                     <Icon className="h-6 w-6" />
                   </div>
-                  <h3 className="font-headline text-2xl font-black tracking-tight text-white">{title}</h3>
+                  <h3 className="font-headline text-2xl font-black tracking-tight text-[color:var(--text-primary)]">{title}</h3>
                   <p className="text-sm leading-8 text-[color:var(--text-secondary)]">{description}</p>
                 </article>
               );
@@ -310,8 +326,8 @@ export default function HomePage({ content, services = [], products = [], jobs =
             <h2 className="font-headline text-3xl font-black leading-tight tracking-[-0.03em] text-white sm:text-5xl">
               Why mission leaders choose Veagle
             </h2>
-            <p className="mt-6 max-w-2xl text-base leading-8 text-[#c6cfe4]">
-              We don&apos;t just build software; we architect reliable digital operations using delivery standards that keep teams aligned.
+            <p className="mt-6 max-w-2xl text-base leading-8 text-[color:var(--text-secondary)]">
+              We don&apos;t just build software; we architect resilient digital operations and robust internal systems that keep your teams focused.
             </p>
           </div>
 
@@ -355,9 +371,9 @@ export default function HomePage({ content, services = [], products = [], jobs =
               <h2 className="mt-4 max-w-3xl font-headline text-3xl font-black leading-tight tracking-[-0.03em] text-white sm:text-5xl">
                 Trusted by businesses across finance, software and operations
               </h2>
-              <p className="mt-5 max-w-2xl text-base leading-8 text-[#c6cfe4]">
+              <p className="mt-5 max-w-2xl text-base leading-8 text-[color:var(--text-secondary)]">
                 {clients.description ||
-                  `Client logos stay visible in one clean trust layer so visitors can quickly feel the range and credibility behind ${COMPANY_BRAND_NAME} delivery.`}
+                  `Our network of trusted partners relies on our engineering standards for consistent, reliable product delivery.`}
               </p>
               <Link
                 href="/clients"
@@ -374,10 +390,10 @@ export default function HomePage({ content, services = [], products = [], jobs =
                   key={`${item.label}-${item.value}`}
                   className="rounded-[1.5rem] border border-white/8 bg-[rgba(20,24,31,0.82)] px-5 py-6 shadow-[0_22px_60px_-42px_rgba(0,0,0,0.84)] backdrop-blur-[14px]"
                 >
-                  <p className="text-[11px] font-bold uppercase tracking-[0.2em] text-[#8f9ab3]">
+                  <p className="text-[10px] font-black uppercase tracking-[0.2em] text-[color:var(--text-muted)]">
                     {item.label}
                   </p>
-                  <p className="mt-3 font-headline text-2xl font-black tracking-tight text-white">
+                  <p className="mt-3 font-headline text-2xl font-black tracking-tight text-[color:var(--text-primary)]">
                     {item.value}
                   </p>
                 </div>
@@ -425,14 +441,14 @@ export default function HomePage({ content, services = [], products = [], jobs =
             {featuredProducts.map((product) => (
               <article
                 key={product.id || product.title}
-                className="overflow-hidden rounded-[1.2rem] border border-white/8 bg-[#1a1f28] p-1"
+                className="group overflow-hidden rounded-[1.2rem] border border-white/8 bg-[#1a1f28] p-1 transition duration-300 hover:-translate-y-1 hover:border-white/16"
               >
                 <div className="relative h-56 overflow-hidden rounded-[0.95rem]">
                   <Image
                     src={product.imageUrl}
                     alt={product.title}
                     fill
-                    className="object-cover"
+                    className="object-cover transition duration-500 group-hover:scale-105"
                     unoptimized
                   />
                 </div>
@@ -440,12 +456,12 @@ export default function HomePage({ content, services = [], products = [], jobs =
                   <h3 className="font-headline text-2xl font-black tracking-tight text-white">
                     {product.title}
                   </h3>
-                  <p className="mt-3 text-sm leading-7 text-[#c1cbde]">
+                  <p className="mt-3 text-[13px] leading-7 text-[color:var(--text-secondary)]">
                     {product.description}
                   </p>
                   <Link
                     href="/products"
-                    className="mt-5 inline-flex items-center gap-2 text-sm font-bold uppercase tracking-[0.16em] text-[color:var(--text-muted)]"
+                    className="mt-5 inline-flex items-center gap-2 text-sm font-bold uppercase tracking-[0.16em] text-[color:var(--text-muted)] transition group-hover:text-[#9fb7ff]"
                   >
                     Review Module
                     <ArrowRight className="h-4 w-4" />
@@ -455,8 +471,8 @@ export default function HomePage({ content, services = [], products = [], jobs =
             ))}
           </div>
           {!featuredProducts.length ? (
-            <p className="mt-8 text-center text-sm text-[#a9b4cc]">
-              Add products from dashboard and modules will appear here automatically.
+            <p className="mt-8 text-center text-[10px] font-black uppercase tracking-widest text-[color:var(--text-muted)]">
+              Add products from dashboard to see more modules here.
             </p>
           ) : null}
         </div>
@@ -472,9 +488,9 @@ export default function HomePage({ content, services = [], products = [], jobs =
               <h2 className="mx-auto max-w-4xl font-headline text-3xl font-black leading-tight tracking-[-0.035em] text-white sm:text-5xl">
                 {finalCta.title || "Ready to build the next version of your website..."}
               </h2>
-              <p className="mx-auto mt-5 max-w-3xl text-base leading-8 text-[#d8e2fb]">
+              <p className="mx-auto mt-5 max-w-3xl text-base leading-8 text-[color:var(--text-secondary)]">
                 {finalCta.description ||
-                  "Tell us what needs to improve and we will convert it into a clear execution plan."}
+                  "Share your vision for the next iteration of your business and we will transform it into a precision-engineered roadmap."}
               </p>
               <div className="mt-8 flex flex-col items-center gap-4 sm:flex-row sm:flex-wrap sm:justify-center">
                 <PrimaryLink href={finalCta.primaryHref || "/contact"}>

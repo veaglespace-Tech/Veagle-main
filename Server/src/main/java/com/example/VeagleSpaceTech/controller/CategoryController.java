@@ -2,7 +2,6 @@ package com.example.VeagleSpaceTech.controller;
 
 import com.example.VeagleSpaceTech.DTO.request.CategoryRequestDTO;
 import com.example.VeagleSpaceTech.DTO.response.CategoryResponseDTO;
-import com.example.VeagleSpaceTech.entity.Category;
 import com.example.VeagleSpaceTech.service.CategoryService;
 import lombok.RequiredArgsConstructor;
 
@@ -17,8 +16,8 @@ import java.util.List;
 @RequiredArgsConstructor // if we use this then no need of @Autowire
 public class CategoryController {
 
-	@Autowired
-    private  CategoryService categoryService;
+    @Autowired
+    private CategoryService categoryService;
 
     // GET ALL
     @GetMapping("/api/v1/categories")
@@ -44,12 +43,11 @@ public class CategoryController {
     @PutMapping("/api/v1/admin/categories/{id}")
     public ResponseEntity<CategoryResponseDTO> update(
             @PathVariable Long id,
-            @RequestBody CategoryRequestDTO categoryRequestDTO
-    ) {
-        System.out.println("\nUpdate Category.....Name: "+categoryRequestDTO.name()+"  Discription: "+categoryRequestDTO.description());
+            @RequestBody CategoryRequestDTO categoryRequestDTO) {
+        System.out.println("\nUpdate Category.....Name: " + categoryRequestDTO.name() + "  Discription: "
+                + categoryRequestDTO.description());
         return ResponseEntity.ok(
-                categoryService.updateCategory(id, categoryRequestDTO)
-        );
+                categoryService.updateCategory(id, categoryRequestDTO));
     }
 
     // DELETE
@@ -59,6 +57,5 @@ public class CategoryController {
         categoryService.deleteCategory(id);
         return ResponseEntity.ok("Category deleted");
     }
-
 
 }

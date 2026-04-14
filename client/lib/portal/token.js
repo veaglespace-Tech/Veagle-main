@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 
-import { decodeJwtPayload, normalizeRole } from "@/lib/utils";
+import { decodeJwtPayload, isJwtExpired, normalizeRole } from "@/lib/utils";
 
 export function getRoleFromToken(token) {
   const payload = decodeJwtPayload(token);
@@ -18,9 +18,19 @@ export function getTokenFromRequest(request) {
 
 export function requirePortalRole(request, allowedRoles = ["ADMIN", "SADMIN"]) {
   const token = getTokenFromRequest(request);
+  if (!token || isJwtExpired(token)) {
+    return {
+      ok: false,
+      response: NextResponse.json(
+        { error: "Portal session expired. Please sign in again." },
+        { status: 401 }
+      ),
+    };
+  }
+
   const role = getRoleFromToken(token);
 
-  if (!token || !allowedRoles.includes(role)) {
+  if (!allowedRoles.includes(role)) {
     return {
       ok: false,
       response: NextResponse.json(

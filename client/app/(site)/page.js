@@ -1,5 +1,5 @@
 import HomePage from "@/components/site/HomePage";
-import { getJobs, getProducts, getServices } from "@/lib/backend";
+import { getClients, getJobs, getProducts, getServices } from "@/lib/backend";
 import { getSiteContent } from "@/lib/cms/store";
 import {
   buildFaqSchema,
@@ -24,11 +24,12 @@ export const metadata = buildPageMetadata({
 });
 
 export default async function Page() {
-  const [content, services, products, jobs] = await Promise.all([
+  const [content, services, products, jobs, clientsData] = await Promise.all([
     getSiteContent(),
     getServices(),
     getProducts(),
     getJobs(),
+    getClients(),
   ]);
   const organizationSchema = buildOrganizationSchema();
   const localBusinessSchema = buildLocalBusinessSchema();
@@ -48,7 +49,7 @@ export default async function Page() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
       />
-      <HomePage content={content} services={services} products={products} jobs={jobs} />
+      <HomePage content={content} services={services} products={products} jobs={jobs} clientsData={clientsData} />
     </>
   );
 }

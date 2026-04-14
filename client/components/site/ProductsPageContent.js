@@ -23,6 +23,7 @@ import {
   pageClass,
 } from "@/components/site/UiBits";
 import { pageArtwork } from "@/lib/visuals";
+import { slugify } from "@/lib/utils";
 
 const categoryAllId = "ALL_SOLUTIONS";
 
@@ -63,14 +64,14 @@ function resolveStatus(product, index) {
   if (/(bank|finance|loan|insurance)/i.test(text)) {
     return {
       label: "ENCRYPTED",
-      className: "bg-[#56e240]/15 text-[#a7ff9c]",
+      className: "bg-[color:var(--accent-success)]/15 text-[color:var(--accent-success)]",
     };
   }
 
   if (/(zoho|platform|suite|erp|business)/i.test(text)) {
     return {
       label: "PLATFORM",
-      className: "bg-[#3a4151] text-[#d0d8eb]",
+      className: "bg-[#3a4151] text-[color:var(--text-secondary)]",
     };
   }
 
@@ -83,7 +84,7 @@ function resolveStatus(product, index) {
 
   return {
     label: `v${index + 1}.STABLE`,
-    className: "bg-[#56e240]/15 text-[#a7ff9c]",
+    className: "bg-[color:var(--accent-success)]/15 text-[color:var(--accent-success)]",
   };
 }
 
@@ -150,7 +151,7 @@ function buildCatalog(products, categories) {
 }
 
 function renderHeroTitle(value) {
-  const title = value || "Products & Solutions";
+  const title = value || "Enterprise Solutions & Software Systems";
   const marker = "solutions";
   const index = title.toLowerCase().indexOf(marker);
 
@@ -165,7 +166,7 @@ function renderHeroTitle(value) {
   return (
     <>
       {start}
-      <span className="text-[color:var(--text-muted)]">{focus}</span>
+      <span className="text-[color:var(--accent)]">{focus}</span>
       {end}
     </>
   );
@@ -207,10 +208,10 @@ export default function ProductsPageContent({ products, categories, content }) {
     (filter) => filter.id === deferredFilter
   );
   const ctaTitle =
-    pageContent.ctaTitle || "Need a custom orbital configuration?";
+    pageContent.ctaTitle || "Need a bespoke architectural configuration?";
   const ctaDescription =
     pageContent.ctaDescription ||
-    "Our engineering teams specialize in building bespoke software layers for unique mission parameters.";
+    "Our engineering labs specialize in building precision-engineered software layers for unique operational mission parameters.";
 
   return (
     <main className={pageClass}>
@@ -229,15 +230,15 @@ export default function ProductsPageContent({ products, categories, content }) {
 
         <div className="relative z-10 mx-auto max-w-screen-2xl px-4 sm:px-6 lg:px-8">
           <div className="max-w-3xl">
-            <span className="inline-flex rounded-full bg-[color:var(--accent-soft)]/12 px-4 py-1.5 text-[11px] font-bold uppercase tracking-[0.22em] text-[#d3deff]">
-              Fleet Catalog v2.0
+            <span className="inline-flex rounded-full border border-[color:var(--accent)]/30 bg-[color:var(--surface-strong)] px-4 py-1.5 text-[10px] font-black uppercase tracking-[0.22em] text-[color:var(--text-muted)]">
+              Digital Fleet Catalog v2.6
             </span>
             <h1 className="mt-6 font-headline text-5xl font-black leading-[0.94] tracking-[-0.04em] text-white sm:text-7xl">
               {renderHeroTitle(pageContent.title)}
             </h1>
-            <p className="mt-6 text-base leading-8 text-[#bac6de] sm:text-lg">
+            <p className="mt-6 text-lg leading-8 text-[color:var(--text-secondary)]">
               {pageContent.description ||
-                "Integrated ecosystems for business operations, automation and financial workflows with mission-grade reliability."}
+                "Integrated software ecosystems for complex business operations, high-efficiency automation, and mission-critical financial workflows."}
             </p>
           </div>
         </div>
@@ -254,7 +255,7 @@ export default function ProductsPageContent({ products, categories, content }) {
                   key={filter.id}
                   type="button"
                   onClick={() => setActiveFilter(filter.id)}
-                  className={`whitespace-nowrap ${filterButtonClass(isActive)}`}
+                  className={`whitespace-nowrap font-black uppercase tracking-[0.14em] text-[10px] ${filterButtonClass(isActive)}`}
                 >
                   {filter.name}
                 </button>
@@ -266,7 +267,7 @@ export default function ProductsPageContent({ products, categories, content }) {
 
       <section className="mx-auto max-w-screen-2xl px-4 py-12 sm:px-6 lg:px-8">
         {activeFilterMeta?.description ? (
-          <p className="mb-6 text-sm leading-7 text-[#aeb9ce]">
+          <p className="mb-6 text-sm leading-7 text-[color:var(--text-secondary)]">
             {activeFilterMeta.description}
           </p>
         ) : null}
@@ -276,37 +277,56 @@ export default function ProductsPageContent({ products, categories, content }) {
             const Icon = resolveProductIcon(product);
             const status = resolveStatus(product, index);
             const categoryName = product.categoryName || "General";
+            const productSlug = product.slug || slugify(product.title);
+            const hasImage = !!product.imageUrl;
 
             return (
-              <article
+              <Link
                 key={product.id || `${product.title}-${index}`}
-                className="group flex h-full flex-col rounded-[1rem] border border-white/6 bg-[rgba(52,53,53,0.4)] p-6 backdrop-blur-[12px] transition duration-300 hover:bg-[#2b2f38]"
+                href={`/products/${productSlug}`}
+                className="group flex h-full flex-col overflow-hidden rounded-[1rem] border border-white/6 bg-[color:var(--surface)] backdrop-blur-[12px] transition duration-300 hover:-translate-y-1 hover:bg-[color:var(--surface-strong)] hover:border-white/14"
               >
-                <div className="mb-7 flex items-start justify-between gap-4">
-                  <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-[color:var(--accent-soft)]/10 text-[#9db5ff] transition duration-300 group-hover:scale-110">
-                    <Icon className="h-6 w-6" />
+                {/* Product image */}
+                {hasImage ? (
+                  <div className="relative h-44 w-full overflow-hidden">
+                    <Image
+                      src={product.imageUrl}
+                      alt={product.title}
+                      fill
+                      className="object-cover transition duration-500 group-hover:scale-105"
+                      unoptimized
+                    />
+                    <div className="absolute inset-0 bg-[linear-gradient(180deg,transparent_50%,rgba(15,18,26,0.7))]" />
                   </div>
-                  <span
-                    className={`rounded px-2 py-1 text-[10px] font-bold uppercase tracking-[0.16em] ${status.className}`}
-                  >
-                    {status.label}
-                  </span>
-                </div>
+                ) : null}
 
-                <h3 className="font-headline text-2xl font-black tracking-tight text-white">
-                  {product.title}
-                </h3>
-                <p className="mt-4 flex-grow text-sm leading-7 text-[#b8c4db]">
-                  {product.description}
-                </p>
+                <div className="flex flex-1 flex-col p-6">
+                  <div className="mb-7 flex items-start justify-between gap-4">
+                    <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-[color:var(--accent)]/10 text-[color:var(--accent)] transition duration-300 group-hover:scale-110 group-hover:bg-[color:var(--accent)] group-hover:text-white">
+                      <Icon className="h-6 w-6" />
+                    </div>
+                    <span
+                      className={`rounded px-2 py-1 text-[9px] font-black uppercase tracking-[0.16em] ${status.className}`}
+                    >
+                      {status.label}
+                    </span>
+                  </div>
 
-                <div className="mt-7 flex items-center justify-between border-t border-white/5 pt-5">
-                  <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#8f9bb3]">
-                    {categoryName}
-                  </span>
-                  <ArrowRight className="h-4.5 w-4.5 text-[color:var(--text-muted)] transition duration-300 group-hover:translate-x-1" />
+                  <h3 className="font-headline text-2xl font-black tracking-tight text-[color:var(--text-primary)]">
+                    {product.title}
+                  </h3>
+                  <p className="mt-4 flex-grow text-sm leading-7 text-[color:var(--text-secondary)]">
+                    {product.description}
+                  </p>
+
+                  <div className="mt-7 flex items-center justify-between border-t border-white/5 pt-5">
+                    <span className="text-[10px] font-black uppercase tracking-[0.2em] text-[color:var(--text-muted)]">
+                      {categoryName}
+                    </span>
+                    <ArrowRight className="h-4.5 w-4.5 text-[color:var(--text-muted)] transition duration-300 group-hover:translate-x-1 group-hover:text-[color:var(--accent)]" />
+                  </div>
                 </div>
-              </article>
+              </Link>
             );
           })}
         </div>
@@ -314,10 +334,10 @@ export default function ProductsPageContent({ products, categories, content }) {
         {!filteredProducts.length ? (
           <div className="mt-8 rounded-[1rem] border border-dashed border-white/15 bg-[#1a1c21] px-6 py-12 text-center">
             <h3 className="font-headline text-2xl font-black tracking-tight text-white">
-              No products in this category yet
+              Project Vault Empty
             </h3>
-            <p className="mx-auto mt-3 max-w-2xl text-sm leading-7 text-[#b0bdd4]">
-              Add products from admin/sadmin dashboard and they will appear here automatically.
+            <p className="mx-auto mt-3 max-w-2xl text-sm leading-7 text-[color:var(--text-muted)]">
+              Initialize your product catalog via the integrated dashboard to synchronize live solutions.
             </p>
           </div>
         ) : null}
@@ -339,13 +359,13 @@ export default function ProductsPageContent({ products, categories, content }) {
             <h2 className="font-headline text-4xl font-black leading-[0.95] tracking-[-0.03em] text-white sm:text-5xl">
               {ctaTitle}
             </h2>
-            <p className="mt-5 text-base leading-8 text-[#dde7ff]">{ctaDescription}</p>
+            <p className="mt-5 text-lg leading-8 text-[color:var(--text-secondary)]">{ctaDescription}</p>
             <div className="mt-8 flex flex-col gap-4 sm:flex-row sm:flex-wrap sm:items-center">
               <PrimaryLink href="/contact">
-                Request a Demo
+                Initiate Protocol
               </PrimaryLink>
               <SecondaryLink href="/contact">
-                Contact Engineering
+                Project Discovery
               </SecondaryLink>
             </div>
           </div>
@@ -364,4 +384,3 @@ export default function ProductsPageContent({ products, categories, content }) {
     </main>
   );
 }
-

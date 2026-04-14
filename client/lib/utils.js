@@ -70,3 +70,15 @@ export function decodeJwtPayload(token) {
     return null;
   }
 }
+
+export function isJwtExpired(token, bufferSeconds = 30) {
+  const payload = decodeJwtPayload(token);
+  const exp = Number(payload?.exp || 0);
+
+  if (!exp) {
+    return true;
+  }
+
+  const nowInSeconds = Math.floor(Date.now() / 1000);
+  return exp <= nowInSeconds + bufferSeconds;
+}

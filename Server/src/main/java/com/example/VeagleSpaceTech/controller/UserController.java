@@ -3,7 +3,6 @@ package com.example.VeagleSpaceTech.controller;
 import com.example.VeagleSpaceTech.DTO.UpdateProfileDTO;
 import com.example.VeagleSpaceTech.DTO.request.LoginRequest;
 import com.example.VeagleSpaceTech.DTO.request.RegisterRequest;
-import com.example.VeagleSpaceTech.DTO.response.AuthResponse;
 import com.example.VeagleSpaceTech.DTO.response.UserResponseDTO;
 import com.example.VeagleSpaceTech.service.UserService;
 import jakarta.validation.Valid;
@@ -20,13 +19,13 @@ public class UserController {
     private UserService userService;
 
     // ✅ Register User
-    @PostMapping("/api/v1/auth/register") ///api/v1/auth/register
+    @PostMapping("/api/v1/auth/register") /// api/v1/auth/register
     public ResponseEntity<UserResponseDTO> register(@Valid @RequestBody RegisterRequest request) {
         return ResponseEntity.status(201)
                 .body(userService.registerUser(request));
     }
 
-    //  Login User
+    // Login User
     @PostMapping("/api/v1/auth/login")
     public ResponseEntity<String> login(@Valid @RequestBody LoginRequest request) {
         return ResponseEntity.ok(userService.login(request));
@@ -45,7 +44,7 @@ public class UserController {
         return ResponseEntity.ok(userService.updateProfile(dto));
     }
 
-    //for password changing
+    // for password changing
 
     @PostMapping("/api/v1/auth/send-otp")
     public ResponseEntity<String> sendOtp() {
@@ -70,7 +69,5 @@ public class UserController {
 
         return ResponseEntity.ok("Password changed");
     }
-
-
 
 }

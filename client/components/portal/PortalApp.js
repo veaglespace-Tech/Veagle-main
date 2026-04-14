@@ -45,7 +45,8 @@ import {
   portalTabListClass,
 } from "@/components/portal/PortalFields";
 import { Eyebrow } from "@/components/site/UiBits";
-import { PORTAL_STORAGE_KEY, authHeaders, requestJson } from "@/lib/portal-api";
+import { authHeaders, requestJson } from "@/lib/portal-api";
+import { clearStoredSession, readStoredSession } from "@/lib/auth-session";
 import { API_BASE_URL } from "@/lib/site";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import {
@@ -153,8 +154,11 @@ const initialServiceForm = {
   id: "",
   title: "",
   description: "",
-  featuresText: "",
+  detailTitle: "",
+  detailDescription: "",
+  features: [""],
   file: null,
+  imageUrl: "",
 };
 
 const initialProductForm = {
@@ -333,6 +337,18 @@ export default function PortalApp() {
     [dispatch]
   );
 
+  const handleSessionExpired = useCallback(
+    (message = "Portal session expired. Please sign in again.") => {
+      clearStoredSession();
+      dispatch(clearSession());
+      dispatch(resetPortalState());
+      dispatch(setSessionReady(true));
+      dispatch(setPortalError(message));
+      router.replace("/portal/admin-login");
+    },
+    [dispatch, router]
+  );
+
   const hydrate = useCallback(
     async (currentSession) => {
       if (!currentSession?.token) {
@@ -340,6 +356,12 @@ export default function PortalApp() {
       }
 
       const result = await dispatch(loadPortalDashboard(currentSession));
+
+      if (loadPortalDashboard.fulfilled.match(result) && result.payload?.authExpired) {
+        const authError = new Error("Portal session expired. Please sign in again.");
+        authError.status = 401;
+        throw authError;
+      }
 
       if (loadPortalDashboard.rejected.match(result)) {
         throw new Error(result.payload || result.error.message || "Failed to load portal data.");
@@ -349,40 +371,34 @@ export default function PortalApp() {
   );
 
   useEffect(() => {
-    const saved =
-      typeof window !== "undefined"
-        ? window.localStorage.getItem(PORTAL_STORAGE_KEY)
-        : null;
+    const nextSession = readStoredSession();
 
-    if (!saved) {
+    if (!nextSession) {
       dispatch(resetPortalState());
       dispatch(setSessionReady(true));
       router.replace("/portal/admin-login");
       return;
     }
 
-    try {
-      const nextSession = JSON.parse(saved);
-
-      if (nextSession.role === "USER") {
-        dispatch(resetPortalState());
-        dispatch(setSessionReady(true));
-        router.replace("/");
-        return;
-      }
-
-      dispatch(setSession(nextSession));
-      dispatch(setSessionReady(true));
-      startTransition(() => {
-        hydrate(nextSession).catch(() => {});
-      });
-    } catch {
-      window.localStorage.removeItem(PORTAL_STORAGE_KEY);
+    if (nextSession.role === "USER") {
       dispatch(resetPortalState());
       dispatch(setSessionReady(true));
-      router.replace("/portal/admin-login");
+      router.replace("/");
+      return;
     }
-  }, [dispatch, hydrate, router]);
+
+    dispatch(setSession(nextSession));
+    dispatch(setSessionReady(true));
+    startTransition(() => {
+      hydrate(nextSession).catch((loadError) => {
+        if (loadError?.status === 401 || loadError?.status === 403) {
+          handleSessionExpired(loadError.message);
+        } else {
+          pushError(loadError?.message || "Failed to load portal data.");
+        }
+      });
+    });
+  }, [dispatch, handleSessionExpired, hydrate, pushError, router]);
 
   function resetForms() {
     setTaskForm(initialTaskForm);
@@ -446,7 +462,7 @@ export default function PortalApp() {
   }
 
   function handleLogout() {
-    window.localStorage.removeItem(PORTAL_STORAGE_KEY);
+    clearStoredSession();
     dispatch(clearSession());
     dispatch(resetPortalState());
     router.replace("/portal/admin-login");
@@ -469,7 +485,11 @@ export default function PortalApp() {
     try {
       await callback();
     } catch (nextError) {
-      pushError(nextError.message);
+      if (nextError?.status === 401 || nextError?.status === 403) {
+        handleSessionExpired(nextError.message);
+      } else {
+        pushError(nextError.message);
+      }
     } finally {
       dispatch(setBusyActionAction(""));
     }
@@ -685,7 +705,7 @@ export default function PortalApp() {
                 saveContent={saveContent}
               />
             ) : null}
-            {!loading && activeTab === "services" ? <ServicesPanel services={services} serviceForm={serviceForm} setServiceForm={setServiceForm} saveService={actions.saveService} beginServiceEdit={actions.beginServiceEdit} deleteService={actions.deleteService} busyAction={busyAction} /> : null}
+            {!loading && activeTab === "services" ? <ServicesPanel session={session} services={services} serviceForm={serviceForm} setServiceForm={setServiceForm} saveService={actions.saveService} beginServiceEdit={actions.beginServiceEdit} deleteService={actions.deleteService} busyAction={busyAction} /> : null}
             {!loading && activeTab === "products" ? <ProductsPanel products={products} categories={categories} productForm={productForm} setProductForm={setProductForm} saveProduct={actions.saveProduct} beginProductEdit={actions.beginProductEdit} toggleProductStatus={actions.toggleProductStatus} deleteProduct={actions.deleteProduct} busyAction={busyAction} /> : null}
             {!loading && activeTab === "categories" ? <CategoriesPanel categories={categories} categoryForm={categoryForm} setCategoryForm={setCategoryForm} saveCategory={actions.saveCategory} beginCategoryEdit={actions.beginCategoryEdit} deleteCategory={actions.deleteCategory} busyAction={busyAction} /> : null}
             {!loading && activeTab === "jobs" ? <JobsPanel jobs={jobs} jobForm={jobForm} setJobForm={setJobForm} saveJob={actions.saveJob} beginJobEdit={actions.beginJobEdit} deleteJob={actions.deleteJob} busyAction={busyAction} /> : null}
@@ -736,8 +756,14 @@ function createPortalActions(context) {
         id: item.id,
         title: item.title,
         description: item.description,
-        featuresText: (item.features || []).map((feature) => feature.name).join(", "),
+        detailTitle: item.detailTitle || "",
+        detailDescription: item.detailDescription || "",
+        features:
+          (item.features || []).map((feature) => feature.name).filter(Boolean).length
+            ? (item.features || []).map((feature) => feature.name)
+            : [""],
         file: null,
+        imageUrl: item.imageUrl || "",
       });
       setActiveTab("services");
     },
@@ -751,9 +777,21 @@ function createPortalActions(context) {
         return;
       }
       await runAction("service", async () => {
-        const features = serviceForm.featuresText.split(",").map((value) => value.trim()).filter(Boolean).map((name) => ({ name }));
+        const features = serviceForm.features
+          .map((value) => value.trim())
+          .filter(Boolean)
+          .map((name) => ({ name }));
         const payload = new FormData();
-        payload.append("data", JSON.stringify({ title: serviceForm.title.trim(), description: serviceForm.description.trim(), features }));
+        payload.append(
+          "data",
+          JSON.stringify({
+            title: serviceForm.title.trim(),
+            description: serviceForm.description.trim(),
+            detailTitle: serviceForm.detailTitle.trim(),
+            detailDescription: serviceForm.detailDescription.trim(),
+            features,
+          })
+        );
         if (serviceForm.file) payload.append("file", serviceForm.file);
         await requestJson(serviceForm.id ? `${API_BASE_URL}/api/v1/admin/services/${serviceForm.id}` : `${API_BASE_URL}/api/v1/admin/services`, {
           method: serviceForm.id ? "PUT" : "POST",

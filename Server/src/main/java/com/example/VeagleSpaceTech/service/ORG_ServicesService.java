@@ -30,8 +30,11 @@ public class ORG_ServicesService {
         }
 
         Services service = new Services();
-        service.setTitle(request.title());
-        service.setDescription(request.description());
+        service.setTitle(normalizeText(request.title()));
+        service.setDescription(normalizeText(request.description()));
+        service.setDetailTitle(normalizeText(request.detailTitle()));
+        service.setDetailDescription(normalizeText(request.detailDescription()));
+        service.setPageContent(normalizeText(request.pageContent()));
         service.setImageUrl(fileService.uploadImage(file, "services"));
         service.setFeatures(new ArrayList<>());
 
@@ -51,8 +54,11 @@ public class ORG_ServicesService {
         Services service = orgServicesRepo.findById(id)
                 .orElseThrow(() -> new RuntimeException("Service not found"));
 
-        service.setTitle(request.title());
-        service.setDescription(request.description());
+        service.setTitle(normalizeText(request.title()));
+        service.setDescription(normalizeText(request.description()));
+        service.setDetailTitle(normalizeText(request.detailTitle()));
+        service.setDetailDescription(normalizeText(request.detailDescription()));
+        service.setPageContent(normalizeText(request.pageContent()));
 
         if (file != null && !file.isEmpty()) {
             fileService.delete(service.getImageUrl());
@@ -118,8 +124,20 @@ public class ORG_ServicesService {
                 service.getId(),
                 service.getTitle(),
                 service.getDescription(),
+                service.getDetailTitle(),
+                service.getDetailDescription(),
+                service.getPageContent(),
                 service.getImageUrl(),
                 features
         );
+    }
+
+    private String normalizeText(String value) {
+        if (value == null) {
+            return null;
+        }
+
+        String trimmed = value.trim();
+        return trimmed.isEmpty() ? null : trimmed;
     }
 }

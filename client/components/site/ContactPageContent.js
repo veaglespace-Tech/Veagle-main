@@ -17,61 +17,61 @@ import { COMPANY_ADDRESS, COMPANY_EMAIL, COMPANY_PHONE, COMPANY_PHONE_LINK } fro
 
 const enquiryChecklist = [
   {
-    title: "System Vulnerabilities",
+    title: "Project Architecture",
     description:
-      "Identify what feels weak or inefficient in your current infrastructure.",
+      "Clarify the specific technical gaps or inefficiencies in your current digital infrastructure.",
     icon: TerminalSquare,
   },
   {
-    title: "Critical Services",
+    title: "Operational Scope",
     description:
-      "Specify which core services and operational modules matter most.",
+      "Define the essential modules and legacy integrations required for your mission-critical systems.",
     icon: Network,
   },
   {
-    title: "Mission Parameters",
+    title: "Mission Constraints",
     description:
-      "Provide an estimated timeline and budgetary constraints for deployment.",
+      "Outline your deployment milestones, budgetary parameters, and long-term scalability goals.",
     icon: Clock3,
   },
 ];
 
 const responseSteps = [
   {
-    title: "Review the brief",
+    title: "Strategic Audit",
     description:
-      "Our engineering leads perform a deep-scan of your requirements and technical scope.",
+      "Our engineering leads perform a deep-scan of your technical brief to assess feasibility and scope.",
     icon: Eye,
-    iconColor: "text-[#8ab0ff]",
+    iconColor: "text-[color:var(--accent)]",
   },
   {
-    title: "Identify direction",
+    title: "Technical Roadmap",
     description:
-      "We map out the architectural trajectory and identify the optimal technology stack.",
+      "We architect a precision-engineered trajectory, identifying the optimal tech stack for your use case.",
     icon: Compass,
-    iconColor: "text-[#56e240]",
+    iconColor: "text-[color:var(--accent-success)]",
   },
   {
-    title: "Reply with clarity",
+    title: "Executive Briefing",
     description:
-      "You receive a practical proposal with technical breakdown and mission timeline.",
+      "You receive a comprehensive proposal with granular technical breakdowns and execution timelines.",
     icon: MailCheck,
-    iconColor: "text-[#8ab0ff]",
+    iconColor: "text-[color:var(--accent)]",
   },
 ];
 
 function renderHeroTitle(value) {
   const title =
     value ||
-    "Start the next version of your website, software or dashboard";
+    "Engineer your next enterprise platform, software node, or data dashboard";
 
-  return title.split(/(website|software|dashboard)/gi).map((part, index) => {
+  return title.split(/(platform|software|dashboard)/gi).map((part, index) => {
     const key = `${part}-${index}`;
     const lowered = part.toLowerCase();
 
-    if (lowered === "website" || lowered === "software") {
+    if (lowered === "platform" || lowered === "software") {
       return (
-        <span key={key} className="text-[color:var(--accent-soft)]">
+        <span key={key} className="text-[color:var(--accent)]">
           {part}
         </span>
       );
@@ -79,7 +79,7 @@ function renderHeroTitle(value) {
 
     if (lowered === "dashboard") {
       return (
-        <span key={key} className="text-[#56e240]">
+        <span key={key} className="text-[color:var(--accent-success)]">
           {part}
         </span>
       );
@@ -117,18 +117,18 @@ export default function ContactPageContent({ content, services = [] }) {
       <section className="px-4 pb-8 pt-28 sm:px-6 sm:pt-32 lg:px-8 lg:pt-36">
         <div className="mx-auto max-w-7xl">
           <div className="max-w-4xl">
-            <div className="inline-flex items-center gap-2 rounded-full border border-[#2e4f8d]/45 bg-[#1b2440]/45 px-3 py-1.5">
-              <span className="h-2 w-2 animate-pulse rounded-full bg-[#56e240]" />
-              <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#b7cbff]">
-                Transmission Protocol Active
+            <div className="inline-flex items-center gap-2 rounded-full border border-[color:var(--accent)]/30 bg-[color:var(--surface-strong)] px-3 py-1.5 backdrop-blur-md">
+              <span className="h-2 w-2 animate-pulse rounded-full bg-[color:var(--accent-success)]" />
+              <span className="text-[10px] font-black uppercase tracking-[0.2em] text-[color:var(--text-muted)]">
+                Secure Transmission Link Active
               </span>
             </div>
             <h1 className="mt-7 max-w-5xl font-headline text-4xl font-black leading-[0.95] tracking-[-0.04em] text-white sm:text-6xl lg:text-7xl">
               {renderHeroTitle(contact.title)}
             </h1>
-            <p className="mt-6 max-w-2xl text-base leading-8 text-[#b7c3db]">
+            <p className="mt-6 max-w-2xl text-lg leading-8 text-[color:var(--text-secondary)]">
               {contact.description ||
-                "Initiate your project with our engineering team. We convert complex technical requirements into high-performance digital infrastructure."}
+                "Initialize a direct engagement with our engineering team to convert your technical requirements into high-performance infrastructure."}
             </p>
           </div>
         </div>
@@ -138,11 +138,11 @@ export default function ContactPageContent({ content, services = [] }) {
         <div className="mx-auto grid max-w-7xl grid-cols-1 items-start gap-12 lg:grid-cols-12 lg:gap-16">
           <div className="space-y-10 lg:col-span-5">
             <div>
-              <h2 className="font-headline text-3xl font-black tracking-tight text-white">
-                Better Input, Better Reply
+              <h2 className="font-headline text-3xl font-black tracking-tight text-[color:var(--text-primary)]">
+                Protocol Alignment
               </h2>
-              <p className="mt-4 text-sm leading-7 text-[#aebad2]">
-                Precision is our priority. To ensure a successful project launch, consider these key data points:
+              <p className="mt-4 text-sm leading-7 text-[color:var(--text-secondary)]">
+                To ensure a precision-matched response, please include the following parameters in your transmission:
               </p>
             </div>
 
@@ -152,14 +152,14 @@ export default function ContactPageContent({ content, services = [] }) {
 
                 return (
                   <li key={item.title} className="flex gap-4">
-                    <div className="mt-0.5 text-[#7ea7ff]">
+                    <div className="mt-0.5 text-[color:var(--accent)]">
                       <Icon className="h-5 w-5" />
                     </div>
                     <div>
-                      <p className="font-headline text-base font-black tracking-tight text-white">
+                      <p className="font-headline text-base font-black tracking-tight text-[color:var(--text-primary)]">
                         {item.title}
                       </p>
-                      <p className="mt-2 text-sm leading-7 text-[#aebad2]">
+                      <p className="mt-2 text-sm leading-7 text-[color:var(--text-muted)]">
                         {item.description}
                       </p>
                     </div>
@@ -168,23 +168,23 @@ export default function ContactPageContent({ content, services = [] }) {
               })}
             </ul>
 
-            <div className="rounded-[1.2rem] border border-white/10 bg-[rgba(40,43,50,0.45)] p-6 backdrop-blur-md">
-              <h3 className="font-headline text-2xl font-black tracking-tight text-white">
-                Reach us directly
+            <div className="rounded-[1.2rem] border border-white/10 bg-[color:var(--surface-strong)] p-6 backdrop-blur-md">
+              <h3 className="font-headline text-2xl font-black tracking-tight text-[color:var(--text-primary)]">
+                Direct Uplink
               </h3>
               <div className="mt-6 space-y-5">
                 <a
                   href={`mailto:${contactEmail}`}
                   className="flex items-start gap-4 transition hover:opacity-90"
                 >
-                  <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#1f2533]">
-                    <AtSign className="h-4.5 w-4.5 text-[#7ea7ff]" />
+                  <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#1b1f27]">
+                    <AtSign className="h-4.5 w-4.5 text-[color:var(--accent)]" />
                   </div>
                   <div>
-                    <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-[#95a3bd]">
-                      Email us
+                    <p className="text-[10px] font-black uppercase tracking-[0.18em] text-[color:var(--text-muted)]">
+                      Priority Email
                     </p>
-                    <p className="mt-1 break-all text-base font-medium text-white">
+                    <p className="mt-1 break-all text-base font-medium text-[color:var(--text-primary)]">
                       {contactEmail}
                     </p>
                   </div>
@@ -193,14 +193,14 @@ export default function ContactPageContent({ content, services = [] }) {
                   href={contactPhoneLink}
                   className="flex items-start gap-4 transition hover:opacity-90"
                 >
-                  <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#1f2533]">
-                    <Phone className="h-4.5 w-4.5 text-[#7ea7ff]" />
+                  <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#1b1f27]">
+                    <Phone className="h-4.5 w-4.5 text-[color:var(--accent)]" />
                   </div>
                   <div>
-                    <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-[#95a3bd]">
-                      Call us
+                    <p className="text-[10px] font-black uppercase tracking-[0.18em] text-[color:var(--text-muted)]">
+                      Vocal Comms
                     </p>
-                    <p className="mt-1 break-all text-base font-medium text-white">
+                    <p className="mt-1 break-all text-base font-medium text-[color:var(--text-primary)]">
                       {contactPhone}
                     </p>
                   </div>
@@ -212,14 +212,14 @@ export default function ContactPageContent({ content, services = [] }) {
                   rel="noreferrer"
                   className="flex items-start gap-4 transition hover:opacity-90"
                 >
-                  <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#1f2533]">
-                    <MapPin className="h-4.5 w-4.5 text-[#7ea7ff]" />
+                  <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#1b1f27]">
+                    <MapPin className="h-4.5 w-4.5 text-[color:var(--accent)]" />
                   </div>
                   <div>
-                    <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-[#95a3bd]">
-                      Visit location
+                    <p className="text-[10px] font-black uppercase tracking-[0.18em] text-[color:var(--text-muted)]">
+                      Mission HQ
                     </p>
-                    <p className="mt-1 text-base font-medium text-white">
+                    <p className="mt-1 text-base font-medium text-[color:var(--text-primary)]">
                       {addressLines[0] || contactAddress}
                       <br />
                       {addressLines[1] || "Pune, Maharashtra"}
@@ -242,11 +242,11 @@ export default function ContactPageContent({ content, services = [] }) {
       <section className="px-4 pb-20 pt-20 sm:px-6 lg:px-8 lg:pb-24">
         <div className="mx-auto max-w-7xl">
           <div className="mx-auto max-w-3xl text-center">
-            <h2 className="font-headline text-3xl font-black tracking-tight text-white sm:text-4xl">
+            <h2 className="font-headline text-3xl font-black tracking-tight text-[color:var(--text-primary)] sm:text-4xl">
               The Response Protocol
             </h2>
-            <p className="mt-4 text-sm leading-7 text-[#adb9d1] sm:text-base">
-              How our team processes your transmission from arrival to execution.
+            <p className="mt-4 text-sm leading-7 text-[color:var(--text-secondary)] sm:text-base">
+              Synchronized operational stages from transmission reception to project initiation.
             </p>
           </div>
 
@@ -261,10 +261,10 @@ export default function ContactPageContent({ content, services = [] }) {
                   <div className="mx-auto flex h-24 w-24 items-center justify-center rounded-[1rem] border border-white/8 bg-[#1b1f27]">
                     <Icon className={`h-8 w-8 ${step.iconColor}`} />
                   </div>
-                  <h3 className="mt-6 font-headline text-2xl font-black tracking-tight text-white">
+                  <h3 className="mt-6 font-headline text-2xl font-black tracking-tight text-[color:var(--text-primary)]">
                     {step.title}
                   </h3>
-                  <p className="mt-3 text-sm leading-7 text-[#aebad2]">
+                  <p className="mt-3 text-sm leading-7 text-[color:var(--text-muted)]">
                     {step.description}
                   </p>
                 </article>
@@ -274,7 +274,7 @@ export default function ContactPageContent({ content, services = [] }) {
 
           <div className="mt-14 text-center">
             <SecondaryLink href="/services">
-              View Services
+              Explore Services
             </SecondaryLink>
           </div>
         </div>
@@ -282,4 +282,3 @@ export default function ContactPageContent({ content, services = [] }) {
     </main>
   );
 }
-

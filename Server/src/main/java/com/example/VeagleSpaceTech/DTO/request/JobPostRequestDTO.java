@@ -1,8 +1,6 @@
 package com.example.VeagleSpaceTech.DTO.request;
 
-import com.example.VeagleSpaceTech.entity.JobPost;
 import com.example.VeagleSpaceTech.enums.JobStatus;
-import jakarta.validation.constraints.NotBlank;
 
 public record JobPostRequestDTO(
 

@@ -1,3 +1,5 @@
+import { isJwtExpired } from "@/lib/utils";
+
 export const PORTAL_STORAGE_KEY = "veagle-portal-session";
 export const PORTAL_SESSION_EVENT = "veagle-portal-session-change";
 
@@ -34,7 +36,12 @@ export function readStoredSession() {
 
   try {
     const session = JSON.parse(raw);
-    return session?.token ? session : null;
+    if (!session?.token || isJwtExpired(session.token)) {
+      window.localStorage.removeItem(PORTAL_STORAGE_KEY);
+      return null;
+    }
+
+    return session;
   } catch {
     window.localStorage.removeItem(PORTAL_STORAGE_KEY);
     return null;

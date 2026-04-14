@@ -17,25 +17,25 @@ import { cn } from "@/lib/utils";
 export const portalShellClass =
   "relative min-h-screen bg-[radial-gradient(circle_at_top_left,var(--glow-one),transparent_24%),radial-gradient(circle_at_85%_18%,var(--glow-two),transparent_18%),linear-gradient(180deg,var(--page-bg-soft),var(--page-bg))]";
 export const portalLayoutClass =
-  "relative z-10 grid min-h-screen lg:grid-cols-[320px_minmax(0,1fr)] xl:grid-cols-[340px_minmax(0,1fr)]";
+  "relative z-10 grid min-h-screen lg:grid-cols-[280px_minmax(0,1fr)] xl:grid-cols-[300px_minmax(0,1fr)]";
 export const portalSidebarClass =
-  "border-b border-[color:var(--border)] bg-[linear-gradient(180deg,#10141d,#171b24)] p-4 shadow-[color:var(--shadow-soft)] backdrop-blur-xl lg:sticky lg:top-0 lg:h-screen lg:overflow-y-auto lg:border-b-0 lg:border-r lg:p-6";
+  "border-b border-[color:var(--border)] bg-[linear-gradient(180deg,#10141d,#171b24)] p-4 shadow-[color:var(--shadow-soft)] backdrop-blur-xl lg:sticky lg:top-0 lg:h-screen lg:overflow-y-auto lg:border-b-0 lg:border-r lg:p-5";
 export const portalCardClass =
-  "rounded-[1.8rem] border border-[color:var(--border)] bg-[linear-gradient(180deg,rgba(26,29,35,0.96),rgba(20,23,29,0.94))] p-5 shadow-[color:var(--shadow-card)] backdrop-blur-sm sm:p-6";
+  "rounded-[1.2rem] border border-[color:var(--border)] bg-[linear-gradient(180deg,rgba(26,29,35,0.96),rgba(20,23,29,0.94))] p-3 shadow-[color:var(--shadow-card)] backdrop-blur-sm sm:p-3.5";
 export const portalSubcardClass =
-  "rounded-[1.4rem] border border-[color:var(--border)] bg-[linear-gradient(180deg,rgba(27,31,39,0.96),rgba(20,23,29,0.92))] p-4 shadow-[color:var(--shadow-soft)]";
-export const portalTabListClass = "grid gap-2 sm:grid-cols-2 lg:grid-cols-1";
+  "rounded-[1rem] border border-[color:var(--border)] bg-[linear-gradient(180deg,rgba(27,31,39,0.96),rgba(20,23,29,0.92))] p-2.5 shadow-[color:var(--shadow-soft)]";
+export const portalTabListClass = "grid gap-1.5 sm:grid-cols-2 lg:grid-cols-1";
 export const portalTabClass = (active) =>
   cn(
-    "group flex w-full items-center gap-3 rounded-[1.3rem] border px-4 py-3.5 text-left text-sm font-semibold transition duration-300 [&_svg]:shrink-0",
+    "group flex w-full items-center gap-2.5 rounded-[0.9rem] border px-3.5 py-2.5 text-left text-[12px] font-semibold transition duration-300 [&_svg]:shrink-0",
     active
       ? "border-[#4e85f3] bg-[linear-gradient(135deg,rgba(25,94,226,0.24),rgba(179,197,255,0.16))] text-white shadow-[color:var(--shadow-accent)]"
       : "border-[color:var(--border)] bg-[rgba(255,255,255,0.03)] text-[color:var(--text-secondary)] hover:-translate-y-0.5 hover:border-[color:var(--border-strong)] hover:bg-[rgba(25,94,226,0.08)] hover:text-white"
   );
 export const portalButtonPrimaryClass =
-  "inline-flex items-center justify-center gap-2 rounded-full border border-transparent bg-[linear-gradient(135deg,var(--accent),var(--accent-strong))] px-5 py-3 text-sm font-bold text-[color:var(--button-ink)] shadow-[color:var(--shadow-accent)] transition duration-300 hover:-translate-y-0.5 hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-60";
+  "inline-flex items-center justify-center gap-2 rounded-full border border-transparent bg-[linear-gradient(135deg,var(--accent),var(--accent-strong))] px-4 py-2 text-[12px] font-bold text-[color:var(--button-ink)] shadow-[color:var(--shadow-accent)] transition duration-300 hover:-translate-y-0.5 hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-60";
 export const portalButtonSecondaryClass =
-  "inline-flex items-center justify-center gap-2 rounded-full border border-[color:var(--border)] bg-[rgba(255,255,255,0.04)] px-5 py-3 text-sm font-semibold text-[color:var(--text-primary)] shadow-[color:var(--shadow-soft)] backdrop-blur-[12px] transition duration-300 hover:-translate-y-0.5 hover:border-[color:var(--border-strong)] hover:bg-[rgba(25,94,226,0.1)] disabled:cursor-not-allowed disabled:opacity-60";
+  "inline-flex items-center justify-center gap-2 rounded-full border border-[color:var(--border)] bg-[rgba(255,255,255,0.04)] px-3.5 py-2 text-[12px] font-semibold text-[color:var(--text-primary)] shadow-[color:var(--shadow-soft)] backdrop-blur-[12px] transition duration-300 hover:-translate-y-0.5 hover:border-[color:var(--border-strong)] hover:bg-[rgba(25,94,226,0.1)] disabled:cursor-not-allowed disabled:opacity-60";
 export const portalInputClass = inputClass;
 export const portalSelectClass = selectClass;
 export const portalTextareaClass = textareaClass;
@@ -46,17 +46,17 @@ export const portalTableClass =
 
 export function DashboardIntro({ title, description }) {
   return (
-    <div className="space-y-4">
+    <div className="space-y-3">
       <Eyebrow>Workspace</Eyebrow>
-      <div className="flex items-start gap-4">
-        <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-[color:var(--accent-contrast)] text-[color:var(--accent)]">
-          <Sparkles className="h-5 w-5" />
+      <div className="flex items-start gap-3.5">
+        <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-[color:var(--accent-contrast)] text-[color:var(--accent)]">
+          <Sparkles className="h-4 w-4" />
         </div>
         <div className="min-w-0">
-          <h1 className="font-headline text-3xl font-black tracking-tighter text-[color:var(--text-primary)] lg:text-4xl">
+          <h1 className="font-headline text-xl font-black tracking-tighter text-[color:var(--text-primary)] lg:text-2xl">
             {title}
           </h1>
-          <p className="mt-3 max-w-3xl text-sm leading-7 text-[color:var(--text-secondary)]">
+          <p className="mt-2 max-w-2xl text-[12px] leading-6 text-[color:var(--text-secondary)]">
             {description}
           </p>
         </div>
@@ -68,11 +68,11 @@ export function DashboardIntro({ title, description }) {
 export function MetricTile({ label, value }) {
   return (
     <div className={`${portalCardClass} relative overflow-hidden`}>
-      <div className="absolute right-0 top-0 h-20 w-20 rounded-full bg-[color:var(--accent-soft)] blur-2xl" />
-      <p className="relative z-10 text-[11px] font-bold uppercase tracking-[0.24em] text-[color:var(--text-muted)]">
+      <div className="absolute right-0 top-0 h-14 w-14 rounded-full bg-[color:var(--accent-soft)] blur-xl" />
+      <p className="relative z-10 text-[9px] font-bold uppercase tracking-[0.24em] text-[color:var(--text-muted)]">
         {label}
       </p>
-      <p className="relative z-10 mt-4 font-headline text-4xl font-black tracking-tighter text-[color:var(--text-primary)]">
+      <p className="relative z-10 mt-2 font-headline text-2xl font-black tracking-tighter text-[color:var(--text-primary)]">
         {value}
       </p>
     </div>
@@ -82,19 +82,19 @@ export function MetricTile({ label, value }) {
 export function Card({ title, children }) {
   return (
     <section className={`${portalCardClass} overflow-hidden`}>
-      <div className="border-b border-[color:var(--border)] pb-4">
-        <h2 className="font-headline text-xl font-black tracking-tight text-[color:var(--text-primary)] sm:text-2xl">
+      <div className="border-b border-[color:var(--border)] pb-2.5">
+        <h2 className="font-headline text-base font-black tracking-tight text-[color:var(--text-primary)] sm:text-lg">
           {title}
         </h2>
       </div>
-      <div className="pt-5">{children}</div>
+      <div className="pt-3.5">{children}</div>
     </section>
   );
 }
 
 export function GridList({ items, renderItem }) {
   return (
-    <div className="grid gap-4 lg:grid-cols-2 2xl:grid-cols-3">
+    <div className="grid gap-3.5 lg:grid-cols-2 2xl:grid-cols-3">
       {items.map((item, index) => {
         const key =
           item?.id ??
@@ -123,21 +123,21 @@ export function ItemCard({
 }) {
   return (
     <article className={`${portalCardClass} h-full`}>
-      <div className="flex h-full flex-col justify-between gap-5">
-        <div className="space-y-4">
+      <div className="flex h-full flex-col justify-between gap-4">
+        <div className="space-y-3">
           <div>
-            <h3 className="font-headline text-xl font-black tracking-tight text-[color:var(--text-primary)]">
+            <h3 className="font-headline text-base font-black tracking-tight text-[color:var(--text-primary)]">
               {title}
             </h3>
             {subtitle ? (
-              <p className="mt-2 break-words text-sm text-[color:var(--text-secondary)]">{subtitle}</p>
+              <p className="mt-1 break-words text-[12px] text-[color:var(--text-secondary)]">{subtitle}</p>
             ) : null}
           </div>
           {description ? (
-            <p className="text-sm leading-7 text-[color:var(--text-secondary)]">{description}</p>
+            <p className="text-[12px] leading-6 text-[color:var(--text-secondary)]">{description}</p>
           ) : null}
           {tags.length ? (
-            <div className="flex flex-wrap gap-2">
+            <div className="flex flex-wrap gap-1.5">
               {tags.map((tag) => (
                 <StatusBadge key={`${title}-${tag}`} value={tag} />
               ))}
@@ -153,14 +153,14 @@ export function ItemCard({
           ) : null}
           {onEdit ? (
             <button type="button" className={portalButtonSecondaryClass} onClick={onEdit}>
-              <FilePenLine className="h-4 w-4" />
+              <FilePenLine className="h-3.5 w-3.5" />
               Edit
             </button>
           ) : null}
           {onDelete ? (
             <button type="button" className={portalButtonSecondaryClass} onClick={onDelete} disabled={busyDelete}>
-              <Trash2 className="h-4 w-4" />
-              {busyDelete ? "Deleting..." : "Delete"}
+              <Trash2 className="h-3.5 w-3.5" />
+              {busyDelete ? "..." : "Delete"}
             </button>
           ) : null}
         </div>
@@ -232,10 +232,10 @@ export function FileField({ label, onChange }) {
 export function ListEditor({ title, items, fields, onAdd, onRemove, onChange }) {
   return (
     <Card title={title}>
-      <div className="space-y-4">
+      <div className="space-y-3.5">
         {items.map((item, index) => (
           <div key={`${title}-${index}`} className={portalSubcardClass}>
-            <div className="grid gap-4 md:grid-cols-2">
+            <div className="grid gap-3.5 md:grid-cols-2">
               {fields.map((field) =>
                 field.multiline ? (
                   <div key={field.key} className="md:col-span-2">
@@ -255,9 +255,9 @@ export function ListEditor({ title, items, fields, onAdd, onRemove, onChange }) 
                 )
               )}
             </div>
-            <div className="mt-4">
+            <div className="mt-3.5">
               <button type="button" className={portalButtonSecondaryClass} onClick={() => onRemove(index)}>
-                <Trash2 className="h-4 w-4" />
+                <Trash2 className="h-3.5 w-3.5" />
                 Remove
               </button>
             </div>
@@ -281,7 +281,7 @@ export function StringListEditor({
 }) {
   return (
     <Card title={title}>
-      <div className="space-y-4">
+      <div className="space-y-3.5">
         {items.map((item, index) => (
           <div key={`${title}-${index}`} className={portalSubcardClass}>
             <InputField
@@ -289,9 +289,9 @@ export function StringListEditor({
               value={item}
               onChange={(value) => onChange(index, value)}
             />
-            <div className="mt-4">
+            <div className="mt-3.5">
               <button type="button" className={portalButtonSecondaryClass} onClick={() => onRemove(index)}>
-                <Trash2 className="h-4 w-4" />
+                <Trash2 className="h-3.5 w-3.5" />
                 Remove
               </button>
             </div>
@@ -327,7 +327,7 @@ export function StatusBadge({ value }) {
   return (
     <span
       className={cn(
-        "inline-flex items-center justify-center rounded-full border px-3 py-1.5 text-[11px] font-bold uppercase tracking-[0.16em]",
+        "inline-flex items-center justify-center rounded-full border px-2.5 py-1 text-[10px] font-bold uppercase tracking-[0.14em]",
         tone
       )}
     >

@@ -1,6 +1,10 @@
+"use client";
+
+import Image from "next/image";
 import Link from "next/link";
 import {
   ArrowRight,
+  ArrowUpRight,
   Boxes,
   BriefcaseBusiness,
   Code2,
@@ -14,7 +18,6 @@ import {
 } from "lucide-react";
 
 import {
-  Chip,
   EmptyState,
   Eyebrow,
   PrimaryLink,
@@ -43,25 +46,22 @@ function resolveServiceIcon(title) {
   return iconMatchers.find((item) => item.pattern.test(title || ""))?.icon || BriefcaseBusiness;
 }
 
-function shortFeature(service) {
-  return (service.features || []).slice(0, 2).map((item) => item.name).join(" • ");
-}
 
 export default function ServicesPageContent({ services, content }) {
   const pageContent = content?.servicesPage || {};
   const heroTitle =
     pageContent.title ||
-    "Digital services shaped around visibility, usability and business performance";
+    "Services shown as clean visual cards with a stronger detail-page flow";
   const heroDescription =
     pageContent.description ||
-    "Deploying precision-engineered digital solutions across the tactical landscape of modern commerce and aerospace instrumentation.";
+    "Explore each service through compact media cards, then open a dedicated page with dashboard-driven content and bullet points.";
   const moduleHighlights = pageContent?.highlights?.length
     ? pageContent.highlights.slice(0, 4)
     : [
-        `${services.length} live service modules connected to the public website.`,
-        "Cards stay compact so discovery feels sharper and cleaner.",
-        "Every service points toward a detail page or direct enquiry path.",
-        "The layout stays scalable as backend entries keep growing.",
+        `${services.length} enterprise-grade service modules ready for deployment.`,
+        "Proprietary engineering standards applied to every delivery node.",
+        "Dynamic page builder integration for custom service blueprints.",
+        "Real-time metadata management via centralized admin portal.",
       ];
 
   return (
@@ -70,50 +70,54 @@ export default function ServicesPageContent({ services, content }) {
         <div className="veagle-section-wash" />
         <div className="veagle-grid-background" />
 
-        <div className={`${containerClass} relative z-10 grid gap-10 lg:grid-cols-[0.94fr_1.06fr] lg:items-center`}>
-          <div className="space-y-6">
-            <Eyebrow className="border-white/10 bg-white/[0.04] text-[#8ba8ff]">
-              Operational Fleet
-            </Eyebrow>
+        <div className={`${containerClass} relative z-10 space-y-8`}>
+          <div className="grid gap-8 xl:grid-cols-[0.96fr_1.04fr] xl:items-end">
+            <div className="space-y-6">
+              <Eyebrow className="border-white/10 bg-white/[0.04] text-[color:var(--accent)]">
+                Service Sectors
+              </Eyebrow>
 
-            <div className="space-y-5">
-              <h1 className="max-w-4xl font-headline text-4xl font-black leading-[0.94] tracking-[-0.05em] text-white sm:text-5xl lg:text-[4.6rem]">
-                {heroTitle}
-              </h1>
-              <p className="max-w-2xl text-base leading-8 text-[color:var(--text-secondary)] sm:text-lg">
-                {heroDescription}
-              </p>
+              <div className="space-y-5">
+                <h1 className="max-w-5xl font-headline text-4xl font-black leading-[0.94] tracking-[-0.05em] text-white sm:text-5xl lg:text-[4.6rem]">
+                  {heroTitle}
+                </h1>
+                <p className="max-w-2xl text-base leading-8 text-[color:var(--text-secondary)] sm:text-lg">
+                  {heroDescription}
+                </p>
+              </div>
+
+              <div className={buttonGroupClass}>
+                <PrimaryLink href="/contact">Discuss Your Requirement</PrimaryLink>
+                <SecondaryLink href="/contact">
+                  Get a Quote
+                </SecondaryLink>
+              </div>
             </div>
 
-            <div className={buttonGroupClass}>
-              <PrimaryLink href="/contact">
-                Initialize Mission
-              </PrimaryLink>
-              <SecondaryLink href="/products">
-                Explore Catalog
-              </SecondaryLink>
-            </div>
-          </div>
-
-          <div className="relative min-h-[360px]">
-            <div className="absolute inset-0 flex items-center justify-center">
-              <div className="relative h-[320px] w-[320px] rounded-full">
-                <div className="absolute inset-0 rounded-full bg-[radial-gradient(circle,rgba(29,117,255,0.18),rgba(7,11,20,0)_64%)]" />
-                <div className="absolute inset-[18%] rounded-full border border-cyan-400/30" />
-                <div className="absolute inset-[28%] rounded-full border border-cyan-300/20" />
-                <div className="absolute inset-[38%] rounded-full border border-[#56e240]/20" />
-                <div className="absolute inset-x-[5%] top-1/2 h-px -translate-y-1/2 bg-[linear-gradient(90deg,transparent,rgba(88,201,255,0.7),transparent)]" />
-                <div className="absolute inset-y-[17%] left-1/2 w-px -translate-x-1/2 bg-[linear-gradient(180deg,transparent,rgba(88,201,255,0.35),transparent)]" />
-                <div className="absolute inset-[31%] flex items-center justify-center rounded-full bg-[linear-gradient(180deg,rgba(18,28,46,0.96),rgba(9,15,27,0.96))] shadow-[0_24px_90px_rgba(0,0,0,0.35)]">
-                  <div className="space-y-2 text-center">
-                    <p className="text-[10px] font-bold uppercase tracking-[0.3em] text-[#74b8ff]">
-                      Service Work
-                    </p>
-                    <p className="font-headline text-lg font-black tracking-tight text-white">
-                      Orbital Command
-                    </p>
-                  </div>
-                </div>
+            <div className="grid gap-4 sm:grid-cols-3">
+              <div className="rounded-[1.5rem] border border-white/10 bg-white/[0.04] p-5 backdrop-blur-sm">
+                <p className="text-[10px] font-black uppercase tracking-[0.24em] text-[color:var(--text-muted)]">
+                  Active Nodes
+                </p>
+                <p className="mt-3 font-headline text-3xl font-black tracking-tight text-[color:var(--text-primary)]">
+                  {services.length}
+                </p>
+              </div>
+              <div className="rounded-[1.5rem] border border-white/10 bg-white/[0.04] p-5 backdrop-blur-sm">
+                <p className="text-[10px] font-black uppercase tracking-[0.24em] text-[color:var(--text-muted)]">
+                  Design Flow
+                </p>
+                <p className="mt-3 font-headline text-3xl font-black tracking-tight text-[color:var(--text-primary)]">
+                  Premium
+                </p>
+              </div>
+              <div className="rounded-[1.5rem] border border-white/10 bg-white/[0.04] p-5 backdrop-blur-sm">
+                <p className="text-[10px] font-black uppercase tracking-[0.24em] text-[color:var(--text-muted)]">
+                  Architecture
+                </p>
+                <p className="mt-3 font-headline text-3xl font-black tracking-tight text-[color:var(--text-primary)]">
+                  Modular
+                </p>
               </div>
             </div>
           </div>
@@ -125,15 +129,15 @@ export default function ServicesPageContent({ services, content }) {
           <div className="mb-8 flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
             <div className="space-y-2">
               <p className="font-headline text-[11px] font-black uppercase tracking-[0.24em] text-white">
-                Service Modules
+                Card Layout
               </p>
               <p className="text-sm text-[color:var(--text-secondary)]">
-                Strategic deployment of technology across core sectors.
+                Click any card to open the full service detail page.
               </p>
             </div>
-            <div className="inline-flex items-center gap-2 text-[11px] font-bold uppercase tracking-[0.28em] text-[#56e240]">
-              <span className="h-2.5 w-2.5 rounded-full bg-[#56e240]" />
-              All systems active
+            <div className="inline-flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.28em] text-[#8ba8ff]">
+              <span className="h-2 w-2 rounded-full bg-[#8ba8ff] shadow-[0_0_8px_rgba(139,168,255,0.4)]" />
+              Interactive Content Discovery
             </div>
           </div>
 
@@ -141,46 +145,67 @@ export default function ServicesPageContent({ services, content }) {
             <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
               {services.map((service, index) => {
                 const Icon = resolveServiceIcon(service.title);
-                const featureText = shortFeature(service);
+                const detailHref = service.slug ? `/services/${service.slug}` : "/services";
 
                 return (
                   <Link
                     key={service.slug || service.id || service.title}
-                    href={service.slug ? `/services/${service.slug}` : "/services"}
-                    className="group rounded-[1.65rem] bg-[linear-gradient(180deg,#17191d,#131519)] p-5 shadow-[0_22px_60px_rgba(0,0,0,0.26)] transition duration-300 hover:-translate-y-1"
+                    href={detailHref}
+                    className="group overflow-hidden rounded-[1.4rem] border border-[color:var(--border)] bg-[linear-gradient(180deg,#171b24,#1d222d)] shadow-[0_24px_70px_rgba(0,0,0,0.24)] transition duration-300 hover:-translate-y-1 hover:border-[color:var(--border-strong)] hover:shadow-[0_26px_80px_rgba(25,94,226,0.15)]"
                   >
-                    <div className="flex items-start justify-between gap-4">
-                      <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-[rgba(255,255,255,0.05)] text-[#b8c7ef]">
-                        <Icon className="h-4.5 w-4.5" />
-                      </div>
-                      <div className="text-right">
-                        <p className="text-[10px] font-bold uppercase tracking-[0.22em] text-[#6f7788]">
+                    {/* Image section */}
+                    <div className="relative h-44 overflow-hidden sm:h-48">
+                      <Image
+                        alt={service.title}
+                        className="object-cover transition duration-500 group-hover:scale-105"
+                        fill
+                        sizes="(max-width: 1280px) 100vw, 33vw"
+                        src={service.imageUrl}
+                        unoptimized
+                      />
+                      <div className="absolute inset-0 bg-[linear-gradient(180deg,transparent_40%,rgba(15,18,26,0.85))]" />
+                      <div className="absolute bottom-3 left-4 flex items-center gap-2">
+                        <div className="flex h-8 w-8 items-center justify-center rounded-xl border border-white/12 bg-[rgba(15,18,26,0.75)] text-white backdrop-blur-sm">
+                          <Icon className="h-4 w-4" />
+                        </div>
+                        <span className="text-[10px] font-black uppercase tracking-[0.24em] text-[color:var(--text-muted)]">
                           Module 0{index + 1}
-                        </p>
-                        <p className="mt-2 text-[10px] font-bold uppercase tracking-[0.22em] text-[#56e240]">
-                          Ready
-                        </p>
+                        </span>
                       </div>
                     </div>
 
-                    <h2 className="mt-8 font-headline text-[1.32rem] font-black leading-tight tracking-tight text-white">
-                      {service.title}
-                    </h2>
-                    <p className="mt-3 text-sm leading-7 text-[#b9c4d8]">
-                      {service.description}
-                    </p>
+                    {/* Content section */}
+                    <div className="space-y-4 px-4 pb-4 pt-3.5">
+                      <div>
+                        <h2 className="font-headline text-[1.4rem] font-black tracking-tight text-[color:var(--text-primary)] leading-tight">
+                          {service.title}
+                        </h2>
+                        <p className="mt-2.5 min-h-[64px] text-[13px] leading-6 text-[color:var(--text-secondary)]">
+                          {service.description}
+                        </p>
+                      </div>
 
-                    <div className="mt-5 min-h-[44px]">
-                      {featureText ? (
-                        <Chip className="border-white/8 bg-white/[0.04] text-[#dbe4f7]">
-                          {featureText}
-                        </Chip>
-                      ) : null}
-                    </div>
+                      <div className="space-y-2.5">
+                        {(service.features || []).slice(0, 3).map((feature) => (
+                          <div
+                            key={feature.id || feature.name}
+                            className="flex items-center gap-3"
+                          >
+                            <div className="h-1 w-1 shrink-0 rounded-full bg-[color:var(--accent)] shadow-[0_0_8px_rgba(25,94,226,0.3)]" />
+                            <span className="text-[13px] font-medium leading-none text-[color:var(--text-secondary)]">
+                              {feature.name}
+                            </span>
+                          </div>
+                        ))}
+                      </div>
 
-                    <div className="mt-8 inline-flex items-center gap-2 text-sm font-bold text-[#dbe4f7]">
-                      Open Module
-                      <ArrowRight className="h-4 w-4 transition duration-300 group-hover:translate-x-1" />
+                      <div className="flex flex-wrap items-center justify-between gap-3 border-t border-white/6 pt-4">
+                        <span className="inline-flex items-center gap-2 text-sm font-black uppercase tracking-[0.2em] text-white transition group-hover:text-[#9fb7ff]">
+                          Open Full Page
+                          <ArrowRight className="h-4 w-4 transition duration-300 group-hover:translate-x-1" />
+                        </span>
+                        <ArrowUpRight className="h-4 w-4 text-[#9ec0ff] transition duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+                      </div>
                     </div>
                   </Link>
                 );
@@ -188,7 +213,7 @@ export default function ServicesPageContent({ services, content }) {
             </div>
           ) : (
             <EmptyState
-              title="No live service modules yet"
+              title="No live service cards yet"
               description="Add services from the dashboard and this page will render them automatically."
             />
           )}
@@ -205,17 +230,15 @@ export default function ServicesPageContent({ services, content }) {
                 Need a custom mix?
               </Eyebrow>
               <div className="space-y-4">
-                <h2 className="max-w-xl font-headline text-3xl font-black tracking-tight text-white sm:text-4xl">
-                  {pageContent.ctaTitle || "Need a combined plan across multiple services?"}
+                <h2 className="max-w-xl font-headline text-3xl font-black tracking-tight text-[color:var(--text-primary)] sm:text-4xl">
+                  {pageContent.ctaTitle || "Custom enterprise-grade solutions for global scale"}
                 </h2>
-                <p className="max-w-xl text-base leading-8 text-[#dde4ff]">
+                <p className="max-w-xl text-base leading-8 text-[color:var(--text-secondary)]">
                   {pageContent.ctaDescription ||
-                    "Unlock operational synergy with a unified mission protocol. We tailor integrated strategies that align development, design and marketing into a single powerhouse."}
+                    "Our engineering team coordinates across multiple sectors to provide a unified architecture for your business operations."}
                 </p>
               </div>
-              <PrimaryLink href="/contact">
-                Request Custom Configuration
-              </PrimaryLink>
+              <PrimaryLink href="/contact">Request Custom Configuration</PrimaryLink>
             </div>
 
             <div className="grid gap-4 sm:grid-cols-2">
@@ -227,10 +250,10 @@ export default function ServicesPageContent({ services, content }) {
                     key={item}
                     className="flex min-h-[116px] flex-col justify-between rounded-[1.55rem] bg-[rgba(18,24,38,0.58)] p-5"
                   >
-                    <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-white/[0.06] text-[#dce4ff]">
+                    <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-white/[0.06] text-[color:var(--text-primary)]">
                       <Icon className="h-4.5 w-4.5" />
                     </div>
-                    <p className="text-sm leading-6 text-[#dce4ff]">{item}</p>
+                    <p className="text-sm leading-6 text-[color:var(--text-secondary)]">{item}</p>
                   </div>
                 );
               })}

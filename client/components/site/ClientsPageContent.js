@@ -34,23 +34,23 @@ const technologyMatchers = [
 
 const groupMeta = {
   partners: {
-    title: "Strategic Partners",
+    title: "Strategic Partnerships",
     description:
-      `Primary delivery partners, business brands and growth-driven organizations connected with ${COMPANY_NAME}.`,
+      `High-growth brands and enterprise-level organizations that trust ${COMPANY_NAME} for mission-critical digital delivery.`,
     icon: Sparkles,
     mode: "featured",
   },
   finance: {
-    title: "Financial Institutions",
+    title: "Financial Ecosystems",
     description:
-      "Trusted names across finance, lending, banking and service ecosystems where credibility matters the most.",
+      "Institutions spanning banking, fintech, and asset management where security and architectural precision are paramount.",
     icon: Landmark,
     mode: "compact",
   },
   technology: {
-    title: "Technology Allies",
+    title: "Technological Alliances",
     description:
-      "Platform, product and digital ecosystem partners helping power modern software, automation and operations.",
+      "Product-first organizations and platform providers that synchronize with our core engineering protocols.",
     icon: Cpu,
     mode: "wide",
   },
@@ -103,14 +103,14 @@ function groupClients(items = []) {
 
 function buildClientSummary(client, groupKey) {
   if (groupKey === "finance") {
-    return "Trusted for finance-oriented visibility, service communication and secure digital operations.";
+    return "Optimizing institutional visibility and secure transactional workflows through precision software architecture.";
   }
 
   if (groupKey === "technology") {
-    return "Aligned with product workflows, platform delivery and modern business system experiences.";
+    return "Synchronizing product development nodes with scalable infrastructure and high-throughput operational systems.";
   }
 
-  return "Part of the wider Veagle delivery network for websites, growth systems and day-to-day business execution.";
+  return "Powering large-scale digital transformations and high-performance web ecosystems for market-leading brands.";
 }
 
 function LogoBadge({ client, size = "large" }) {
@@ -135,7 +135,7 @@ function LogoBadge({ client, size = "large" }) {
           unoptimized
         />
       ) : (
-        <span className="px-4 text-center text-xs font-bold uppercase tracking-[0.18em] text-[#0d172f]">
+        <span className="px-4 text-center text-[10px] font-black uppercase tracking-[0.18em] text-[color:var(--page-bg)]">
           {client.name}
         </span>
       )}
@@ -149,22 +149,22 @@ function FeaturedClientCard({ client }) {
       href={client.href}
       target="_blank"
       rel="noreferrer"
-      className="group flex h-full flex-col rounded-[1.9rem] bg-[rgba(18,22,30,0.72)] p-6 shadow-[0_26px_80px_-44px_rgba(0,0,0,0.9)] ring-1 ring-white/6 backdrop-blur-[14px] transition duration-300 hover:-translate-y-1 hover:bg-[rgba(24,30,42,0.88)]"
+      className="group flex h-full flex-col rounded-[1.9rem] bg-[color:var(--surface)] p-6 shadow-[0_26px_80px_-44px_rgba(0,0,0,0.9)] ring-1 ring-white/6 backdrop-blur-[14px] transition duration-300 hover:-translate-y-1 hover:bg-[color:var(--surface-strong)]"
     >
       <div className="flex items-start justify-between gap-4">
         <LogoBadge client={client} />
-        <span className="rounded-full bg-[#56e240]/12 px-3 py-1 text-[10px] font-bold uppercase tracking-[0.22em] text-[#78ff5f]">
-          Connected
+        <span className="rounded-full bg-[color:var(--accent-success)]/12 px-3 py-1 text-[10px] font-black uppercase tracking-[0.22em] text-[color:var(--accent-success)]">
+          Validated
         </span>
       </div>
-      <h3 className="mt-10 font-headline text-2xl font-black tracking-tight text-white">
+      <h3 className="mt-10 font-headline text-2xl font-black tracking-tight text-[color:var(--text-primary)]">
         {client.name}
       </h3>
-      <p className="mt-3 text-sm leading-7 text-[#b6c1d8]">
+      <p className="mt-3 text-sm leading-7 text-[color:var(--text-secondary)]">
         {buildClientSummary(client, "partners")}
       </p>
-      <div className="mt-auto pt-8 text-xs font-bold uppercase tracking-[0.22em] text-[#9fb7ff]">
-        Open Client Profile
+      <div className="mt-auto pt-8 text-[10px] font-black uppercase tracking-[0.22em] text-[color:var(--accent)] group-hover:text-[color:var(--text-primary)]">
+        Client Module Profile
         <ArrowRight className="ml-2 inline h-4 w-4 transition group-hover:translate-x-1" />
       </div>
     </a>
@@ -177,10 +177,10 @@ function CompactClientCard({ client }) {
       href={client.href}
       target="_blank"
       rel="noreferrer"
-      className="group flex min-h-[13rem] flex-col items-center justify-center rounded-[1.6rem] bg-[rgba(24,27,34,0.92)] p-5 text-center transition duration-300 hover:bg-[rgba(31,36,46,0.96)]"
+      className="group flex min-h-[13rem] flex-col items-center justify-center rounded-[1.6rem] bg-[color:var(--surface)] p-5 text-center transition duration-300 hover:bg-[color:var(--surface-strong)] hover:scale-[1.02]"
     >
       <LogoBadge client={client} size="small" />
-      <p className="mt-5 text-[11px] font-bold uppercase tracking-[0.22em] text-[#c0cadf]">
+      <p className="mt-5 text-[10px] font-black uppercase tracking-[0.22em] text-[color:var(--text-muted)] group-hover:text-[color:var(--text-primary)]">
         {client.name}
       </p>
     </a>
@@ -193,20 +193,20 @@ function WideClientCard({ client }) {
       href={client.href}
       target="_blank"
       rel="noreferrer"
-      className="group flex h-full items-center gap-5 rounded-[1.9rem] bg-[rgba(18,22,30,0.72)] p-6 shadow-[0_24px_70px_-42px_rgba(0,0,0,0.85)] ring-1 ring-white/6 backdrop-blur-[14px] transition duration-300 hover:-translate-y-1 hover:bg-[rgba(24,30,42,0.88)]"
+      className="group flex h-full items-center gap-5 rounded-[1.9rem] bg-[color:var(--surface)] p-6 shadow-[0_24px_70px_-42px_rgba(0,0,0,0.85)] ring-1 ring-white/6 backdrop-blur-[14px] transition duration-300 hover:-translate-y-1 hover:bg-[color:var(--surface-strong)]"
     >
       <div className="shrink-0">
         <LogoBadge client={client} size="wide" />
       </div>
       <div className="min-w-0">
-        <h3 className="font-headline text-2xl font-black tracking-tight text-white">
+        <h3 className="font-headline text-2xl font-black tracking-tight text-[color:var(--text-primary)]">
           {client.name}
         </h3>
-        <p className="mt-3 text-sm leading-7 text-[#b6c1d8]">
+        <p className="mt-3 text-sm leading-7 text-[color:var(--text-secondary)]">
           {buildClientSummary(client, "technology")}
         </p>
       </div>
-      <ArrowRight className="ml-auto hidden h-5 w-5 shrink-0 text-[#9fb7ff] transition group-hover:translate-x-1 sm:block" />
+      <ArrowRight className="ml-auto hidden h-5 w-5 shrink-0 text-[color:var(--accent)] transition group-hover:translate-x-1 group-hover:text-[color:var(--text-primary)] sm:block" />
     </a>
   );
 }
@@ -224,17 +224,17 @@ function GroupSection({ sectionKey, items }) {
       <div className={containerClass}>
         <div className="mb-10 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
           <div className="max-w-2xl">
-            <p className="text-[11px] font-bold uppercase tracking-[0.24em] text-[#9fb7ff]">
-              Client Network
+            <p className="text-[10px] font-black uppercase tracking-[0.24em] text-[color:var(--accent)]">
+              Operational Nodes
             </p>
-            <h2 className="mt-4 font-headline text-3xl font-black tracking-[-0.03em] text-white sm:text-4xl">
+            <h2 className="mt-4 font-headline text-3xl font-black tracking-[-0.03em] text-[color:var(--text-primary)] sm:text-4xl">
               {meta.title}
             </h2>
-            <p className="mt-3 text-sm leading-8 text-[#b5bfd3] sm:text-base">
+            <p className="mt-3 text-[15px] leading-8 text-[color:var(--text-secondary)]">
               {meta.description}
             </p>
           </div>
-          <div className="flex h-14 w-14 items-center justify-center rounded-[1.3rem] bg-[rgba(22,28,40,0.92)] text-[#9fb7ff] ring-1 ring-white/8">
+          <div className="flex h-14 w-14 items-center justify-center rounded-[1.3rem] bg-[color:var(--surface-strong)] text-[color:var(--accent)] ring-1 ring-white/8 shadow-[0_0_20px_rgba(25,94,226,0.1)]">
             <Icon className="h-6 w-6" />
           </div>
         </div>
@@ -287,9 +287,9 @@ export default function ClientsPageContent({ content, clientsData = [] }) {
     proof.length > 0
       ? proof
       : [
-          { label: "Connected logos", value: `${normalizedClients.length}+` },
-          { label: "Delivery focus", value: hasClientCards ? "Live showcase" : "Waiting for data" },
-          { label: "Brand trust", value: hasClientCards ? "Portfolio-backed" : "Add client proofs" },
+          { label: "Active Integrations", value: `${normalizedClients.length}+` },
+          { label: "Operational Context", value: hasClientCards ? "Live Protocol" : "Standby" },
+          { label: "Delivery Tier", value: hasClientCards ? "Enterprise Ready" : "Initializing" },
         ];
 
   return (
@@ -300,25 +300,25 @@ export default function ClientsPageContent({ content, clientsData = [] }) {
 
         <div className={`relative z-10 ${containerClass}`}>
           <div className="mx-auto max-w-4xl text-center">
-            <div className="inline-flex items-center gap-2 rounded-full border border-[#3257b8]/40 bg-[#1a2240]/45 px-4 py-2">
-              <span className="h-2.5 w-2.5 rounded-full bg-[#56e240] shadow-[0_0_14px_rgba(86,226,64,0.55)]" />
-              <span className="text-[11px] font-bold uppercase tracking-[0.24em] text-[color:var(--accent-soft)]">
-                Client Network Active
+            <div className="inline-flex items-center gap-2 rounded-full border border-[color:var(--accent)]/30 bg-[color:var(--surface-strong)] px-4 py-2 backdrop-blur-md">
+              <span className="h-2 w-2 animate-pulse rounded-full bg-[color:var(--accent-success)] shadow-[0_0_14px_rgba(86,226,64,0.4)]" />
+              <span className="text-[10px] font-black uppercase tracking-[0.24em] text-[color:var(--text-muted)]">
+                Client Network Uplink Active
               </span>
             </div>
 
             <h1 className="mx-auto mt-8 max-w-4xl font-headline text-4xl font-black leading-[0.95] tracking-[-0.045em] text-white sm:text-6xl lg:text-7xl">
-              {clients.title || "Built for businesses that need clarity, confidence and real digital momentum"}
+              {clients.title || "Accelerating digital outcomes for market-leading enterprise brands"}
             </h1>
-            <p className="mx-auto mt-6 max-w-3xl text-base leading-8 text-[#b8c3d8] sm:text-lg">
+            <p className="mx-auto mt-6 max-w-3xl text-lg leading-8 text-[color:var(--text-secondary)]">
               {clients.description ||
-                `${COMPANY_NAME} works with growth brands, financial institutions and technology teams that need a more dependable digital presentation.`}
+                `${COMPANY_NAME} engineers high-performance software and digital infrastructure for global financial nodes and technology powerhouses.`}
             </p>
 
-            <div className="mt-10 flex flex-wrap items-center justify-center gap-4 text-[11px] font-bold uppercase tracking-[0.24em] text-[#8f9ab3]">
-              <span>{normalizedClients.length}+ connected client identities</span>
+            <div className="mt-10 flex flex-wrap items-center justify-center gap-4 text-[10px] font-black uppercase tracking-[0.24em] text-[color:var(--text-muted)]">
+              <span>{normalizedClients.length}+ Encapsulated Brand Identities</span>
               <span className="hidden h-px w-12 bg-white/12 sm:block" />
-              <span>{segments.length || 3} focus sectors across operations</span>
+              <span>{segments.length || 3} Sector-Specific Delivery Orbits</span>
             </div>
           </div>
 
@@ -326,12 +326,12 @@ export default function ClientsPageContent({ content, clientsData = [] }) {
             {heroProof.map((item) => (
               <div
                 key={`${item.label}-${item.value}`}
-                className="rounded-[1.65rem] bg-[rgba(19,23,31,0.72)] px-5 py-6 text-left shadow-[0_20px_60px_-40px_rgba(0,0,0,0.9)] ring-1 ring-white/6 backdrop-blur-[14px]"
+                className="rounded-[1.65rem] bg-[color:var(--surface)] px-5 py-6 text-left shadow-[0_20px_60px_-40px_rgba(0,0,0,0.9)] ring-1 ring-white/6 backdrop-blur-[14px]"
               >
-                <p className="text-[11px] font-bold uppercase tracking-[0.22em] text-[#8f9ab3]">
+                <p className="text-[10px] font-black uppercase tracking-[0.22em] text-[color:var(--text-muted)]">
                   {item.label}
                 </p>
-                <p className="mt-3 font-headline text-2xl font-black tracking-tight text-white">
+                <p className="mt-3 font-headline text-2xl font-black tracking-tight text-[color:var(--text-primary)]">
                   {item.value}
                 </p>
               </div>
@@ -349,12 +349,12 @@ export default function ClientsPageContent({ content, clientsData = [] }) {
       ) : (
         <section className="pb-16 sm:pb-20">
           <div className={containerClass}>
-            <div className="rounded-[2rem] bg-[rgba(14,18,26,0.8)] p-8 text-center shadow-[0_28px_80px_-48px_rgba(0,0,0,0.88)] ring-1 ring-white/6 backdrop-blur-[14px]">
-              <h2 className="font-headline text-3xl font-black tracking-[-0.03em] text-white sm:text-4xl">
-                No client showcase entries yet
+            <div className="rounded-[2rem] bg-[color:var(--surface)] p-8 text-center shadow-[0_28px_80px_-48px_rgba(0,0,0,0.88)] ring-1 ring-white/6 backdrop-blur-[14px]">
+              <h2 className="font-headline text-3xl font-black tracking-[-0.03em] text-[color:var(--text-primary)] sm:text-4xl">
+                Technical Directory Standby
               </h2>
-              <p className="mx-auto mt-4 max-w-2xl text-sm leading-8 text-[#b5bfd3] sm:text-base">
-                Add client logos and links from the dashboard CMS to publish this page without any hardcoded data.
+              <p className="mx-auto mt-4 max-w-2xl text-[15px] leading-8 text-[color:var(--text-secondary)]">
+                Initialize client nodes via the administrative dashboard to populate the operational showcase layer.
               </p>
             </div>
           </div>
@@ -364,28 +364,28 @@ export default function ClientsPageContent({ content, clientsData = [] }) {
       {segments.length ? (
         <section className="pb-16 sm:pb-20">
           <div className={containerClass}>
-            <div className="rounded-[2rem] bg-[rgba(14,18,26,0.8)] p-6 shadow-[0_28px_80px_-48px_rgba(0,0,0,0.88)] ring-1 ring-white/6 backdrop-blur-[14px] sm:p-8">
+            <div className="rounded-[2rem] bg-[color:var(--surface)] p-6 shadow-[0_28px_80px_-48px_rgba(0,0,0,0.88)] ring-1 ring-white/6 backdrop-blur-[14px] sm:p-8">
               <div className="max-w-2xl">
-                <p className="text-[11px] font-bold uppercase tracking-[0.24em] text-[#9fb7ff]">
-                  Network sectors
+                <p className="text-[10px] font-black uppercase tracking-[0.24em] text-[color:var(--accent)]">
+                  Delivery Vectors
                 </p>
-                <h2 className="mt-4 font-headline text-3xl font-black tracking-[-0.03em] text-white sm:text-4xl">
-                  Where this client network performs best
+                <h2 className="mt-4 font-headline text-3xl font-black tracking-[-0.03em] text-[color:var(--text-primary)] sm:text-4xl">
+                  Strategic Domain Specialization
                 </h2>
               </div>
               <div className="mt-8 grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
                 {segments.map((item) => (
                   <div
                     key={item.title}
-                    className="rounded-[1.55rem] bg-[rgba(24,29,37,0.92)] p-5 transition duration-300 hover:bg-[rgba(29,35,46,0.96)]"
+                    className="rounded-[1.55rem] bg-[color:var(--surface-strong)] p-5 transition duration-300 hover:bg-[color:var(--accent)]/10"
                   >
-                    <p className="text-[11px] font-bold uppercase tracking-[0.2em] text-[#8f9ab3]">
-                      Sector focus
+                    <p className="text-[10px] font-black uppercase tracking-[0.2em] text-[color:var(--text-muted)]">
+                      Operational Tier
                     </p>
-                    <h3 className="mt-4 font-headline text-2xl font-black tracking-tight text-white">
+                    <h3 className="mt-4 font-headline text-2xl font-black tracking-tight text-[color:var(--text-primary)]">
                       {item.title}
                     </h3>
-                    <p className="mt-3 text-sm leading-7 text-[#b8c3d8]">
+                    <p className="mt-3 text-sm leading-7 text-[color:var(--text-secondary)]">
                       {item.description}
                     </p>
                   </div>
@@ -399,20 +399,20 @@ export default function ClientsPageContent({ content, clientsData = [] }) {
       <section className="px-4 pb-24 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-5xl">
           <div
-            className={`${ctaShellClass} relative overflow-hidden bg-[linear-gradient(180deg,rgba(16,21,31,0.92),rgba(10,13,19,0.98))] px-6 py-12 text-center shadow-[0_30px_90px_-54px_rgba(0,0,0,0.9)] ring-1 ring-white/8 sm:px-10 lg:px-16`}
+            className={`${ctaShellClass} relative overflow-hidden bg-[color:var(--page-bg-soft)] px-6 py-12 text-center shadow-[0_30px_90px_-54px_rgba(0,0,0,0.9)] ring-1 ring-white/8 sm:px-10 lg:px-16`}
           >
             <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,rgba(25,94,226,0.18),transparent_32%),linear-gradient(180deg,transparent,rgba(8,10,15,0.34))]" />
             <div className="relative z-10">
               <h2 className="mx-auto max-w-4xl font-headline text-3xl font-black leading-tight tracking-[-0.035em] text-white sm:text-5xl">
-                {clients.ctaTitle || "Want your client story to feel more credible online?"}
+                {clients.ctaTitle || "Scale your brand with a high-performance digital orbit"}
               </h2>
-              <p className="mx-auto mt-5 max-w-3xl text-base leading-8 text-[#b8c3d8]">
+              <p className="mx-auto mt-5 max-w-3xl text-lg leading-8 text-[color:var(--text-secondary)]">
                 {clients.ctaDescription ||
-                  "We can turn partner logos, sectors and service credibility into a stronger public trust layer without making the website feel crowded."}
+                  "Engage our engineering core to build a sophisticated technical showcase that projects authority and operational excellence."}
               </p>
               <div className="mt-8 flex flex-wrap justify-center gap-4">
-                <PrimaryLink href="/contact">Build the showcase</PrimaryLink>
-                <SecondaryLink href="/portfolio">View portfolio</SecondaryLink>
+                <PrimaryLink href="/contact">Initiate Launch</PrimaryLink>
+                <SecondaryLink href="/portfolio">Module Discovery</SecondaryLink>
               </div>
             </div>
           </div>
