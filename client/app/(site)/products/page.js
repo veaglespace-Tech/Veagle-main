@@ -5,15 +5,16 @@ import { buildPageMetadata } from "@/lib/seo";
 import { COMPANY_NAME } from "@/lib/site";
 
 export const metadata = buildPageMetadata({
-  title: "Products and Business Solutions",
+  title: "Business Solutions, Digital Products and Software Modules",
   description:
-    `Explore ${COMPANY_NAME} products, grouped business solutions and category-driven digital offerings.`,
+    `Explore ${COMPANY_NAME} products, business solutions, digital offerings and category-based software modules built for modern business needs.`,
   path: "/products",
   keywords: [
     `${COMPANY_NAME} products`,
     "business software products Pune",
     "digital products showcase",
-    "software solutions company Pune",
+    "business solutions company Pune",
+    "software modules and digital products",
   ],
 });
 

@@ -8,12 +8,14 @@ export const containerClass = "mx-auto w-full max-w-screen-2xl px-4 sm:px-6 lg:p
 export const sectionClass = "relative py-16 sm:py-20 lg:py-24";
 export const firstSectionClass = "relative overflow-hidden pb-16 pt-32 sm:pb-20 sm:pt-36 lg:pb-24 lg:pt-40";
 export const ctaShellClass = "overflow-hidden !rounded-[2.25rem] sm:!rounded-[2.6rem]";
+export const pageHeroTitleClass =
+  "font-headline text-3xl font-black leading-[0.95] tracking-[-0.04em] sm:text-5xl lg:text-6xl";
 export const surfaceCardClass =
   "rounded-[1.75rem] border border-[color:var(--border)] bg-[color:var(--surface)] p-5 shadow-[color:var(--shadow-card)] backdrop-blur-sm sm:p-7";
 export const mutedCardClass =
   "rounded-[1.5rem] border border-[color:var(--border)] bg-[color:var(--surface-muted)] p-5 shadow-[color:var(--shadow-soft)] sm:p-6";
 export const eyebrowClass =
-  "inline-flex items-center gap-2 rounded-full border border-[color:var(--border-strong)] bg-[color:var(--accent-contrast)] px-4 py-2 text-[11px] font-bold uppercase tracking-[0.24em] text-[color:var(--accent-soft)]";
+  "inline-flex items-center gap-2 rounded-full border border-[color:var(--accent)]/40 bg-[color:var(--accent)]/15 px-4 py-2 text-[10px] font-black uppercase tracking-[0.3em] text-[#93c5fd] shadow-[0_0_20px_rgba(25,94,226,0.15)]";
 export const chipClass =
   "inline-flex items-center rounded-full border border-[color:var(--border)] bg-[color:var(--surface-strong)] px-3 py-1.5 text-xs font-semibold tracking-[0.08em] text-[color:var(--text-secondary)]";
 export const buttonBaseClass =

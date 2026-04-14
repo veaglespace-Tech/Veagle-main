@@ -1,6 +1,6 @@
 import ServiceDetailPageContent from "@/components/site/ServiceDetailPageContent";
 import { getServiceBySlug, getServices } from "@/lib/backend";
-import { buildPageMetadata } from "@/lib/seo";
+import { buildPageMetadata, buildServiceSchema } from "@/lib/seo";
 import { COMPANY_NAME } from "@/lib/site";
 
 export async function generateMetadata({ params }) {
@@ -16,11 +16,12 @@ export async function generateMetadata({ params }) {
     description,
     path: `/services/${slug}`,
     keywords: [
+      `${service?.title || COMPANY_NAME} service`,
       `${COMPANY_NAME} services`,
-      "dynamic website service",
+      "dynamic website development service",
       "software development service",
-      "ERP service",
-      "dashboard service",
+      "ERP development service",
+      "digital marketing service",
     ],
   });
 }
@@ -50,9 +51,18 @@ export default async function ServiceDetailPage({ params }) {
   const relatedServices = (services || [])
     .filter((item) => item?.slug && item.slug !== service.slug)
     .slice(0, 3);
+  const serviceSchema = buildServiceSchema(service, `/services/${slug}`);
 
   return (
-    <ServiceDetailPageContent service={service} relatedServices={relatedServices} />
+    <>
+      {serviceSchema ? (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(serviceSchema) }}
+        />
+      ) : null}
+      <ServiceDetailPageContent service={service} relatedServices={relatedServices} />
+    </>
   );
 }
 

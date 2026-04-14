@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import { ArrowRight } from "lucide-react";
 
 import LeadCaptureForm from "@/components/forms/LeadCaptureForm";
 import {
@@ -12,8 +13,8 @@ import {
   SectionIntro,
   containerClass,
   firstSectionClass,
-  mutedCardClass,
   pageClass,
+  pageHeroTitleClass,
   sectionClass,
 } from "@/components/site/UiBits";
 
@@ -36,39 +37,47 @@ export default function ServiceDetailPageContent({ service, relatedServices }) {
   }
 
   const renderBlocks = () => {
-    return blocks.map((block) => {
+    return (blocks || []).map((block, index) => {
       if (block.type === "hero") {
         return (
-          <section key={block.id} className={`${firstSectionClass} relative flex min-h-[60vh] items-center overflow-hidden pb-20 sm:pb-28 lg:pb-36`}>
+          <section key={block.id || index} className={`${firstSectionClass} relative flex min-h-[70vh] items-center overflow-hidden pb-24 sm:pb-32 lg:pb-40`}>
             {block.content.imageUrl && (
               <div className="absolute inset-0 z-0">
                 <Image 
                   src={block.content.imageUrl} 
                   alt={block.content.title}
                   fill
-                  className="object-cover opacity-30 brightness-[0.6]"
+                  className="object-cover opacity-30 brightness-[0.5] grayscale-[0.2]"
                   unoptimized
                   priority
                 />
-                <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent,var(--page-bg))]" />
-                <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-[color:var(--page-bg)]" />
+                <div className="absolute inset-0 bg-gradient-to-b from-[color:var(--page-bg)]/80 via-[color:var(--page-bg)]/40 to-[color:var(--page-bg)]" />
+                <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_0%,var(--page-bg)_100%)]" />
               </div>
             )}
             
             <div className="veagle-section-wash" />
             <div className="veagle-grid-background pointer-events-none" />
             
-            <div className={`${containerClass} relative z-10 mx-auto max-w-6xl text-center`}>
-              <div className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-[color:var(--surface-strong)] px-4 py-2 backdrop-blur-sm">
-                <span className="h-2 w-2 rounded-full bg-[color:var(--accent)]" />
-                <span className="text-[10px] font-black uppercase tracking-[0.24em] text-[color:var(--text-muted)]">Service Intelligence</span>
+            <div className={`${containerClass} relative z-10 mx-auto max-w-6xl`}>
+              <div className="flex flex-col items-center text-center">
+                <Eyebrow className="mb-8">
+                  Service Overview
+                </Eyebrow>
+                <h1 className={`${pageHeroTitleClass} text-[color:var(--text-primary)]`}>
+                  {block.content.title}
+                </h1>
+                <p className="mt-10 max-w-3xl text-lg leading-relaxed text-[color:var(--text-secondary)] opacity-90 sm:text-xl lg:text-2xl">
+                  {block.content.description}
+                </p>
+                <div className="mt-12 flex flex-col items-center gap-4 sm:flex-row">
+                  <PrimaryLink href="#initiate">Discuss This Service</PrimaryLink>
+                  <div className="h-px w-12 bg-[color:var(--border)] sm:h-12 sm:w-px" />
+                  <span className="text-[10px] font-black uppercase tracking-[0.3em] text-[color:var(--text-muted)]">
+                    Section {String(index + 1).padStart(2, "0")}
+                  </span>
+                </div>
               </div>
-              <h1 className="mt-8 font-headline text-5xl font-black leading-[0.92] tracking-tighter text-white sm:text-7xl lg:text-9xl">
-                {block.content.title}
-              </h1>
-              <p className="mx-auto mt-10 max-w-3xl text-lg leading-8 text-[color:var(--text-secondary)] sm:text-xl lg:text-2xl">
-                {block.content.description}
-              </p>
             </div>
           </section>
         );
@@ -76,30 +85,32 @@ export default function ServiceDetailPageContent({ service, relatedServices }) {
 
       if (block.type === "image") {
         return (
-          <section key={block.id} className={sectionClass}>
+          <section key={block.id || index} className={sectionClass}>
             <div className={containerClass}>
-              <div className="mx-auto max-w-5xl overflow-hidden rounded-[2.5rem] border border-white/10 bg-white/[0.02] p-4 shadow-[0_32px_80px_rgba(0,0,0,0.4)]">
-                <div className="relative aspect-[16/10] overflow-hidden rounded-[1.8rem]">
-                  <Image 
-                    src={block.content.imageUrl} 
-                    alt={block.content.caption || "Service visual"}
-                    fill
-                    className="object-cover transition duration-700 hover:scale-105"
-                    unoptimized
-                  />
-                  {!block.content.imageUrl && (
-                    <div className="flex h-full w-full items-center justify-center bg-[color:var(--surface-strong)] text-white/10">
-                      Empty image block - Add URL in builder
-                    </div>
-                  )}
+              <div className="mx-auto max-w-5xl">
+                <div className="relative overflow-hidden rounded-[2.5rem] border border-[color:var(--border)] bg-[color:var(--surface-muted)] p-5 shadow-[color:var(--shadow-card)]">
+                  <div className="relative aspect-[16/9] overflow-hidden rounded-[1.8rem] border border-[color:var(--border-strong)]/20">
+                    <Image 
+                      src={block.content.imageUrl} 
+                      alt={block.content.caption || "Service visual"}
+                      fill
+                      className="object-cover transition duration-1000 hover:scale-105"
+                      unoptimized
+                    />
+                    {!block.content.imageUrl && (
+                      <div className="flex h-full w-full items-center justify-center bg-[color:var(--surface-strong)] text-[color:var(--text-muted)] italic">
+                        Visual asset pending configuration
+                      </div>
+                    )}
+                  </div>
                 </div>
                 {block.content.caption && (
-                  <div className="mt-6 flex items-center justify-center gap-3">
-                    <div className="h-px w-10 bg-white/10" />
-                    <p className="text-sm italic tracking-wide text-[color:var(--text-muted)]">
+                  <div className="mt-8 flex items-center justify-center gap-4">
+                    <div className="h-px flex-1 bg-gradient-to-r from-transparent to-[color:var(--border)]" />
+                    <p className="font-headline text-[11px] font-black uppercase tracking-[0.3em] text-[color:var(--text-muted)]">
                       {block.content.caption}
                     </p>
-                    <div className="h-px w-10 bg-white/10" />
+                    <div className="h-px flex-1 bg-gradient-to-l from-transparent to-[color:var(--border)]" />
                   </div>
                 )}
               </div>
@@ -110,15 +121,18 @@ export default function ServiceDetailPageContent({ service, relatedServices }) {
 
       if (block.type === "text") {
         return (
-          <section key={block.id} className={sectionClass}>
+          <section key={block.id || index} className={sectionClass}>
             <div className={containerClass}>
-              <div className="mx-auto max-w-4xl text-center">
-                <h2 className="font-headline text-3xl font-black tracking-tight text-[color:var(--text-primary)] sm:text-4xl">
-                  {block.content.heading}
-                </h2>
-                <div className="mt-8 text-base leading-8 text-[color:var(--text-secondary)] sm:text-lg">
+              <div className="mx-auto max-w-4xl">
+                <SectionIntro 
+                  title={block.content.heading}
+                  align="center"
+                />
+                <div className="mt-10 columns-1 gap-12 text-lg leading-relaxed text-[color:var(--text-secondary)] sm:columns-1 lg:text-xl">
                   {block.content.text.split("\n\n").map((para, i) => (
-                    <p key={i} className="mb-4">{para}</p>
+                    <p key={i} className="mb-6 last:mb-0 first-letter:float-left first-letter:mr-3 first-letter:text-5xl first-letter:font-black first-letter:text-[color:var(--accent)]">
+                      {para}
+                    </p>
                   ))}
                 </div>
               </div>
@@ -129,22 +143,28 @@ export default function ServiceDetailPageContent({ service, relatedServices }) {
 
       if (block.type === "features") {
         return (
-          <section key={block.id} className={sectionClass}>
+          <section key={block.id || index} className={sectionClass}>
             <div className={containerClass}>
-              <div className="mb-12 text-center">
-                <h2 className="font-headline text-3xl font-black tracking-tight text-[color:var(--text-primary)] sm:text-4xl">
-                  {block.content.title}
-                </h2>
+              <div className="mb-16">
+                <SectionIntro 
+                  eyebrow="Key Features"
+                  title={block.content.title}
+                  align="center"
+                />
               </div>
               <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
                 {(block.content.points || []).map((point, i) => (
-                  <div key={i} className={mutedCardClass}>
-                    <div className="flex gap-4">
-                      <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[color:var(--accent)] text-[10px] font-black text-white">
-                        {i + 1}
+                  <div key={i} className="group relative rounded-[2rem] border border-[color:var(--border)] bg-[color:var(--surface-muted)] p-8 transition duration-300 hover:border-[color:var(--accent)]/40 hover:bg-[color:var(--surface-strong)]">
+                    <div className="absolute -right-4 -top-4 h-24 w-24 rounded-full bg-[color:var(--accent)]/5 blur-2xl transition duration-500 group-hover:bg-[color:var(--accent)]/10" />
+                    <div className="relative space-y-4">
+                      <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[color:var(--accent)]/10 text-sm font-black text-[color:var(--accent)]">
+                        {String(i + 1).padStart(2, '0')}
                       </div>
-                      <p className="text-sm font-semibold text-[color:var(--text-secondary)]">
+                      <h3 className="font-headline text-2xl font-black tracking-tight text-[color:var(--text-primary)]">
                         {point}
+                      </h3>
+                      <p className="text-sm leading-relaxed text-[color:var(--text-secondary)] opacity-80">
+                        A practical capability designed to improve delivery quality, usability and long-term scalability.
                       </p>
                     </div>
                   </div>
@@ -165,33 +185,54 @@ export default function ServiceDetailPageContent({ service, relatedServices }) {
         <div className="space-y-0">
           {renderBlocks()}
           
-          {/* Always add CTA and Related at the end of custom pages */}
-          <section className="pb-24 sm:pb-28">
-            <div className={`${containerClass} grid gap-8 xl:grid-cols-[1.02fr_0.98fr] xl:items-start`}>
-               <div className="space-y-6">
-                 <SectionIntro 
-                   eyebrow="Initiate engagement" 
-                   title="Discuss your architecture" 
-                   description="Our engineering team will coordinate the full execution roadmap based on the specific service modules active above." 
-                 />
-                 <LeadCaptureForm defaultService={service.title} />
-               </div>
-               <div className="space-y-6">
-                 <SectionIntro 
-                   eyebrow="Related nodes" 
-                   title="Operational Ecosystem" 
-                   description="Explore vertically aligned solutions that complement this specific technical orbit." 
-                 />
-                 <div className="grid gap-4">
-                   {relatedServices.slice(0, 2).map(item => (
-                     <article key={item.slug} className="group rounded-[1.5rem] border border-[color:var(--border)] bg-[rgba(255,255,255,0.03)] p-6 transition hover:bg-[rgba(255,255,255,0.05)]">
-                        <h3 className="font-headline text-xl font-bold text-[color:var(--text-primary)]">{item.title}</h3>
-                        <p className="mt-2 text-sm text-[color:var(--text-secondary)]">{item.description}</p>
-                        <Link href={`/services/${item.slug}`} className="mt-4 inline-block text-[10px] font-black uppercase tracking-widest text-[color:var(--accent)] group-hover:text-[color:var(--text-primary)]">Open Module Protocol →</Link>
-                     </article>
-                   ))}
+          <section id="initiate" className="pb-32 pt-16">
+            <div className={containerClass}>
+              <div className="grid gap-12 xl:grid-cols-2 xl:items-start">
+                 <div className="sticky top-24 space-y-10">
+                   <SectionIntro 
+                     eyebrow="Talk to Our Team" 
+                     title="Let's plan the right solution for your requirement" 
+                     description="Share your goals and we will help you map the best delivery approach for this service." 
+                   />
+                   
+                   <div className="grid gap-4 sm:grid-cols-2">
+                     <div className="rounded-[1.6rem] border border-[color:var(--border)] bg-[color:var(--surface-muted)] p-6">
+                        <p className="text-[10px] font-black uppercase tracking-widest text-[color:var(--text-muted)]">Active Spec</p>
+                        <p className="mt-3 font-headline text-2xl font-black text-[color:var(--text-primary)]">{service.title}</p>
+                     </div>
+                     <div className="rounded-[1.6rem] border border-[color:var(--border)] bg-[color:var(--surface-muted)] p-6">
+                        <p className="text-[10px] font-black uppercase tracking-widest text-[color:var(--text-muted)]">Support</p>
+                        <p className="mt-3 font-headline text-2xl font-black text-[color:var(--text-primary)]">Veagle Space Team</p>
+                     </div>
+                   </div>
+
+                   <div className="space-y-6">
+                      <p className="text-xs font-black uppercase tracking-[0.3em] text-[color:var(--text-muted)]">Related Services</p>
+                      <div className="grid gap-4">
+                        {relatedServices.slice(0, 2).map(item => (
+                          <Link key={item.slug} href={`/services/${item.slug}`} className="group relative overflow-hidden rounded-[1.5rem] border border-[color:var(--border)] bg-[color:var(--surface-muted)] p-6 transition hover:border-[color:var(--accent)]/40 hover:bg-[color:var(--surface-strong)]">
+                             <div className="flex items-center justify-between">
+                               <div>
+                                 <h4 className="font-headline text-lg font-black text-[color:var(--text-primary)]">{item.title}</h4>
+                                 <p className="mt-1 text-xs text-[color:var(--text-muted)] line-clamp-1">{item.description}</p>
+                               </div>
+                               <div className="flex h-10 w-10 items-center justify-center rounded-full border border-[color:var(--border)] bg-[color:var(--page-bg)] transition group-hover:bg-[color:var(--accent)] group-hover:text-white">
+                                 <ArrowRight className="h-4 w-4" />
+                               </div>
+                             </div>
+                          </Link>
+                        ))}
+                      </div>
+                   </div>
                  </div>
-               </div>
+
+                  <div className="relative">
+                    <div className="absolute -inset-4 z-0 rounded-[3rem] bg-[color:var(--accent)]/5 blur-3xl" />
+                    <div className="relative z-10 overflow-hidden rounded-[2rem] border border-[color:var(--border)] bg-[color:var(--surface-muted)]/50 shadow-[color:var(--shadow-card)] backdrop-blur-md">
+                      <LeadCaptureForm defaultService={service.title} />
+                    </div>
+                  </div>
+              </div>
             </div>
           </section>
         </div>
@@ -201,15 +242,15 @@ export default function ServiceDetailPageContent({ service, relatedServices }) {
             <div className="veagle-section-wash" />
             <div className="veagle-grid-background" />
 
-            <div className={`${containerClass} relative z-10 grid gap-8 xl:grid-cols-[1.02fr_0.98fr] xl:items-center`}>
-              <div className="overflow-hidden rounded-[2rem] border border-[color:var(--border)] bg-[linear-gradient(180deg,#171b24,#1d222d)] p-5 shadow-[0_28px_90px_rgba(0,0,0,0.3)]">
-                <div className="relative overflow-hidden rounded-[1.5rem] border border-[rgba(93,126,194,0.2)] bg-[#101622] p-5">
-                  <div className="absolute -right-8 -top-8 h-28 w-28 rounded-full bg-[rgba(43,98,237,0.28)] blur-[2px]" />
-                  <div className="relative rounded-[1.2rem] border border-[rgba(93,126,194,0.18)] bg-[#0d1420] p-5">
-                    <div className="relative flex min-h-[280px] items-center justify-center overflow-hidden rounded-[1rem] border border-[rgba(93,126,194,0.12)] bg-[linear-gradient(180deg,#0f1724,#111b29)] sm:min-h-[420px]">
+            <div className={`${containerClass} relative z-10 grid gap-12 xl:grid-cols-[1.02fr_0.98fr] xl:items-center`}>
+              <div className="relative group">
+                <div className="absolute -inset-4 rounded-[2.5rem] bg-[color:var(--accent)]/10 blur-3xl transition duration-700 group-hover:bg-[color:var(--accent)]/20" />
+                <div className="relative overflow-hidden rounded-[2.5rem] border border-[color:var(--border-strong)] bg-[linear-gradient(180deg,#171b24,#1d222d)] p-4 shadow-[color:var(--shadow-card)]">
+                  <div className="relative overflow-hidden rounded-[2rem] border border-[color:var(--border)] bg-[#101622] p-6 lg:p-10">
+                    <div className="relative flex min-h-[320px] items-center justify-center overflow-hidden rounded-[1.5rem] bg-[linear-gradient(180deg,#0f1724,#111b29)] sm:min-h-[440px]">
                       <Image
                         alt={service.title}
-                        className="object-contain p-6"
+                        className="object-contain p-10 drop-shadow-[0_20px_50px_rgba(0,0,0,0.5)] transition duration-700 group-hover:scale-105"
                         fill
                         sizes="(max-width: 1280px) 100vw, 52vw"
                         src={service.imageUrl}
@@ -220,202 +261,127 @@ export default function ServiceDetailPageContent({ service, relatedServices }) {
                 </div>
               </div>
 
-              <div className="space-y-6">
-                <Eyebrow>Module Details</Eyebrow>
-
+              <div className="space-y-8">
                 <div className="space-y-4">
-                  <h1 className="font-headline text-4xl font-black tracking-tighter text-[color:var(--text-primary)] sm:text-5xl lg:text-6xl">
+                  <Eyebrow>Service Details</Eyebrow>
+                  <h1 className={`${pageHeroTitleClass} text-[color:var(--text-primary)]`}>
                     {detailHeading}
                   </h1>
-                  <p className="max-w-2xl text-lg leading-8 text-[color:var(--text-secondary)]">
+                  <p className="max-w-2xl text-lg leading-relaxed text-[color:var(--text-secondary)] sm:text-xl">
                     {detailDescription}
                   </p>
                 </div>
 
-                <div className="grid gap-3 sm:grid-cols-3">
-                  <div className="rounded-[1.4rem] border border-[color:var(--border)] bg-[rgba(255,255,255,0.04)] p-4">
-                    <p className="text-[10px] font-black uppercase tracking-[0.22em] text-[color:var(--text-muted)]">
-                      Specifications
-                    </p>
-                    <p className="mt-3 font-headline text-3xl font-black tracking-tight text-[color:var(--text-primary)]">
-                      {features.length}
-                    </p>
-                  </div>
-                  <div className="rounded-[1.4rem] border border-[color:var(--border)] bg-[rgba(255,255,255,0.04)] p-4">
-                    <p className="text-[10px] font-black uppercase tracking-[0.22em] text-[color:var(--text-muted)]">
-                      Architecture
-                    </p>
-                    <p className="mt-3 font-headline text-3xl font-black tracking-tight text-[color:var(--text-primary)]">
-                      Modular
-                    </p>
-                  </div>
-                  <div className="rounded-[1.4rem] border border-[color:var(--border)] bg-[rgba(255,255,255,0.04)] p-4">
-                    <p className="text-[10px] font-black uppercase tracking-[0.22em] text-[color:var(--text-muted)]">
-                      Protocol
-                    </p>
-                    <p className="mt-3 font-headline text-3xl font-black tracking-tight text-[color:var(--text-primary)]">
-                      Active
-                    </p>
-                  </div>
+                <div className="grid gap-4 sm:grid-cols-3">
+                  {[
+                    { label: "Specifications", value: features.length },
+                    { label: "Architecture", value: "Modular" },
+                    { label: "Status", value: "Available" }
+                  ].map((stat, i) => (
+                    <div key={i} className="rounded-[1.5rem] border border-[color:var(--border)] bg-[color:var(--surface-muted)] p-5">
+                      <p className="text-[10px] font-black uppercase tracking-widest text-[color:var(--text-muted)]">{stat.label}</p>
+                      <p className="mt-3 font-headline text-3xl font-black text-[color:var(--text-primary)]">{stat.value}</p>
+                    </div>
+                  ))}
                 </div>
 
-                <div className="flex flex-wrap gap-2">
+                <div className="flex flex-wrap gap-2.5">
                   {features.length ? (
                     features.map((feature) => (
-                      <Chip
-                        key={feature.id || feature.name}
-                        className="border-white/10 bg-white/[0.05] text-[color:var(--text-secondary)]"
-                      >
+                      <Chip key={feature.id || feature.name} className="border-[color:var(--border)] bg-[color:var(--surface-strong)] px-5 py-2">
                         {feature.name}
                       </Chip>
                     ))
                   ) : (
-                    <Chip className="border-white/10 bg-white/[0.05] text-[color:var(--text-muted)] italic">
-                      Initialize technical specifications in the dashboard to populate these nodes.
-                    </Chip>
+                    <Chip className="border-dashed opacity-50 italic">Add features in the dashboard</Chip>
                   )}
                 </div>
 
-                <div className="flex flex-col gap-3 sm:flex-row">
-                  <PrimaryLink href="/contact">Configure Service</PrimaryLink>
-                  <SecondaryLink href="/services">System Directory</SecondaryLink>
+                <div className="flex flex-col gap-4 pt-4 sm:flex-row">
+                  <PrimaryLink href="#initiate">Get a Quote</PrimaryLink>
+                  <SecondaryLink href="/services">Back to Services</SecondaryLink>
                 </div>
               </div>
             </div>
           </section>
 
           <section className={sectionClass}>
-            <div className={`${containerClass} grid gap-8 xl:grid-cols-[0.92fr_1.08fr]`}>
-              <div className="space-y-6">
+            <div className={`${containerClass} grid gap-12 xl:grid-cols-[0.85fr_1.15fr]`}>
+              <div className="space-y-8">
                 <SectionIntro
-                  eyebrow="Technical scope"
+                  eyebrow="Service Scope"
                   title={detailHeading}
                   description={detailDescription}
                 />
-
-                <Panel className="space-y-4">
-                  <p className="text-[10px] font-black uppercase tracking-[0.22em] text-[color:var(--text-muted)]">
-                    Operation Matrix
-                  </p>
-                  <div className="space-y-3">
-                    <div className="flex items-start gap-3">
-                      <span className="mt-1 h-1.5 w-1.5 shrink-0 rounded-full bg-[color:var(--accent)] shadow-[0_0_8px_rgba(25,94,226,0.3)]" />
-                      <p className="text-sm leading-7 text-[color:var(--text-secondary)]">
-                        Centralized content orchestration via dashboard-driven metadata points.
-                      </p>
-                    </div>
-                    <div className="flex items-start gap-3">
-                      <span className="mt-1 h-1.5 w-1.5 shrink-0 rounded-full bg-[color:var(--accent)] shadow-[0_0_8px_rgba(25,94,226,0.3)]" />
-                      <p className="text-sm leading-7 text-[color:var(--text-secondary)]">
-                        Dynamic visual assets synchronized across global delivery layers.
-                      </p>
-                    </div>
-                    <div className="flex items-start gap-3">
-                      <span className="mt-1 h-1.5 w-1.5 shrink-0 rounded-full bg-[color:var(--accent)] shadow-[0_0_8px_rgba(25,94,226,0.3)]" />
-                      <p className="text-sm leading-7 text-[color:var(--text-secondary)]">
-                        Modular technical specifications managed through the integrated service portal.
-                      </p>
-                    </div>
+                <Panel className="space-y-6">
+                  <p className="text-[10px] font-black uppercase tracking-widest text-[color:var(--accent)]">What This Service Covers</p>
+                  <div className="space-y-5">
+                    {[
+                      "Clear requirement planning aligned with business goals.",
+                      "Responsive execution built for usability and long-term maintainability.",
+                      "Structured delivery with a straightforward inquiry and follow-up flow."
+                    ].map((text, i) => (
+                      <div key={i} className="flex gap-4">
+                        <div className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-[color:var(--accent)] shadow-[0_0_10px_var(--accent)]" />
+                        <p className="text-base leading-relaxed text-[color:var(--text-secondary)]">{text}</p>
+                      </div>
+                    ))}
                   </div>
                 </Panel>
               </div>
 
-              <div className="grid gap-4">
+              <div className="grid gap-5 md:grid-cols-2">
                 {features.length ? (
                   features.map((feature, index) => (
-                    <div key={feature.id || feature.name} className={mutedCardClass}>
-                      <div className="flex gap-4">
-                        <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-[color:var(--accent)] text-sm font-black text-white">
+                    <div key={feature.id || feature.name} className="group rounded-[1.8rem] border border-[color:var(--border)] bg-[color:var(--surface-muted)] p-7 transition duration-300 hover:border-[color:var(--accent)]/40 hover:bg-[color:var(--surface-strong)]">
+                      <div className="flex flex-col h-full gap-5">
+                        <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[color:var(--accent)]/10 text-sm font-black text-[color:var(--accent)]">
                           {String(index + 1).padStart(2, "0")}
                         </div>
-                        <div>
-                          <h2 className="font-headline text-xl font-black tracking-tight text-[color:var(--text-primary)]">
-                            {feature.name}
-                          </h2>
-                          <p className="mt-2 text-sm leading-7 text-[color:var(--text-secondary)]">
-                            {feature.name} is a core operational node of this protocol, specifically engineered to provide a robust technical foundation within the {service.title} architecture.
+                        <div className="space-y-3">
+                          <h3 className="font-headline text-xl font-black text-[color:var(--text-primary)]">{feature.name}</h3>
+                          <p className="text-sm leading-relaxed text-[color:var(--text-secondary)] opacity-80">
+                            A focused part of the {service.title} offering designed to support real business needs and smoother delivery.
                           </p>
                         </div>
                       </div>
                     </div>
                   ))
                 ) : (
-                  <EmptyState
-                    title="Initialize Module Points"
-                    description="Add operational specifications in the dashboard to populate this technical matrix."
-                  />
+                  <div className="md:col-span-2">
+                    <EmptyState title="No features added yet" description="Configure features in the admin dashboard." />
+                  </div>
                 )}
               </div>
             </div>
           </section>
 
-          <section className="pb-24 sm:pb-28">
-            <div className={`${containerClass} grid gap-8 xl:grid-cols-[1.02fr_0.98fr] xl:items-start`}>
-              <div className="space-y-6">
-                <SectionIntro
-                  eyebrow="Related configurations"
-                  title="Ecosystem Synergy"
-                  description="Synchronize your project with complementary service modules from our technical directory."
-                />
-
-                {relatedServices.length ? (
-                  <div className="grid gap-5 md:grid-cols-2">
-                    {relatedServices.map((item) => (
-                      <article
-                        key={item.slug}
-                        className="group overflow-hidden rounded-[1.7rem] border border-[color:var(--border)] bg-[linear-gradient(180deg,#171b24,#1d222d)] shadow-[0_24px_70px_rgba(0,0,0,0.22)] transition hover:border-[color:var(--accent)]/30"
-                      >
-                        <div className="p-4">
-                          <div className="relative overflow-hidden rounded-[1.25rem] border border-[rgba(93,126,194,0.2)] bg-[#101622] p-4">
-                            <div className="absolute -right-6 -top-6 h-20 w-20 rounded-full bg-[rgba(43,98,237,0.24)] blur-[2px]" />
-                            <div className="relative rounded-[1rem] border border-[rgba(93,126,194,0.18)] bg-[#0d1420] p-4">
-                              <div className="relative flex min-h-[150px] items-center justify-center overflow-hidden rounded-[0.9rem] border border-[rgba(93,126,194,0.12)] bg-[linear-gradient(180deg,#0f1724,#111b29)]">
-                                <Image
-                                  alt={item.title}
-                                  className="object-contain p-4 group-hover:scale-110 transition duration-500"
-                                  fill
-                                  sizes="(max-width: 1280px) 100vw, 33vw"
-                                  src={item.imageUrl}
-                                  unoptimized
-                                />
-                              </div>
-                            </div>
+          <section id="initiate" className="pb-32 pt-16">
+            <div className={containerClass}>
+                <div className="relative overflow-hidden rounded-[3rem] border border-[color:var(--border)] bg-[color:var(--surface-muted)] shadow-[color:var(--shadow-card)]">
+                  <div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_10%,var(--accent)_0%,transparent_50%)] opacity-[0.03]" />
+                  <div className="relative z-10 grid gap-12 lg:grid-cols-[0.8fr_1.2fr] lg:items-center p-8 sm:p-12">
+                    <div className="space-y-6">
+                       <SectionIntro 
+                          eyebrow="Get Started" 
+                          title="Let's discuss your project" 
+                          description="Connect with our team to talk about scope, timeline, goals and the right next step." 
+                       />
+                       <div className="flex items-center gap-4">
+                          <div className="h-10 w-10 rounded-full border border-[color:var(--border)] bg-[color:var(--page-bg)] p-0.5">
+                             <div className="h-full w-full rounded-full bg-[color:var(--accent)]" />
                           </div>
-                        </div>
-
-                        <div className="space-y-4 px-5 pb-5">
-                          <h3 className="font-headline text-2xl font-black tracking-tight text-[color:var(--text-primary)]">
-                            {item.title}
-                          </h3>
-                          <p className="text-sm leading-7 text-[color:var(--text-secondary)] line-clamp-2">
-                            {item.description}
-                          </p>
-                          <Link
-                            className="inline-flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-[color:var(--accent)]"
-                            href={`/services/${item.slug}`}
-                          >
-                            Explore Protocol →
-                          </Link>
-                        </div>
-                      </article>
-                    ))}
+                          <div>
+                             <p className="text-xs font-black text-[color:var(--text-primary)]">Veagle Space</p>
+                             <p className="text-[10px] text-[color:var(--text-muted)] uppercase tracking-widest leading-none">Project Team</p>
+                          </div>
+                       </div>
+                    </div>
+                    <div className="overflow-hidden rounded-[2rem] border border-[color:var(--border)] bg-[color:var(--page-bg)]/40 backdrop-blur-sm">
+                       <LeadCaptureForm defaultService={service.title} />
+                    </div>
                   </div>
-                ) : (
-                  <EmptyState
-                    title="No Related Ecosystems"
-                    description="As you expand your service directory, complementary modules will synchronize here."
-                  />
-                )}
-              </div>
-
-              <div className="space-y-6">
-                <SectionIntro
-                  eyebrow="Initiate Mission"
-                  title="Ready to engineer your next digital platform?"
-                  description="Leverage our strategic alignment channel to discuss the specific operational scope of your project."
-                />
-                <LeadCaptureForm defaultService={service.title} />
-              </div>
+                </div>
             </div>
           </section>
         </>

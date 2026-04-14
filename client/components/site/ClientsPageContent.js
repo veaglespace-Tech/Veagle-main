@@ -7,6 +7,7 @@ import {
   containerClass,
   ctaShellClass,
   pageClass,
+  pageHeroTitleClass,
 } from "@/components/site/UiBits";
 import { resolveClientProfile } from "@/lib/fallback-data";
 import { backendAssetUrl } from "@/lib/backend";
@@ -36,21 +37,21 @@ const groupMeta = {
   partners: {
     title: "Strategic Partnerships",
     description:
-      `High-growth brands and enterprise-level organizations that trust ${COMPANY_NAME} for mission-critical digital delivery.`,
+      `Businesses and brands that value clear delivery, strong digital presentation and dependable execution from ${COMPANY_NAME}.`,
     icon: Sparkles,
     mode: "featured",
   },
   finance: {
     title: "Financial Ecosystems",
     description:
-      "Institutions spanning banking, fintech, and asset management where security and architectural precision are paramount.",
+      "Finance-oriented teams and institutions that need dependable presentation, process clarity and secure digital workflows.",
     icon: Landmark,
     mode: "compact",
   },
   technology: {
     title: "Technological Alliances",
     description:
-      "Product-first organizations and platform providers that synchronize with our core engineering protocols.",
+      "Technology-led organizations that need scalable websites, software support and cleaner customer-facing experiences.",
     icon: Cpu,
     mode: "wide",
   },
@@ -59,14 +60,14 @@ const groupMeta = {
 function normalizeClients(items = []) {
   return items
     .map(resolveClientProfile)
-    .filter((item) => item?.name && item?.href);
+    .filter((item) => item?.name);
 }
 
 function normalizeBackendClients(items = []) {
   return items
     .map((client) => ({
       name: client?.name || "",
-      href: client?.websiteUrl || "/contact",
+      href: client?.websiteUrl || "",
       image: backendAssetUrl(client?.logoUrl),
       description: client?.description || "",
     }))
@@ -103,14 +104,26 @@ function groupClients(items = []) {
 
 function buildClientSummary(client, groupKey) {
   if (groupKey === "finance") {
-    return "Optimizing institutional visibility and secure transactional workflows through precision software architecture.";
+    return "Supporting finance-focused teams with better digital presentation, structured workflows and dependable software support.";
   }
 
   if (groupKey === "technology") {
-    return "Synchronizing product development nodes with scalable infrastructure and high-throughput operational systems.";
+    return "Helping digital and technology-led teams improve product presentation, workflow clarity and scalable execution.";
   }
 
-  return "Powering large-scale digital transformations and high-performance web ecosystems for market-leading brands.";
+  return "Helping service brands and business teams create stronger websites, clearer communication and smoother digital operations.";
+}
+
+function ClientCardShell({ client, className, children }) {
+  if (client.href) {
+    return (
+      <a href={client.href} target="_blank" rel="noreferrer" className={className}>
+        {children}
+      </a>
+    );
+  }
+
+  return <div className={className}>{children}</div>;
 }
 
 function LogoBadge({ client, size = "large" }) {
@@ -145,16 +158,14 @@ function LogoBadge({ client, size = "large" }) {
 
 function FeaturedClientCard({ client }) {
   return (
-    <a
-      href={client.href}
-      target="_blank"
-      rel="noreferrer"
+    <ClientCardShell
+      client={client}
       className="group flex h-full flex-col rounded-[1.9rem] bg-[color:var(--surface)] p-6 shadow-[0_26px_80px_-44px_rgba(0,0,0,0.9)] ring-1 ring-white/6 backdrop-blur-[14px] transition duration-300 hover:-translate-y-1 hover:bg-[color:var(--surface-strong)]"
     >
       <div className="flex items-start justify-between gap-4">
         <LogoBadge client={client} />
         <span className="rounded-full bg-[color:var(--accent-success)]/12 px-3 py-1 text-[10px] font-black uppercase tracking-[0.22em] text-[color:var(--accent-success)]">
-          Validated
+          Active
         </span>
       </div>
       <h3 className="mt-10 font-headline text-2xl font-black tracking-tight text-[color:var(--text-primary)]">
@@ -164,35 +175,31 @@ function FeaturedClientCard({ client }) {
         {buildClientSummary(client, "partners")}
       </p>
       <div className="mt-auto pt-8 text-[10px] font-black uppercase tracking-[0.22em] text-[color:var(--accent)] group-hover:text-[color:var(--text-primary)]">
-        Client Module Profile
+        Client Profile
         <ArrowRight className="ml-2 inline h-4 w-4 transition group-hover:translate-x-1" />
       </div>
-    </a>
+    </ClientCardShell>
   );
 }
 
 function CompactClientCard({ client }) {
   return (
-    <a
-      href={client.href}
-      target="_blank"
-      rel="noreferrer"
+    <ClientCardShell
+      client={client}
       className="group flex min-h-[13rem] flex-col items-center justify-center rounded-[1.6rem] bg-[color:var(--surface)] p-5 text-center transition duration-300 hover:bg-[color:var(--surface-strong)] hover:scale-[1.02]"
     >
       <LogoBadge client={client} size="small" />
       <p className="mt-5 text-[10px] font-black uppercase tracking-[0.22em] text-[color:var(--text-muted)] group-hover:text-[color:var(--text-primary)]">
         {client.name}
       </p>
-    </a>
+    </ClientCardShell>
   );
 }
 
 function WideClientCard({ client }) {
   return (
-    <a
-      href={client.href}
-      target="_blank"
-      rel="noreferrer"
+    <ClientCardShell
+      client={client}
       className="group flex h-full items-center gap-5 rounded-[1.9rem] bg-[color:var(--surface)] p-6 shadow-[0_24px_70px_-42px_rgba(0,0,0,0.85)] ring-1 ring-white/6 backdrop-blur-[14px] transition duration-300 hover:-translate-y-1 hover:bg-[color:var(--surface-strong)]"
     >
       <div className="shrink-0">
@@ -207,7 +214,7 @@ function WideClientCard({ client }) {
         </p>
       </div>
       <ArrowRight className="ml-auto hidden h-5 w-5 shrink-0 text-[color:var(--accent)] transition group-hover:translate-x-1 group-hover:text-[color:var(--text-primary)] sm:block" />
-    </a>
+    </ClientCardShell>
   );
 }
 
@@ -225,7 +232,7 @@ function GroupSection({ sectionKey, items }) {
         <div className="mb-10 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
           <div className="max-w-2xl">
             <p className="text-[10px] font-black uppercase tracking-[0.24em] text-[color:var(--accent)]">
-              Operational Nodes
+              Industries We Support
             </p>
             <h2 className="mt-4 font-headline text-3xl font-black tracking-[-0.03em] text-[color:var(--text-primary)] sm:text-4xl">
               {meta.title}
@@ -303,22 +310,22 @@ export default function ClientsPageContent({ content, clientsData = [] }) {
             <div className="inline-flex items-center gap-2 rounded-full border border-[color:var(--accent)]/30 bg-[color:var(--surface-strong)] px-4 py-2 backdrop-blur-md">
               <span className="h-2 w-2 animate-pulse rounded-full bg-[color:var(--accent-success)] shadow-[0_0_14px_rgba(86,226,64,0.4)]" />
               <span className="text-[10px] font-black uppercase tracking-[0.24em] text-[color:var(--text-muted)]">
-                Client Network Uplink Active
+                Client and industry coverage
               </span>
             </div>
 
-            <h1 className="mx-auto mt-8 max-w-4xl font-headline text-4xl font-black leading-[0.95] tracking-[-0.045em] text-white sm:text-6xl lg:text-7xl">
-              {clients.title || "Accelerating digital outcomes for market-leading enterprise brands"}
+            <h1 className={`mx-auto mt-8 max-w-4xl ${pageHeroTitleClass} text-white`}>
+              {clients.title || "Supporting brands, business teams and digital-first companies with practical technology solutions"}
             </h1>
             <p className="mx-auto mt-6 max-w-3xl text-lg leading-8 text-[color:var(--text-secondary)]">
               {clients.description ||
-                `${COMPANY_NAME} engineers high-performance software and digital infrastructure for global financial nodes and technology powerhouses.`}
+                `${COMPANY_NAME} helps businesses improve websites, software workflows and digital communication through practical, user-friendly delivery.`}
             </p>
 
             <div className="mt-10 flex flex-wrap items-center justify-center gap-4 text-[10px] font-black uppercase tracking-[0.24em] text-[color:var(--text-muted)]">
-              <span>{normalizedClients.length}+ Encapsulated Brand Identities</span>
+              <span>{normalizedClients.length}+ client references</span>
               <span className="hidden h-px w-12 bg-white/12 sm:block" />
-              <span>{segments.length || 3} Sector-Specific Delivery Orbits</span>
+              <span>{segments.length || 3} industry segments</span>
             </div>
           </div>
 
@@ -351,10 +358,10 @@ export default function ClientsPageContent({ content, clientsData = [] }) {
           <div className={containerClass}>
             <div className="rounded-[2rem] bg-[color:var(--surface)] p-8 text-center shadow-[0_28px_80px_-48px_rgba(0,0,0,0.88)] ring-1 ring-white/6 backdrop-blur-[14px]">
               <h2 className="font-headline text-3xl font-black tracking-[-0.03em] text-[color:var(--text-primary)] sm:text-4xl">
-                Technical Directory Standby
+                Client references are being updated
               </h2>
               <p className="mx-auto mt-4 max-w-2xl text-[15px] leading-8 text-[color:var(--text-secondary)]">
-                Initialize client nodes via the administrative dashboard to populate the operational showcase layer.
+                Add client logos and links from the administrative dashboard to publish this section.
               </p>
             </div>
           </div>
@@ -367,10 +374,10 @@ export default function ClientsPageContent({ content, clientsData = [] }) {
             <div className="rounded-[2rem] bg-[color:var(--surface)] p-6 shadow-[0_28px_80px_-48px_rgba(0,0,0,0.88)] ring-1 ring-white/6 backdrop-blur-[14px] sm:p-8">
               <div className="max-w-2xl">
                 <p className="text-[10px] font-black uppercase tracking-[0.24em] text-[color:var(--accent)]">
-                  Delivery Vectors
+                  Industry Focus
                 </p>
                 <h2 className="mt-4 font-headline text-3xl font-black tracking-[-0.03em] text-[color:var(--text-primary)] sm:text-4xl">
-                  Strategic Domain Specialization
+                  Where We Add Value
                 </h2>
               </div>
               <div className="mt-8 grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
@@ -380,7 +387,7 @@ export default function ClientsPageContent({ content, clientsData = [] }) {
                     className="rounded-[1.55rem] bg-[color:var(--surface-strong)] p-5 transition duration-300 hover:bg-[color:var(--accent)]/10"
                   >
                     <p className="text-[10px] font-black uppercase tracking-[0.2em] text-[color:var(--text-muted)]">
-                      Operational Tier
+                      Segment
                     </p>
                     <h3 className="mt-4 font-headline text-2xl font-black tracking-tight text-[color:var(--text-primary)]">
                       {item.title}
@@ -404,15 +411,15 @@ export default function ClientsPageContent({ content, clientsData = [] }) {
             <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,rgba(25,94,226,0.18),transparent_32%),linear-gradient(180deg,transparent,rgba(8,10,15,0.34))]" />
             <div className="relative z-10">
               <h2 className="mx-auto max-w-4xl font-headline text-3xl font-black leading-tight tracking-[-0.035em] text-white sm:text-5xl">
-                {clients.ctaTitle || "Scale your brand with a high-performance digital orbit"}
+                {clients.ctaTitle || "Need a partner for stronger websites, smoother software and better digital visibility?"}
               </h2>
               <p className="mx-auto mt-5 max-w-3xl text-lg leading-8 text-[color:var(--text-secondary)]">
                 {clients.ctaDescription ||
-                  "Engage our engineering core to build a sophisticated technical showcase that projects authority and operational excellence."}
+                  "Talk to Veagle Space about building a business-ready digital presence that supports both customers and internal teams."}
               </p>
               <div className="mt-8 flex flex-wrap justify-center gap-4">
-                <PrimaryLink href="/contact">Initiate Launch</PrimaryLink>
-                <SecondaryLink href="/portfolio">Module Discovery</SecondaryLink>
+                <PrimaryLink href="/contact">Start a Conversation</PrimaryLink>
+                <SecondaryLink href="/portfolio">View Portfolio</SecondaryLink>
               </div>
             </div>
           </div>

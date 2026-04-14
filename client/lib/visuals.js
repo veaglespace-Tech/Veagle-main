@@ -47,7 +47,6 @@ export const pageArtwork = {
   about: "/veagle-about-network.svg",
   services: "/veagle-services-flow.svg",
   career: "/veagle-career-launch.svg",
-  university: "/veagle-university-lab.svg",
 };
 
 export function resolveServiceIllustration(title, fallback = "/Website Design & Development.png") {

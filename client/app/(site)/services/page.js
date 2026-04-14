@@ -5,15 +5,17 @@ import { buildPageMetadata } from "@/lib/seo";
 import { COMPANY_NAME } from "@/lib/site";
 
 export const metadata = buildPageMetadata({
-  title: "Services for Websites, Software, ERP and Growth",
+  title: "Website Development, Software, ERP and SEO Services in Pune",
   description:
-    `Explore ${COMPANY_NAME} services including dynamic websites, software development, ERP systems, mobile apps, SEO / SMO and resource outsourcing.`,
+    `Explore ${COMPANY_NAME} services including website development, e-commerce websites, software development, ERP systems, mobile apps, UI/UX, digital marketing, SEO / SMO, BPO / KPO and resource outsourcing.`,
   path: "/services",
   keywords: [
-    "website development services Pune",
-    "software development services Pune",
-    "ERP development services",
+    "website development services in Pune",
+    "software development services in Pune",
+    "ERP development services Pune",
+    "digital marketing services Pune",
     "SEO services Pune",
+    "resource outsourcing services",
   ],
 });
 

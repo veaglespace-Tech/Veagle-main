@@ -1,4 +1,3 @@
-import Link from "next/link";
 import {
   AtSign,
   Clock3,
@@ -12,49 +11,49 @@ import {
 } from "lucide-react";
 
 import LeadCaptureForm from "@/components/forms/LeadCaptureForm";
-import { SecondaryLink, pageClass } from "@/components/site/UiBits";
+import { SecondaryLink, pageClass, pageHeroTitleClass } from "@/components/site/UiBits";
 import { COMPANY_ADDRESS, COMPANY_EMAIL, COMPANY_PHONE, COMPANY_PHONE_LINK } from "@/lib/site";
 
 const enquiryChecklist = [
   {
-    title: "Project Architecture",
+    title: "Project Goals",
     description:
-      "Clarify the specific technical gaps or inefficiencies in your current digital infrastructure.",
+      "Share what you want to launch, improve or automate so we can suggest the right next step.",
     icon: TerminalSquare,
   },
   {
-    title: "Operational Scope",
+    title: "Required Services",
     description:
-      "Define the essential modules and legacy integrations required for your mission-critical systems.",
+      "Tell us if you need website development, software, ERP, SEO, design, outsourcing or a custom combination.",
     icon: Network,
   },
   {
-    title: "Mission Constraints",
+    title: "Timeline and Budget",
     description:
-      "Outline your deployment milestones, budgetary parameters, and long-term scalability goals.",
+      "Add expected timeline, budget range and any business constraints we should keep in mind.",
     icon: Clock3,
   },
 ];
 
 const responseSteps = [
   {
-    title: "Strategic Audit",
+    title: "Requirement Review",
     description:
-      "Our engineering leads perform a deep-scan of your technical brief to assess feasibility and scope.",
+      "We review your requirement to understand scope, business goals and technical fit.",
     icon: Eye,
     iconColor: "text-[color:var(--accent)]",
   },
   {
-    title: "Technical Roadmap",
+    title: "Solution Planning",
     description:
-      "We architect a precision-engineered trajectory, identifying the optimal tech stack for your use case.",
+      "We recommend the right website, software, ERP or marketing approach for your use case.",
     icon: Compass,
     iconColor: "text-[color:var(--accent-success)]",
   },
   {
-    title: "Executive Briefing",
+    title: "Response and Proposal",
     description:
-      "You receive a comprehensive proposal with granular technical breakdowns and execution timelines.",
+      "You receive a clear response with deliverables, discussion points and execution direction.",
     icon: MailCheck,
     iconColor: "text-[color:var(--accent)]",
   },
@@ -63,13 +62,13 @@ const responseSteps = [
 function renderHeroTitle(value) {
   const title =
     value ||
-    "Engineer your next enterprise platform, software node, or data dashboard";
+    "Website development, software, ERP, digital marketing and business support services in one place";
 
-  return title.split(/(platform|software|dashboard)/gi).map((part, index) => {
+  return title.split(/(website|software|digital marketing)/gi).map((part, index) => {
     const key = `${part}-${index}`;
     const lowered = part.toLowerCase();
 
-    if (lowered === "platform" || lowered === "software") {
+    if (lowered === "website" || lowered === "software") {
       return (
         <span key={key} className="text-[color:var(--accent)]">
           {part}
@@ -77,7 +76,7 @@ function renderHeroTitle(value) {
       );
     }
 
-    if (lowered === "dashboard") {
+    if (lowered === "digital marketing") {
       return (
         <span key={key} className="text-[color:var(--accent-success)]">
           {part}
@@ -115,20 +114,20 @@ export default function ContactPageContent({ content, services = [] }) {
   return (
     <main className={pageClass}>
       <section className="px-4 pb-8 pt-28 sm:px-6 sm:pt-32 lg:px-8 lg:pt-36">
-        <div className="mx-auto max-w-7xl">
-          <div className="max-w-4xl">
+        <div className="mx-auto max-w-7xl flex flex-col items-center text-center">
+          <div className="max-w-4xl flex flex-col items-center">
             <div className="inline-flex items-center gap-2 rounded-full border border-[color:var(--accent)]/30 bg-[color:var(--surface-strong)] px-3 py-1.5 backdrop-blur-md">
               <span className="h-2 w-2 animate-pulse rounded-full bg-[color:var(--accent-success)]" />
               <span className="text-[10px] font-black uppercase tracking-[0.2em] text-[color:var(--text-muted)]">
-                Secure Transmission Link Active
+                Contact Veagle Space
               </span>
             </div>
-            <h1 className="mt-7 max-w-5xl font-headline text-4xl font-black leading-[0.95] tracking-[-0.04em] text-white sm:text-6xl lg:text-7xl">
+            <h1 className={`mt-7 max-w-5xl ${pageHeroTitleClass} text-white`}>
               {renderHeroTitle(contact.title)}
             </h1>
-            <p className="mt-6 max-w-2xl text-lg leading-8 text-[color:var(--text-secondary)]">
+            <p className="mt-6 mx-auto max-w-2xl text-lg leading-8 text-[color:var(--text-secondary)]">
               {contact.description ||
-                "Initialize a direct engagement with our engineering team to convert your technical requirements into high-performance infrastructure."}
+                "Tell us about your requirement and our team will help you shape the right website, software, ERP or digital growth solution."}
             </p>
           </div>
         </div>
@@ -139,10 +138,10 @@ export default function ContactPageContent({ content, services = [] }) {
           <div className="space-y-10 lg:col-span-5">
             <div>
               <h2 className="font-headline text-3xl font-black tracking-tight text-[color:var(--text-primary)]">
-                Protocol Alignment
+                What to Share
               </h2>
               <p className="mt-4 text-sm leading-7 text-[color:var(--text-secondary)]">
-                To ensure a precision-matched response, please include the following parameters in your transmission:
+                To help us respond faster and more clearly, include the following details in your inquiry:
               </p>
             </div>
 
@@ -170,7 +169,7 @@ export default function ContactPageContent({ content, services = [] }) {
 
             <div className="rounded-[1.2rem] border border-white/10 bg-[color:var(--surface-strong)] p-6 backdrop-blur-md">
               <h3 className="font-headline text-2xl font-black tracking-tight text-[color:var(--text-primary)]">
-                Direct Uplink
+                Direct Contact
               </h3>
               <div className="mt-6 space-y-5">
                 <a
@@ -181,8 +180,8 @@ export default function ContactPageContent({ content, services = [] }) {
                     <AtSign className="h-4.5 w-4.5 text-[color:var(--accent)]" />
                   </div>
                   <div>
-                    <p className="text-[10px] font-black uppercase tracking-[0.18em] text-[color:var(--text-muted)]">
-                      Priority Email
+                    <p className="text-[10px] font-black uppercase tracking-[0.18em] text-white/70">
+                      Email
                     </p>
                     <p className="mt-1 break-all text-base font-medium text-[color:var(--text-primary)]">
                       {contactEmail}
@@ -197,8 +196,8 @@ export default function ContactPageContent({ content, services = [] }) {
                     <Phone className="h-4.5 w-4.5 text-[color:var(--accent)]" />
                   </div>
                   <div>
-                    <p className="text-[10px] font-black uppercase tracking-[0.18em] text-[color:var(--text-muted)]">
-                      Vocal Comms
+                    <p className="text-[10px] font-black uppercase tracking-[0.18em] text-white/70">
+                      Phone
                     </p>
                     <p className="mt-1 break-all text-base font-medium text-[color:var(--text-primary)]">
                       {contactPhone}
@@ -216,8 +215,8 @@ export default function ContactPageContent({ content, services = [] }) {
                     <MapPin className="h-4.5 w-4.5 text-[color:var(--accent)]" />
                   </div>
                   <div>
-                    <p className="text-[10px] font-black uppercase tracking-[0.18em] text-[color:var(--text-muted)]">
-                      Mission HQ
+                    <p className="text-[10px] font-black uppercase tracking-[0.18em] text-white/70">
+                      Office
                     </p>
                     <p className="mt-1 text-base font-medium text-[color:var(--text-primary)]">
                       {addressLines[0] || contactAddress}
@@ -243,10 +242,10 @@ export default function ContactPageContent({ content, services = [] }) {
         <div className="mx-auto max-w-7xl">
           <div className="mx-auto max-w-3xl text-center">
             <h2 className="font-headline text-3xl font-black tracking-tight text-[color:var(--text-primary)] sm:text-4xl">
-              The Response Protocol
+              What Happens Next
             </h2>
             <p className="mt-4 text-sm leading-7 text-[color:var(--text-secondary)] sm:text-base">
-              Synchronized operational stages from transmission reception to project initiation.
+              A simple process from first inquiry to project discussion.
             </p>
           </div>
 
@@ -274,7 +273,7 @@ export default function ContactPageContent({ content, services = [] }) {
 
           <div className="mt-14 text-center">
             <SecondaryLink href="/services">
-              Explore Services
+              Explore All Services
             </SecondaryLink>
           </div>
         </div>

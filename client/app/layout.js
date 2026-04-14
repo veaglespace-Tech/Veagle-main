@@ -1,5 +1,24 @@
+import { Inter, Plus_Jakarta_Sans } from "next/font/google";
 import ThemeProvider, { themeInitScript } from "@/components/ThemeProvider";
-import { COMPANY_NAME, COMPANY_SHORT_NAME, LOGO_PATH, SITE_URL } from "@/lib/site";
+
+const inter = Inter({
+  subsets: ["latin"],
+  variable: "--font-inter",
+  display: "swap",
+});
+
+const jakarta = Plus_Jakarta_Sans({
+  subsets: ["latin"],
+  variable: "--font-jakarta",
+  display: "swap",
+});
+import {
+  COMPANY_NAME,
+  COMPANY_SHORT_NAME,
+  COMPANY_TAGLINE,
+  LOGO_PATH,
+  SITE_URL,
+} from "@/lib/site";
 import ReduxProvider from "@/store/provider";
 import "./globals.css";
 
@@ -9,21 +28,21 @@ export const metadata = {
     default: COMPANY_NAME,
     template: `%s | ${COMPANY_SHORT_NAME}`,
   },
-  description:
-    `${COMPANY_NAME} delivers software development, dynamic websites, ERP systems, admin dashboards, digital marketing and growth-ready business experiences from Pune.`,
+  description: COMPANY_TAGLINE,
   keywords: [
-    "software development company Pune",
+    "software development company in Pune",
+    "website development company in Pune",
     "dynamic website development Pune",
-    "admin dashboard development",
-    "ERP system development Pune",
+    "e-commerce website development Pune",
+    "ERP software development Pune",
+    "mobile app development Pune",
     "digital marketing company Pune",
     "SEO services Pune",
     COMPANY_NAME,
   ],
   openGraph: {
     title: COMPANY_NAME,
-    description:
-      `Dynamic websites, software systems, ERP and admin dashboard experiences from ${COMPANY_NAME}.`,
+    description: COMPANY_TAGLINE,
     url: SITE_URL,
     siteName: COMPANY_SHORT_NAME,
     type: "website",
@@ -44,8 +63,7 @@ export const metadata = {
   twitter: {
     card: "summary_large_image",
     title: COMPANY_NAME,
-    description:
-      `Dynamic websites, software systems and dashboard experiences for growth-focused businesses from ${COMPANY_NAME}.`,
+    description: COMPANY_TAGLINE,
     images: [LOGO_PATH],
   },
 };
@@ -56,15 +74,14 @@ export default function RootLayout({ children }) {
       lang="en"
       suppressHydrationWarning
       data-scroll-behavior="smooth"
-      className="antialiased"
+      className={`antialiased ${inter.variable} ${jakarta.variable}`}
     >
-      <head>
+      <body className="min-h-screen bg-[color:var(--page-bg)] font-sans text-[color:var(--text-primary)]">
         <script
           id="veagle-theme-init"
+          suppressHydrationWarning
           dangerouslySetInnerHTML={{ __html: themeInitScript }}
         />
-      </head>
-      <body className="min-h-screen bg-[color:var(--page-bg)] font-sans text-[color:var(--text-primary)]">
         <ReduxProvider>
           <ThemeProvider>
             {children}

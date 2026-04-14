@@ -13,7 +13,6 @@ import {
   readStoredSession,
 } from "@/lib/auth-session";
 import {
-  Eyebrow,
   Panel,
   inputClass,
   labelClass,
@@ -38,17 +37,17 @@ const initialState = {
 
 const budgetOptions = [
   { value: "", label: "Select budget range" },
-  { value: "25k-50k", label: "$25k - $50k" },
-  { value: "50k-150k", label: "$50k - $150k" },
-  { value: "150k-plus", label: "$150k+" },
+  { value: "25k-50k", label: "INR 25k - 50k" },
+  { value: "50k-150k", label: "INR 50k - 1.5L" },
+  { value: "150k-plus", label: "INR 1.5L+" },
   { value: "guidance", label: "Need budget guidance" },
 ];
 
 const timelineOptions = [
   { value: "", label: "Select timeline" },
-  { value: "rapid-4-8-weeks", label: "Rapid Deployment (4-8 weeks)" },
-  { value: "standard-3-6-months", label: "Standard Mission (3-6 months)" },
-  { value: "strategic-6-plus-months", label: "Strategic Long-term (6+ months)" },
+  { value: "rapid-4-8-weeks", label: "Fast launch (4-8 weeks)" },
+  { value: "standard-3-6-months", label: "Standard project (3-6 months)" },
+  { value: "strategic-6-plus-months", label: "Long-term roadmap (6+ months)" },
   { value: "need-recommendation", label: "Need recommendation" },
 ];
 
@@ -207,7 +206,7 @@ export default function LeadCaptureForm({
         });
         setStatus({
           type: "success",
-          message: "Requirement received. We will get back to you shortly.",
+          message: "Thanks. Your requirement has been received and our team will get back to you shortly.",
         });
       } catch (error) {
         setStatus({
@@ -245,7 +244,7 @@ export default function LeadCaptureForm({
             Quick Enquiry
           </h3>
           <p className="mt-2 text-sm leading-7 text-[color:var(--text-secondary)]">
-            Start your journey toward premium digital execution today.
+            Share a quick overview of your requirement and we will get back to you.
           </p>
 
           <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
@@ -256,7 +255,7 @@ export default function LeadCaptureForm({
               onChange={handleChange}
               readOnly={userLocked}
               error={errors.name}
-              placeholder="John Architect"
+              placeholder="Your name"
             />
 
             <MinimalField
@@ -276,7 +275,7 @@ export default function LeadCaptureForm({
               value={form.message}
               onChange={handleChange}
               error={errors.message}
-              placeholder="Tell us about your technical goals..."
+              placeholder="Tell us what you want to build or improve."
             />
 
             {status.message ? (
@@ -296,7 +295,7 @@ export default function LeadCaptureForm({
               type="submit"
               disabled={isSubmitting}
             >
-              {isSubmitting ? "Submitting..." : "Send Blueprint Request"}
+              {isSubmitting ? "Submitting..." : "Send Enquiry"}
             </button>
           </form>
         </div>
@@ -339,7 +338,7 @@ export default function LeadCaptureForm({
               value={form.name}
               onChange={handleChange}
               readOnly={userLocked}
-              placeholder="Commander Name"
+              placeholder="Your full name"
             />
             {errors.name ? <FieldError>{errors.name}</FieldError> : null}
           </label>
@@ -351,7 +350,7 @@ export default function LeadCaptureForm({
               name="company"
               value={form.company}
               onChange={handleChange}
-              placeholder="Organization"
+              placeholder="Business or company name"
             />
             {errors.company ? <FieldError>{errors.company}</FieldError> : null}
           </label>
@@ -378,7 +377,7 @@ export default function LeadCaptureForm({
               value={form.phone}
               onChange={handleChange}
               readOnly={userLocked}
-              placeholder="+1 (000) 000-0000"
+              placeholder="+91"
             />
             {errors.phone ? <FieldError>{errors.phone}</FieldError> : null}
           </label>
@@ -451,7 +450,7 @@ export default function LeadCaptureForm({
               name="message"
               value={form.message}
               onChange={handleChange}
-              placeholder="Detail your mission requirements here..."
+              placeholder="Tell us what you want to build, improve or launch."
             />
             {errors.message ? <FieldError>{errors.message}</FieldError> : null}
           </label>
@@ -474,7 +473,7 @@ export default function LeadCaptureForm({
               type="submit"
               disabled={isSubmitting}
             >
-              {isSubmitting ? "Submitting..." : "Initiate Signal Transfer"}
+              {isSubmitting ? "Submitting..." : "Send Requirement"}
               <Rocket className="h-4.5 w-4.5 transition group-hover:translate-x-0.5" />
             </button>
           </div>
@@ -484,22 +483,20 @@ export default function LeadCaptureForm({
   }
 
   return (
-    <Panel className="overflow-hidden p-0">
-      <div className="border-b border-[color:var(--border)] bg-[linear-gradient(135deg,var(--accent),var(--accent-strong))] px-5 py-6 text-white sm:px-6 sm:py-7">
-        <Eyebrow className="border-white/15 bg-white/10 text-white">
-          {compact ? "Quick enquiry" : "Requirement form"}
-        </Eyebrow>
-        <h3 className="mt-4 font-headline text-2xl font-black tracking-tighter text-white sm:text-3xl">
-          {compact ? "Tell us what needs to improve." : "Share the requirement and we will shape the right next step."}
+    <Panel className="overflow-hidden p-0 border-[color:var(--border)] bg-[color:var(--page-bg)]/40 backdrop-blur-xl">
+      <div className="border-b border-[color:var(--border)] bg-[linear-gradient(135deg,var(--accent),var(--accent-strong))] px-6 py-6 text-white sm:px-10 sm:py-8">
+        <label className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-3 py-1 text-[9px] font-black uppercase tracking-[0.2em] text-white">
+          Project Enquiry
+        </label>
+        <h3 className="mt-4 font-headline text-2xl font-black tracking-[-0.04em] text-white sm:text-3xl">
+          {compact ? "Tell us what you need." : "Let's discuss your requirement."}
         </h3>
-        <p className="mt-3 text-sm leading-7 text-blue-50/80">
-          {compact
-            ? "Use this form for website, software, dashboard, SEO or admin workflow requirements."
-            : "Add business context, service priority and project expectations so the team can respond with more clarity."}
+        <p className="mt-2 text-xs leading-relaxed text-blue-100/70 max-w-lg">
+          Share your business goals, preferred service and project details so we can guide the next step clearly.
         </p>
       </div>
 
-      <form className="space-y-6 p-5 sm:p-6" onSubmit={handleSubmit}>
+      <form className="space-y-5 p-6 sm:p-8" onSubmit={handleSubmit}>
         <AccessBanner
           session={session}
           loginHref={loginHref}
@@ -518,16 +515,16 @@ export default function LeadCaptureForm({
 
         <div className="grid gap-4 sm:grid-cols-2">
           <Field
-            label="Full name"
+            label="Full Name"
             name="name"
             value={form.name}
             onChange={handleChange}
             readOnly={userLocked}
             error={errors.name}
-            placeholder="Your full name"
+            placeholder="Your name"
           />
           <Field
-            label="Company"
+            label="Organization"
             name="company"
             value={form.company}
             onChange={handleChange}
@@ -542,7 +539,7 @@ export default function LeadCaptureForm({
             onChange={handleChange}
             readOnly={userLocked}
             error={errors.email}
-            placeholder="name@company.com"
+            placeholder="name@domain.com"
           />
           <Field
             label="Phone"
@@ -554,7 +551,7 @@ export default function LeadCaptureForm({
             placeholder="+91"
           />
           <SelectField
-            label="Service needed"
+            label="Service Needed"
             name="serviceInterest"
             value={form.serviceInterest}
             onChange={handleChange}
@@ -562,7 +559,7 @@ export default function LeadCaptureForm({
             error={errors.serviceInterest}
           />
           <SelectField
-            label="Approx budget"
+            label="Approx Budget"
             name="budget"
             value={form.budget}
             onChange={handleChange}
@@ -572,7 +569,7 @@ export default function LeadCaptureForm({
         </div>
 
         <SelectField
-          label="Preferred timeline"
+          label="Preferred Timeline"
           name="timeline"
           value={form.timeline}
           onChange={handleChange}
@@ -581,14 +578,14 @@ export default function LeadCaptureForm({
         />
 
         <label className="block">
-          <span className={labelClass}>Project brief</span>
+          <span className="text-[10px] font-black uppercase tracking-widest text-[color:var(--text-muted)] opacity-80">Project Brief</span>
           <textarea
-            className={textareaClass}
-            rows={compact ? 4 : 6}
+            className={cn(textareaClass, "mt-2 bg-[color:var(--surface-strong)] border-[color:var(--border)] focus:border-[color:var(--accent)] min-h-[100px]")}
+            rows={compact ? 3 : 4}
             name="message"
             value={form.message}
             onChange={handleChange}
-            placeholder="Tell us what needs to improve, what the website or software must do, and what success looks like."
+            placeholder="Tell us what you want to build, what should improve, and what success looks like."
           />
           {errors.message ? <FieldError>{errors.message}</FieldError> : null}
         </label>
@@ -597,20 +594,20 @@ export default function LeadCaptureForm({
           <div
             className={
               status.type === "success"
-                ? "rounded-2xl border border-emerald-500/20 bg-emerald-500/10 px-4 py-3 text-sm text-emerald-200"
-                : "rounded-2xl border border-rose-500/20 bg-rose-500/10 px-4 py-3 text-sm text-rose-200"
+                ? "rounded-xl border border-emerald-500/20 bg-emerald-500/10 px-4 py-3 text-xs text-emerald-200"
+                : "rounded-xl border border-rose-500/20 bg-rose-500/10 px-4 py-3 text-xs text-rose-200"
             }
           >
             {status.message}
           </div>
         ) : null}
 
-        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-          <p className="text-xs leading-6 text-[color:var(--text-muted)]">
-            Submitted enquiries are stored for dashboard review and follow-up.
+        <div className="flex flex-col gap-4 pt-4 sm:flex-row sm:items-center sm:justify-between border-t border-[color:var(--border)]">
+          <p className="text-[9px] font-black uppercase tracking-[0.2em] text-[color:var(--text-muted)] opacity-50">
+            Secure enquiry channel
           </p>
-          <button className={cn(primaryButtonClass, "w-full sm:w-auto")} type="submit" disabled={isSubmitting}>
-            {isSubmitting ? "Submitting..." : "Submit requirement"}
+          <button className={cn(primaryButtonClass, "w-full sm:w-auto px-8 min-h-[2.8rem] text-xs")} type="submit" disabled={isSubmitting}>
+            {isSubmitting ? "Submitting..." : "Submit Requirement"}
           </button>
         </div>
       </form>
@@ -680,7 +677,7 @@ function AccessBanner({ session, loginHref, registerHref, onLogout }) {
         Registration and Login required
       </p>
       <p className="mt-2 text-xs leading-6 text-amber-100/70">
-        To maintain project security and data integrity, you must be signed in to submit a technical requirement.
+        Please sign in or create a profile to submit your enquiry and track follow-up safely.
       </p>
       <div className="mt-4 flex flex-wrap gap-3">
         <Link

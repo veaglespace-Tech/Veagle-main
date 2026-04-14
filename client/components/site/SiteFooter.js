@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { Globe2, Mail, MapPin, Phone, Rocket } from "lucide-react";
+import { Mail, MapPin, Phone } from "lucide-react";
 
 import BrandMark from "@/components/BrandMark";
 import { socialLinksData } from "@/components/site/StickySocialBar";
@@ -10,11 +10,10 @@ import {
   COMPANY_ADDRESS_QUERY,
   COMPANY_EMAIL,
   COMPANY_EMAIL_LINK,
+  COMPANY_NAME,
   COMPANY_PHONE,
   COMPANY_PHONE_LINK,
-  COMPANY_INSTAGRAM,
-  COMPANY_LINKEDIN,
-  COMPANY_NAME,
+  COMPANY_TAGLINE,
 } from "@/lib/site";
 
 const quickLinks = [
@@ -23,8 +22,6 @@ const quickLinks = [
   { href: "/career", label: "Career" },
   { href: "/contact", label: "Contact" },
 ];
-
-
 
 function FooterLink({ href, label, external = false }) {
   const className =
@@ -41,21 +38,10 @@ function FooterLink({ href, label, external = false }) {
   return (
     <Link href={href} className={className}>
       {label}
-      <span className="ml-2 text-xs opacity-0 transition-all duration-300 -translate-x-1 group-hover:translate-x-0 group-hover:opacity-100">
+      <span className="ml-2 -translate-x-1 text-xs opacity-0 transition-all duration-300 group-hover:translate-x-0 group-hover:opacity-100">
         {"->"}
       </span>
     </Link>
-  );
-}
-
-function FooterColumn({ title, children }) {
-  return (
-    <div className="space-y-4">
-      <h3 className="font-headline text-[11px] font-black uppercase tracking-[0.24em] text-white/80">
-        {title}
-      </h3>
-      <div className="space-y-3">{children}</div>
-    </div>
   );
 }
 
@@ -85,15 +71,13 @@ export default function SiteFooter({ content, services }) {
     : COMPANY_ADDRESS_QUERY;
 
   return (
-    <footer className="w-full border-t border-slate-800/30 bg-[#0b0e14] pt-24 pb-12">
+    <footer className="w-full border-t border-slate-800/30 bg-[#0b0e14] pb-12 pt-24">
       <div className="mx-auto grid max-w-7xl grid-cols-1 gap-16 px-8 pb-24 md:grid-cols-4 md:px-12">
         <div className="space-y-8">
           <div className="font-headline text-2xl font-bold tracking-tighter text-slate-50">
             <BrandMark variant="footer" tone="light" />
           </div>
-          <p className="max-w-xs text-sm leading-relaxed text-slate-400">
-            Engineering dynamic websites, complex software systems, and high-performance ERP workflows for modern businesses.
-          </p>
+          <p className="max-w-xs text-sm leading-relaxed text-slate-400">{COMPANY_TAGLINE}</p>
           <div className="flex space-x-4">
             {socialLinksData.map((social) => {
               const Icon = social.icon;
@@ -114,18 +98,20 @@ export default function SiteFooter({ content, services }) {
         </div>
 
         <div className="space-y-8">
-          <h3 className="font-headline text-sm font-semibold uppercase tracking-tight text-[#7bd0ff]">
+          <h3 className="font-headline text-sm font-black uppercase tracking-[0.2em] text-[color:var(--accent)]">
             Services
           </h3>
           <ul className="space-y-4">
             <li>
               <FooterLink href="/services" label="Explore services" />
             </li>
-            <li className="pt-4 text-xs uppercase tracking-widest text-slate-500">Capabilities</li>
-            {(serviceLinks.length ? serviceLinks : [{ href: "/services", label: "Dynamic Web" }])
+            <li className="pt-4 text-[10px] font-black uppercase tracking-[0.24em] text-[color:var(--text-muted)] opacity-60">
+              Capabilities
+            </li>
+            {(serviceLinks.length ? serviceLinks : [{ href: "/services", label: "Dynamic Websites" }])
               .slice(0, 3)
               .map((link) => (
-                <li key={link.label} className="text-sm text-slate-400">
+                <li key={link.label} className="text-sm font-medium text-[color:var(--text-muted)]">
                   {link.label}
                 </li>
               ))}
@@ -133,7 +119,7 @@ export default function SiteFooter({ content, services }) {
         </div>
 
         <div className="space-y-8">
-          <h3 className="font-headline text-sm font-semibold uppercase tracking-tight text-slate-400">
+          <h3 className="font-headline text-sm font-black uppercase tracking-[0.2em] text-[color:var(--text-primary)]">
             Quick Links
           </h3>
           <nav className="flex flex-col space-y-4">
@@ -141,7 +127,7 @@ export default function SiteFooter({ content, services }) {
               <Link
                 key={link.label}
                 href={link.href}
-                className="text-sm font-medium text-slate-400 transition-colors duration-300 hover:text-slate-100"
+                className="text-sm font-medium text-[color:var(--text-secondary)] transition-colors duration-300 hover:text-[color:var(--text-primary)]"
               >
                 {link.label}
               </Link>
@@ -150,37 +136,55 @@ export default function SiteFooter({ content, services }) {
         </div>
 
         <div className="space-y-8">
-          <h3 className="font-headline text-sm font-semibold uppercase tracking-tight text-slate-400">
+          <h3 className="font-headline text-sm font-black uppercase tracking-[0.2em] text-[color:var(--text-primary)]">
             Contact
           </h3>
           <div className="space-y-6">
             <div className="flex items-start space-x-4">
-              <Mail className="mt-0.5 h-5 w-5 text-[color:var(--accent)]" />
+              <div className="mt-1 flex h-8 w-8 items-center justify-center rounded-lg bg-[color:var(--accent)]/10 text-[color:var(--accent)]">
+                <Mail className="h-4 w-4" />
+              </div>
               <div className="space-y-1">
-                <p className="text-xs uppercase tracking-tighter text-slate-500">Email</p>
-                <a href={footerEmailLink} className="text-sm text-slate-100 transition-colors hover:text-[color:var(--accent)]">
+                <p className="text-[10px] font-black uppercase tracking-widest text-[color:var(--text-muted)] opacity-60">
+                  Email
+                </p>
+                <a
+                  href={footerEmailLink}
+                  className="text-sm font-medium text-[color:var(--text-secondary)] transition-colors hover:text-[color:var(--text-primary)]"
+                >
                   {footerEmail}
                 </a>
               </div>
             </div>
             <div className="flex items-start space-x-4">
-              <Phone className="mt-0.5 h-5 w-5 text-[color:var(--accent)]" />
+              <div className="mt-1 flex h-8 w-8 items-center justify-center rounded-lg bg-[color:var(--accent)]/10 text-[color:var(--accent)]">
+                <Phone className="h-4 w-4" />
+              </div>
               <div className="space-y-1">
-                <p className="text-xs uppercase tracking-tighter text-slate-500">Phone</p>
-                <a href={footerPhoneLink} className="text-sm text-slate-100 transition-colors hover:text-[color:var(--accent)]">
+                <p className="text-[10px] font-black uppercase tracking-widest text-[color:var(--text-muted)] opacity-60">
+                  Phone
+                </p>
+                <a
+                  href={footerPhoneLink}
+                  className="text-sm font-medium text-[color:var(--text-secondary)] transition-colors hover:text-[color:var(--text-primary)]"
+                >
                   {footerPhone}
                 </a>
               </div>
             </div>
             <div className="flex items-start space-x-4">
-              <MapPin className="mt-0.5 h-5 w-5 text-[color:var(--accent)]" />
+              <div className="mt-1 flex h-8 w-8 items-center justify-center rounded-lg bg-[color:var(--accent)]/10 text-[color:var(--accent)]">
+                <MapPin className="h-4 w-4" />
+              </div>
               <div className="space-y-1">
-                <p className="text-xs uppercase tracking-tighter text-slate-500">Address</p>
+                <p className="text-[10px] font-black uppercase tracking-widest text-[color:var(--text-muted)] opacity-60">
+                  Address
+                </p>
                 <a
                   href={footerAddressQuery}
                   target="_blank"
                   rel="noreferrer"
-                  className="text-sm leading-relaxed text-slate-100 transition-colors hover:text-[color:var(--accent)]"
+                  className="text-sm font-medium leading-relaxed text-[color:var(--text-secondary)] transition-colors hover:text-[color:var(--text-primary)]"
                 >
                   {footerAddress}
                 </a>
@@ -190,20 +194,20 @@ export default function SiteFooter({ content, services }) {
         </div>
       </div>
 
-      <div className="mx-auto max-w-7xl border-t border-slate-800/20 px-8 pt-12 md:px-12">
+      <div className="mx-auto max-w-7xl border-t border-[color:var(--border)] px-8 pt-12 md:px-12">
         <div className="flex flex-col items-center justify-between gap-8 md:flex-row">
-          <div className="text-xs font-medium uppercase tracking-widest text-slate-500">
-            © {new Date().getFullYear()} {COMPANY_NAME}. All rights reserved.
+          <div className="text-[10px] font-black uppercase tracking-[0.2em] text-[color:var(--text-muted)] opacity-50">
+            Copyright {new Date().getFullYear()} {COMPANY_NAME}. All rights reserved.
           </div>
-          <div className="flex flex-wrap justify-center gap-8 text-[10px] font-bold uppercase tracking-widest text-slate-400 md:text-xs">
-            <Link href="/contact" className="transition-colors hover:text-[color:var(--accent)]">
+          <div className="flex flex-wrap justify-center gap-8 text-[10px] font-black uppercase tracking-[0.2em] text-[color:var(--text-muted)]">
+            <Link href="/contact" className="transition-colors hover:text-[color:var(--text-primary)]">
               Terms of Service
             </Link>
-            <Link href="/contact" className="transition-colors hover:text-[color:var(--accent)]">
+            <Link href="/contact" className="transition-colors hover:text-[color:var(--text-primary)]">
               Privacy Policy
             </Link>
-            <Link href="/login" className="flex items-center transition-colors hover:text-[color:var(--accent)]">
-              User Login
+            <Link href="/login" className="transition-colors hover:text-[color:var(--text-primary)]">
+              Login
             </Link>
           </div>
         </div>

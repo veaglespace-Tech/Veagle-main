@@ -4,9 +4,11 @@ export const API_BASE_URL =
   process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:8080";
 
 export const COMPANY_NAME = "Veagle Space";
+export const COMPANY_LEGAL_NAME = "Veagle Space Technology Pvt. Ltd.";
 export const COMPANY_SHORT_NAME = COMPANY_NAME;
 export const COMPANY_BRAND_NAME = COMPANY_NAME;
-export const COMPANY_TAGLINE = "";
+export const COMPANY_TAGLINE =
+  "Software development, dynamic website design, ERP systems, digital marketing and business support services from Pune.";
 export const LOGO_PATH = "/veagle-logo.webp";
 
 export const COMPANY_EMAIL = "info@veaglespace.com";

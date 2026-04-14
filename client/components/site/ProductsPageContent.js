@@ -16,14 +16,19 @@ import {
 } from "lucide-react";
 
 import {
+  Eyebrow,
   PrimaryLink,
   SecondaryLink,
+  containerClass,
   ctaShellClass,
   filterButtonClass,
   pageClass,
+  pageHeroTitleClass,
+  primaryButtonClass,
+  sectionClass,
 } from "@/components/site/UiBits";
+import { cn, slugify } from "@/lib/utils";
 import { pageArtwork } from "@/lib/visuals";
-import { slugify } from "@/lib/utils";
 
 const categoryAllId = "ALL_SOLUTIONS";
 
@@ -150,28 +155,6 @@ function buildCatalog(products, categories) {
   return groups;
 }
 
-function renderHeroTitle(value) {
-  const title = value || "Enterprise Solutions & Software Systems";
-  const marker = "solutions";
-  const index = title.toLowerCase().indexOf(marker);
-
-  if (index === -1) {
-    return title;
-  }
-
-  const start = title.slice(0, index);
-  const focus = title.slice(index, index + marker.length);
-  const end = title.slice(index + marker.length);
-
-  return (
-    <>
-      {start}
-      <span className="text-[color:var(--accent)]">{focus}</span>
-      {end}
-    </>
-  );
-}
-
 export default function ProductsPageContent({ products, categories, content }) {
   const pageContent = content?.productsPage || {};
   const catalogGroups = useMemo(
@@ -211,35 +194,56 @@ export default function ProductsPageContent({ products, categories, content }) {
     pageContent.ctaTitle || "Need a bespoke architectural configuration?";
   const ctaDescription =
     pageContent.ctaDescription ||
-    "Our engineering labs specialize in building precision-engineered software layers for unique operational mission parameters.";
+    "We build solution catalogs, product showcases and inquiry-ready business pages that are easier for users to understand and easier for your team to manage.";
 
   return (
     <main className={pageClass}>
-      <header className="relative overflow-hidden pb-20 pt-32">
-        <div className="absolute inset-0 opacity-40">
-          <div className="absolute inset-0 bg-gradient-to-br from-[color:var(--accent)]/20 to-transparent" />
+      <header className={`${sectionClass} !pt-32 !pb-14 relative overflow-hidden`}>
+        <div className="absolute inset-0 z-0">
           <Image
             src={pageArtwork.hero}
             alt="Products background"
             fill
-            className="object-cover opacity-30 grayscale"
+            className="object-cover opacity-20 grayscale"
             priority
             unoptimized
           />
+          <div className="absolute inset-0 bg-gradient-to-b from-[color:var(--page-bg)]/60 via-[color:var(--page-bg)]/80 to-[color:var(--page-bg)]" />
         </div>
 
-        <div className="relative z-10 mx-auto max-w-screen-2xl px-4 sm:px-6 lg:px-8">
-          <div className="max-w-3xl">
-            <span className="inline-flex rounded-full border border-[color:var(--accent)]/30 bg-[color:var(--surface-strong)] px-4 py-1.5 text-[10px] font-black uppercase tracking-[0.22em] text-[color:var(--text-muted)]">
-              Digital Fleet Catalog v2.6
-            </span>
-            <h1 className="mt-6 font-headline text-5xl font-black leading-[0.94] tracking-[-0.04em] text-white sm:text-7xl">
-              {renderHeroTitle(pageContent.title)}
-            </h1>
-            <p className="mt-6 text-lg leading-8 text-[color:var(--text-secondary)]">
-              {pageContent.description ||
-                "Integrated software ecosystems for complex business operations, high-efficiency automation, and mission-critical financial workflows."}
-            </p>
+        <div className="veagle-section-wash" />
+        <div className="veagle-grid-background" />
+
+        <div className={`${containerClass} relative z-10 flex flex-col items-center text-center`}>
+          <div className="max-w-4xl space-y-8">
+            <div className="flex flex-col items-center space-y-6">
+              <Eyebrow>
+                {pageContent.eyebrow || "Solution Architecture"}
+              </Eyebrow>
+
+              <div className="space-y-5">
+                <h1 className={`${pageHeroTitleClass} text-white`}>
+                  Website development, software, ERP, digital marketing
+                  <br className="hidden lg:block" />
+                  <span className="text-glow bg-gradient-to-r from-[#e7ecff] via-[#bcd0ff] to-[#56e240] bg-clip-text text-transparent">
+                    and business support services in one place
+                  </span>
+                </h1>
+                <p className="mx-auto max-w-2xl text-[1.1rem] leading-8 text-white/80">
+                  {pageContent.description ||
+                    "Browse enterprise-grade product modules and digital solutions engineered to automate operations and accelerate growth."}
+                </p>
+              </div>
+
+              <div className="flex items-center justify-center">
+                <Link
+                  href="/contact"
+                  className={cn(primaryButtonClass, "min-h-0 px-8 py-3.5")}
+                >
+                  Request a Quote
+                </Link>
+              </div>
+            </div>
           </div>
         </div>
       </header>
@@ -333,14 +337,14 @@ export default function ProductsPageContent({ products, categories, content }) {
 
         {!filteredProducts.length ? (
           <div className="mt-8 rounded-[1rem] border border-dashed border-white/15 bg-[#1a1c21] px-6 py-12 text-center">
-            <h3 className="font-headline text-2xl font-black tracking-tight text-white">
-              Project Vault Empty
-            </h3>
-            <p className="mx-auto mt-3 max-w-2xl text-sm leading-7 text-[color:var(--text-muted)]">
-              Initialize your product catalog via the integrated dashboard to synchronize live solutions.
-            </p>
-          </div>
-        ) : null}
+              <h3 className="font-headline text-2xl font-black tracking-tight text-white">
+                No products published yet
+              </h3>
+              <p className="mx-auto mt-3 max-w-2xl text-sm leading-7 text-[color:var(--text-muted)]">
+                Add products from the dashboard to publish your live solution catalog here.
+              </p>
+            </div>
+          ) : null}
       </section>
 
       <section className="mx-auto max-w-screen-2xl px-4 py-20 sm:px-6 lg:px-8 lg:py-24">
@@ -362,10 +366,10 @@ export default function ProductsPageContent({ products, categories, content }) {
             <p className="mt-5 text-lg leading-8 text-[color:var(--text-secondary)]">{ctaDescription}</p>
             <div className="mt-8 flex flex-col gap-4 sm:flex-row sm:flex-wrap sm:items-center">
               <PrimaryLink href="/contact">
-                Initiate Protocol
+                Request a Quote
               </PrimaryLink>
               <SecondaryLink href="/contact">
-                Project Discovery
+                Discuss a Custom Solution
               </SecondaryLink>
             </div>
           </div>

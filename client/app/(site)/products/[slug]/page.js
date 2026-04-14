@@ -6,17 +6,16 @@ import {
   Chip,
   EmptyState,
   Eyebrow,
-  Panel,
   PrimaryLink,
   SecondaryLink,
   SectionIntro,
   containerClass,
   firstSectionClass,
   pageClass,
-  sectionClass,
+  pageHeroTitleClass,
 } from "@/components/site/UiBits";
 import { getProducts } from "@/lib/backend";
-import { buildPageMetadata } from "@/lib/seo";
+import { buildPageMetadata, buildProductSchema } from "@/lib/seo";
 import { COMPANY_NAME } from "@/lib/site";
 import { slugify } from "@/lib/utils";
 
@@ -34,9 +33,11 @@ export async function generateMetadata({ params }) {
     description,
     path: `/products/${slug}`,
     keywords: [
+      `${product?.title || COMPANY_NAME} product`,
       `${COMPANY_NAME} products`,
       "business software products",
       "digital products showcase",
+      "business solutions product",
     ],
   });
 }
@@ -69,10 +70,18 @@ export default async function ProductDetailPage({ params }) {
     .slice(0, 3);
 
   const categoryName = product.categoryName || "General";
+  const productSchema = buildProductSchema(product, `/products/${slug}`);
 
   return (
-    <main className={pageClass}>
-      <section className={`${firstSectionClass} relative overflow-hidden pb-16 sm:pb-20`}>
+    <>
+      {productSchema ? (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(productSchema) }}
+        />
+      ) : null}
+      <main className={pageClass}>
+        <section className={`${firstSectionClass} relative overflow-hidden pb-16 sm:pb-20`}>
         <div className="veagle-section-wash" />
         <div className="veagle-grid-background" />
 
@@ -95,10 +104,10 @@ export default async function ProductDetailPage({ params }) {
           ) : null}
 
           <div className="space-y-6">
-            <Eyebrow>Product detail</Eyebrow>
+            <Eyebrow>Business solution</Eyebrow>
 
             <div className="space-y-4">
-              <h1 className="font-headline text-4xl font-black tracking-tighter text-[color:var(--text-primary)] sm:text-5xl lg:text-6xl">
+              <h1 className={`${pageHeroTitleClass} text-[color:var(--text-primary)]`}>
                 {product.title}
               </h1>
               <p className="max-w-2xl text-base leading-8 text-[color:var(--text-secondary)] sm:text-lg">
@@ -117,18 +126,18 @@ export default async function ProductDetailPage({ params }) {
               </div>
               <div className="rounded-[1.4rem] border border-[color:var(--border)] bg-[rgba(255,255,255,0.04)] p-4">
                 <p className="text-[11px] font-bold uppercase tracking-[0.22em] text-[color:var(--text-muted)]">
-                  Content source
+                  Delivery model
                 </p>
                 <p className="mt-3 font-headline text-xl font-black tracking-tight text-[color:var(--text-primary)]">
-                  Dashboard
+                  Dynamic catalog
                 </p>
               </div>
               <div className="rounded-[1.4rem] border border-[color:var(--border)] bg-[rgba(255,255,255,0.04)] p-4">
                 <p className="text-[11px] font-bold uppercase tracking-[0.22em] text-[color:var(--text-muted)]">
-                  Next step
+                  Best for
                 </p>
                 <p className="mt-3 font-headline text-xl font-black tracking-tight text-[color:var(--text-primary)]">
-                  Quote
+                  Business use
                 </p>
               </div>
             </div>
@@ -138,7 +147,7 @@ export default async function ProductDetailPage({ params }) {
                 {categoryName}
               </Chip>
               <Chip className="border-white/10 bg-white/[0.05] text-[#dce6fb]">
-                Dashboard-managed
+                Inquiry ready
               </Chip>
             </div>
 
@@ -208,13 +217,14 @@ export default async function ProductDetailPage({ params }) {
           <div className="space-y-6">
             <SectionIntro
               eyebrow="Get started"
-              title="Interested in this product? Let us know"
-              description="Use this form to start the discussion."
+              title="Interested in this product for your business?"
+              description="Use this form to discuss pricing, customization or implementation support."
             />
             <LeadCaptureForm defaultService={product.title} />
           </div>
         </div>
-      </section>
-    </main>
+        </section>
+      </main>
+    </>
   );
 }

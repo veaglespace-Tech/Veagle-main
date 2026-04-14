@@ -369,7 +369,7 @@ function AccessBanner({ session, loginHref, registerHref, onLogout }) {
         Registration and Login required
       </p>
       <p className="mt-2 text-xs leading-6 text-amber-100/70">
-        To maintain candidate security and protocol integrity, you must be signed in to submit a job application.
+        Please sign in or create a profile to submit your job application securely.
       </p>
       <div className="mt-4 flex flex-wrap gap-3">
         <Link

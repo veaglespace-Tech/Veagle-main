@@ -15,6 +15,7 @@ import java.util.Map;
 public class SiteContentService {
 
     private static final String PRIMARY_CONTENT_KEY = "PRIMARY_SITE_CONTENT";
+    private static final String DEPRECATED_UNIVERSITY_KEY = "university";
     private static final TypeReference<LinkedHashMap<String, Object>> CONTENT_TYPE = new TypeReference<>() {
     };
 
@@ -23,8 +24,7 @@ public class SiteContentService {
 
     public Map<String, Object> getContent() {
         return siteContentRepository.findByContentKey(PRIMARY_CONTENT_KEY)
-                .map(SiteContent::getPayload)
-                .map(this::deserialize)
+                .map(this::loadSanitizedContent)
                 .orElseGet(LinkedHashMap::new);
     }
 
@@ -32,12 +32,28 @@ public class SiteContentService {
         SiteContent siteContent = siteContentRepository.findByContentKey(PRIMARY_CONTENT_KEY)
                 .orElseGet(() -> SiteContent.builder().contentKey(PRIMARY_CONTENT_KEY).build());
 
-        Map<String, Object> nextContent =
-                content == null ? new LinkedHashMap<>() : new LinkedHashMap<>(content);
+        Map<String, Object> nextContent = sanitizeContent(content);
 
         siteContent.setPayload(serialize(nextContent));
         siteContentRepository.save(siteContent);
         return nextContent;
+    }
+
+    private LinkedHashMap<String, Object> sanitizeContent(Map<String, Object> content) {
+        LinkedHashMap<String, Object> nextContent =
+                content == null ? new LinkedHashMap<>() : new LinkedHashMap<>(content);
+        nextContent.remove(DEPRECATED_UNIVERSITY_KEY);
+        return nextContent;
+    }
+
+    private LinkedHashMap<String, Object> loadSanitizedContent(SiteContent siteContent) {
+        LinkedHashMap<String, Object> storedContent = deserialize(siteContent.getPayload());
+        LinkedHashMap<String, Object> sanitizedContent = sanitizeContent(storedContent);
+        if (sanitizedContent.size() != storedContent.size()) {
+            siteContent.setPayload(serialize(sanitizedContent));
+            siteContentRepository.save(siteContent);
+        }
+        return sanitizedContent;
     }
 
     private LinkedHashMap<String, Object> deserialize(String payload) {

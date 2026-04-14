@@ -1,8 +1,8 @@
+import Image from "next/image";
 import { useState } from "react";
 import { ArrowLeft, Plus, Save, Trash2, GripVertical, Image as ImageIcon, Type, List } from "lucide-react";
 
 import { 
-  portalButtonPrimaryClass, 
   portalButtonSecondaryClass,
   InputField, 
   TextAreaField 
@@ -165,7 +165,14 @@ export default function PageBuilder({ service, onSave, onCancel }) {
                       </div>
                       <div className="flex min-h-[120px] items-center justify-center rounded-xl border border-dashed border-white/10 bg-[#0d1017]">
                         {block.content.imageUrl ? (
-                          <img src={block.content.imageUrl} alt="Preview" className="max-h-[100px] rounded-lg object-contain shadow-2xl" />
+                          <Image
+                            src={block.content.imageUrl}
+                            alt="Preview"
+                            width={240}
+                            height={100}
+                            className="max-h-[100px] rounded-lg object-contain shadow-2xl"
+                            unoptimized
+                          />
                         ) : (
                           <div className="text-center">
                             <ImageIcon className="mx-auto h-6 w-6 text-white/10" />

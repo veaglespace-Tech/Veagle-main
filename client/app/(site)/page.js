@@ -10,16 +10,17 @@ import {
 import { COMPANY_NAME } from "@/lib/site";
 
 export const metadata = buildPageMetadata({
-  title: "Dynamic Software, Web, Dashboard and SEO Experiences",
+  title: "Software Development Company in Pune | Dynamic Website Development",
   description:
-    `${COMPANY_NAME} helps businesses with dynamic websites, software development, ERP systems, admin dashboards, digital marketing, SEO / SMO and operational support.`,
+    `${COMPANY_NAME} is a Pune-based company for dynamic website development, software development, ERP systems, mobile apps, digital marketing and SEO-ready business solutions.`,
   path: "/",
   keywords: [
-    "software development Pune",
+    "software development company in Pune",
     "dynamic website development company Pune",
-    "admin dashboard development",
+    "website development company Pune",
     "ERP development company Pune",
     "digital marketing services Pune",
+    "SEO company Pune",
   ],
 });
 

@@ -12,6 +12,7 @@ import {
 } from "lucide-react";
 
 import JobApplicationForm from "@/components/forms/JobApplicationForm";
+import { pageHeroTitleClass } from "@/components/site/UiBits";
 import { pageArtwork } from "@/lib/visuals";
 
 const highlightIcons = [Rocket, TrendingUp, ShieldCheck];
@@ -19,8 +20,8 @@ const highlightIcons = [Rocket, TrendingUp, ShieldCheck];
 function renderHeroTitle(value) {
   const title =
     value ||
-    "Build the next generation of enterprise software and digital ecosystems.";
-  const marker = "digital ecosystems";
+    "Build the next generation of websites, software and digital solutions.";
+  const marker = "digital solutions";
   const index = title.toLowerCase().indexOf(marker);
 
   if (index === -1) {
@@ -178,16 +179,16 @@ export default function CareerPageContent({ jobs, content }) {
         </div>
 
         <div className="relative z-10 mx-auto w-full max-w-5xl text-center">
-          <span className="inline-flex items-center rounded-full border border-white/12 bg-[color:var(--surface-strong)] px-4 py-2 text-[10px] font-black uppercase tracking-[0.24em] text-[color:var(--text-muted)]">
-            {career.eyebrow || "Orbital careers"}
-          </span>
-          <h1 className="mx-auto mt-8 max-w-4xl font-headline text-4xl font-black leading-[0.93] tracking-[-0.045em] text-white sm:text-6xl lg:text-7xl">
+            <span className="inline-flex items-center rounded-full border border-white/12 bg-[color:var(--surface-strong)] px-4 py-2 text-[10px] font-black uppercase tracking-[0.24em] text-[color:var(--text-muted)]">
+            {career.eyebrow || "Careers at Veagle Space"}
+            </span>
+          <h1 className={`mx-auto mt-8 max-w-4xl ${pageHeroTitleClass} text-white`}>
             {renderHeroTitle(career.title)}
           </h1>
-          <p className="mx-auto mt-6 max-w-2xl text-base leading-8 text-[color:var(--text-secondary)] sm:text-lg">
-            {career.description ||
-              "Join an engineering culture that prioritizes architectural excellence and technical innovation."}
-          </p>
+            <p className="mx-auto mt-6 max-w-2xl text-base leading-8 text-[color:var(--text-secondary)] sm:text-lg">
+              {career.description ||
+              "Join a team working on practical website, software, design, marketing and support projects for real businesses."}
+            </p>
         </div>
       </section>
 
@@ -224,7 +225,7 @@ export default function CareerPageContent({ jobs, content }) {
                 Open Positions
               </h2>
               <p className="mt-4 max-w-xl text-sm leading-7 text-[color:var(--text-muted)]">
-                Identify your specialty within our engineering and product nodes. Select a role to begin the application protocol.
+                Select a role and apply directly. We are looking for people who can learn fast, communicate clearly and build practical outcomes.
               </p>
             </div>
             {filters.length ? (
@@ -333,16 +334,16 @@ export default function CareerPageContent({ jobs, content }) {
         <div ref={formRef} id="apply-section" className="mx-auto grid w-full max-w-screen-xl gap-10 lg:grid-cols-[0.96fr_1.04fr] lg:items-start">
           <div>
             <h2 className="font-headline text-4xl font-black tracking-tight text-[color:var(--text-primary)] sm:text-5xl">
-              {career.applyTitle || "Application Protocol"}
+              {career.applyTitle || "Apply for the role"}
             </h2>
             <p className="mt-5 text-sm leading-8 text-[color:var(--text-secondary)]">
               {career.applyDescription ||
-                "Submit your credentials through our priority candidate assessment channel. Our engineering leads review each profile for architectural alignment."}
+                "Share your details and resume. Our team reviews every profile for skill fit, communication and project alignment."}
             </p>
 
             <div className="mt-10 overflow-hidden rounded-[1.2rem] border border-white/8 bg-[linear-gradient(150deg,#2b5fd4,#1d47ab)] p-6 shadow-[0_24px_70px_rgba(2,7,22,0.35)]">
               <p className="text-[10px] font-black uppercase tracking-[0.22em] text-[color:var(--text-primary)]/70">
-                Active Selection
+                Selected Role
               </p>
               <h3 className="mt-2 font-headline text-3xl font-black tracking-tight text-white">
                 {selectedJob?.title || "Pending Selection"}
@@ -362,7 +363,7 @@ export default function CareerPageContent({ jobs, content }) {
                 ) : (
                   <div className="flex items-center gap-3 text-sm text-[color:var(--text-secondary)]">
                     <CheckCircle2 className="h-4.5 w-4.5 text-[color:var(--text-primary)]/60" />
-                    <span>Global talent sourcing protocols active.</span>
+                    <span>We review applications and get back with the next steps when there is a fit.</span>
                   </div>
                 )}
               </div>

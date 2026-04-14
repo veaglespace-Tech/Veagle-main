@@ -17,6 +17,8 @@ import {
   Users2,
 } from "lucide-react";
 
+import { cn } from "@/lib/utils";
+
 import {
   EmptyState,
   Eyebrow,
@@ -27,6 +29,7 @@ import {
   ctaShellClass,
   firstSectionClass,
   pageClass,
+  pageHeroTitleClass,
   sectionClass,
 } from "@/components/site/UiBits";
 
@@ -51,10 +54,10 @@ export default function ServicesPageContent({ services, content }) {
   const pageContent = content?.servicesPage || {};
   const heroTitle =
     pageContent.title ||
-    "Services shown as clean visual cards with a stronger detail-page flow";
+    "Website development, software, ERP, digital marketing and business support services in one place";
   const heroDescription =
     pageContent.description ||
-    "Explore each service through compact media cards, then open a dedicated page with dashboard-driven content and bullet points.";
+    "Unified technical delivery for enterprise-grade software, high-conversion web platforms, and automated business workflows.";
   const moduleHighlights = pageContent?.highlights?.length
     ? pageContent.highlights.slice(0, 4)
     : [
@@ -70,53 +73,53 @@ export default function ServicesPageContent({ services, content }) {
         <div className="veagle-section-wash" />
         <div className="veagle-grid-background" />
 
-        <div className={`${containerClass} relative z-10 space-y-8`}>
-          <div className="grid gap-8 xl:grid-cols-[0.96fr_1.04fr] xl:items-end">
-            <div className="space-y-6">
-              <Eyebrow className="border-white/10 bg-white/[0.04] text-[color:var(--accent)]">
-                Service Sectors
+        <div className={`${containerClass} relative z-10 flex flex-col items-center text-center`}>
+          <div className="max-w-4xl space-y-10">
+            <div className="flex flex-col items-center space-y-6">
+              <Eyebrow>
+                {pageContent.eyebrow || "Our Services"}
               </Eyebrow>
 
               <div className="space-y-5">
-                <h1 className="max-w-5xl font-headline text-4xl font-black leading-[0.94] tracking-[-0.05em] text-white sm:text-5xl lg:text-[4.6rem]">
+                <h1 className={`${pageHeroTitleClass} text-white`}>
                   {heroTitle}
                 </h1>
-                <p className="max-w-2xl text-base leading-8 text-[color:var(--text-secondary)] sm:text-lg">
+                <p className="mx-auto max-w-2xl text-[1.1rem] leading-8 text-[color:var(--text-secondary)]">
                   {heroDescription}
                 </p>
               </div>
 
-              <div className={buttonGroupClass}>
+              <div className={cn(buttonGroupClass, "justify-center")}>
                 <PrimaryLink href="/contact">Discuss Your Requirement</PrimaryLink>
                 <SecondaryLink href="/contact">
-                  Get a Quote
+                  Request a Quote
                 </SecondaryLink>
               </div>
             </div>
 
-            <div className="grid gap-4 sm:grid-cols-3">
-              <div className="rounded-[1.5rem] border border-white/10 bg-white/[0.04] p-5 backdrop-blur-sm">
-                <p className="text-[10px] font-black uppercase tracking-[0.24em] text-[color:var(--text-muted)]">
-                  Active Nodes
+            <div className="mx-auto grid max-w-3xl gap-4 sm:grid-cols-3">
+              <div className="rounded-[1.5rem] border border-white/10 bg-white/[0.04] p-5 backdrop-blur-sm transition-colors hover:bg-white/[0.06]">
+                <p className="text-[10px] font-black uppercase tracking-[0.24em] text-white/90">
+                  Active Services
                 </p>
-                <p className="mt-3 font-headline text-3xl font-black tracking-tight text-[color:var(--text-primary)]">
+                <p className="mt-3 font-headline text-3xl font-black tracking-tight text-white">
                   {services.length}
                 </p>
               </div>
-              <div className="rounded-[1.5rem] border border-white/10 bg-white/[0.04] p-5 backdrop-blur-sm">
-                <p className="text-[10px] font-black uppercase tracking-[0.24em] text-[color:var(--text-muted)]">
-                  Design Flow
+              <div className="rounded-[1.5rem] border border-white/10 bg-white/[0.04] p-5 backdrop-blur-sm transition-colors hover:bg-white/[0.06]">
+                <p className="text-[10px] font-black uppercase tracking-[0.24em] text-white/90">
+                  Experience
                 </p>
-                <p className="mt-3 font-headline text-3xl font-black tracking-tight text-[color:var(--text-primary)]">
-                  Premium
+                <p className="mt-3 font-headline text-2xl font-black tracking-tight text-white">
+                  User Friendly
                 </p>
               </div>
-              <div className="rounded-[1.5rem] border border-white/10 bg-white/[0.04] p-5 backdrop-blur-sm">
-                <p className="text-[10px] font-black uppercase tracking-[0.24em] text-[color:var(--text-muted)]">
-                  Architecture
+              <div className="rounded-[1.5rem] border border-white/10 bg-white/[0.04] p-5 backdrop-blur-sm transition-colors hover:bg-white/[0.06]">
+                <p className="text-[10px] font-black uppercase tracking-[0.24em] text-white/90">
+                  Delivery
                 </p>
-                <p className="mt-3 font-headline text-3xl font-black tracking-tight text-[color:var(--text-primary)]">
-                  Modular
+                <p className="mt-3 font-headline text-2xl font-black tracking-tight text-white">
+                  Dynamic
                 </p>
               </div>
             </div>
@@ -129,15 +132,15 @@ export default function ServicesPageContent({ services, content }) {
           <div className="mb-8 flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
             <div className="space-y-2">
               <p className="font-headline text-[11px] font-black uppercase tracking-[0.24em] text-white">
-                Card Layout
+                Service Directory
               </p>
               <p className="text-sm text-[color:var(--text-secondary)]">
-                Click any card to open the full service detail page.
+                Open any service card to learn more about the scope, features and next steps.
               </p>
             </div>
             <div className="inline-flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.28em] text-[#8ba8ff]">
               <span className="h-2 w-2 rounded-full bg-[#8ba8ff] shadow-[0_0_8px_rgba(139,168,255,0.4)]" />
-              Interactive Content Discovery
+              SEO-Ready, Mobile-Friendly Pages
             </div>
           </div>
 
@@ -169,7 +172,7 @@ export default function ServicesPageContent({ services, content }) {
                           <Icon className="h-4 w-4" />
                         </div>
                         <span className="text-[10px] font-black uppercase tracking-[0.24em] text-[color:var(--text-muted)]">
-                          Module 0{index + 1}
+                          Service 0{index + 1}
                         </span>
                       </div>
                     </div>
@@ -177,9 +180,9 @@ export default function ServicesPageContent({ services, content }) {
                     {/* Content section */}
                     <div className="space-y-4 px-4 pb-4 pt-3.5">
                       <div>
-                        <h2 className="font-headline text-[1.4rem] font-black tracking-tight text-[color:var(--text-primary)] leading-tight">
+                        <h3 className="font-headline text-2xl font-black tracking-tight text-white leading-tight">
                           {service.title}
-                        </h2>
+                        </h3>
                         <p className="mt-2.5 min-h-[64px] text-[13px] leading-6 text-[color:var(--text-secondary)]">
                           {service.description}
                         </p>
@@ -201,7 +204,7 @@ export default function ServicesPageContent({ services, content }) {
 
                       <div className="flex flex-wrap items-center justify-between gap-3 border-t border-white/6 pt-4">
                         <span className="inline-flex items-center gap-2 text-sm font-black uppercase tracking-[0.2em] text-white transition group-hover:text-[#9fb7ff]">
-                          Open Full Page
+                          View Service
                           <ArrowRight className="h-4 w-4 transition duration-300 group-hover:translate-x-1" />
                         </span>
                         <ArrowUpRight className="h-4 w-4 text-[#9ec0ff] transition duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
@@ -213,7 +216,7 @@ export default function ServicesPageContent({ services, content }) {
             </div>
           ) : (
             <EmptyState
-              title="No live service cards yet"
+              title="No services published yet"
               description="Add services from the dashboard and this page will render them automatically."
             />
           )}
@@ -226,19 +229,19 @@ export default function ServicesPageContent({ services, content }) {
             className={`${ctaShellClass} grid gap-6 bg-[linear-gradient(135deg,#1c2f6b,#18275a)] p-6 shadow-[0_30px_90px_rgba(6,12,28,0.32)] lg:grid-cols-[1.08fr_0.92fr] lg:items-center lg:p-8`}
           >
             <div className="space-y-5">
-              <Eyebrow className="border-white/10 bg-white/[0.08] text-white">
-                Need a custom mix?
+              <Eyebrow>
+                Need a custom solution?
               </Eyebrow>
               <div className="space-y-4">
                 <h2 className="max-w-xl font-headline text-3xl font-black tracking-tight text-[color:var(--text-primary)] sm:text-4xl">
-                  {pageContent.ctaTitle || "Custom enterprise-grade solutions for global scale"}
+                  {pageContent.ctaTitle || "Need a website, software platform or marketing-ready business system?"}
                 </h2>
                 <p className="max-w-xl text-base leading-8 text-[color:var(--text-secondary)]">
                   {pageContent.ctaDescription ||
-                    "Our engineering team coordinates across multiple sectors to provide a unified architecture for your business operations."}
+                    "We can combine website development, software, ERP, mobile apps, SEO and support services into a solution that matches your business goals."}
                 </p>
               </div>
-              <PrimaryLink href="/contact">Request Custom Configuration</PrimaryLink>
+              <PrimaryLink href="/contact">Discuss Your Requirement</PrimaryLink>
             </div>
 
             <div className="grid gap-4 sm:grid-cols-2">

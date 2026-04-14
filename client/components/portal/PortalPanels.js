@@ -14,7 +14,6 @@ import {
   ItemCard,
   ListEditor,
   MetricTile,
-  portalCardClass,
   portalButtonPrimaryClass,
   portalButtonSecondaryClass,
   portalSelectClass,
@@ -155,7 +154,6 @@ export function ContentPanel({
     (content.about?.pillars?.length || 0) +
     (content.clients?.segments?.length || 0) +
     (content.career?.highlights?.length || 0) +
-    (content.university?.benefits?.length || 0) +
     (content.portfolio?.projects?.length || 0);
 
   const proofBlockCount =
@@ -168,7 +166,7 @@ export function ContentPanel({
     <div className="space-y-5">
       <DashboardIntro
         title="Public content manager"
-        description="Unified CMS for homepage, about, clients, career, services, products, portfolio and university content."
+        description="Unified CMS for homepage, about, clients, career, services, products and portfolio content."
       />
 
       <div className="grid gap-4 xl:grid-cols-[1.1fr_0.9fr]">
@@ -180,7 +178,7 @@ export function ContentPanel({
             Centralized content architecture.
           </h2>
           <p className="mt-2.5 max-w-2xl text-[11px] leading-6 text-blue-50/80">
-            Control messaging, client proof and university assets from one secure administrative layer.
+            Control messaging, client proof and public-facing content from one secure administrative layer.
           </p>
         </div>
 
@@ -537,53 +535,6 @@ export function ContentPanel({
         removeNestedContentListItem={removeNestedContentListItem}
       />
 
-      <NestedTextSectionCard
-        title="University page overview"
-        content={content}
-        sectionKey="university"
-        updateNestedContentField={updateNestedContentField}
-        fields={[
-          { key: "eyebrow", label: "Eyebrow" },
-          { key: "title", label: "Title" },
-          { key: "description", label: "Description", multiline: true },
-          { key: "highlightTitle", label: "Highlight title" },
-          { key: "highlightDescription", label: "Highlight description", multiline: true },
-        ]}
-      />
-      <NestedStringListSection
-        title="University chips"
-        items={content.university.chips}
-        sectionKey="university"
-        listKey="chips"
-        label="Chip"
-        updateNestedStringListItem={updateNestedStringListItem}
-        addNestedStringListItem={addNestedStringListItem}
-        removeNestedStringListItem={removeNestedStringListItem}
-      />
-      <NestedStringListSection
-        title="University features"
-        items={content.university.features}
-        sectionKey="university"
-        listKey="features"
-        label="Feature"
-        updateNestedStringListItem={updateNestedStringListItem}
-        addNestedStringListItem={addNestedStringListItem}
-        removeNestedStringListItem={removeNestedStringListItem}
-      />
-      <NestedObjectListSection
-        title="University benefits"
-        items={content.university.benefits}
-        sectionKey="university"
-        listKey="benefits"
-        fields={[
-          { key: "title", label: "Title" },
-          { key: "description", label: "Description", multiline: true },
-        ]}
-        updateNestedContentList={updateNestedContentList}
-        addNestedContentListItem={addNestedContentListItem}
-        removeNestedContentListItem={removeNestedContentListItem}
-      />
-
       <button type="button" className={`${portalButtonPrimaryClass} w-full sm:w-auto`} onClick={saveContent} disabled={busyAction === "content"}>
         <Save className="h-4 w-4" />
         {busyAction === "content" ? "Saving..." : "Save content"}
@@ -734,9 +685,6 @@ export function ServicesPanel({
     );
   }
 
-  const activeImage = previewUrl || backendAssetUrl(serviceForm.imageUrl) || "";
-  const filledFeatures = (serviceForm.features || []).map((item) => item.trim()).filter(Boolean);
-  const detailHeading = serviceForm.detailTitle?.trim() || serviceForm.title || "Service detail";
   const detailCopy =
     serviceForm.detailDescription?.trim() ||
     serviceForm.description ||

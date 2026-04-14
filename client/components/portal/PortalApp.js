@@ -106,9 +106,6 @@ const nestedContentObjectTemplates = {
       summary: "",
     },
   },
-  university: {
-    benefits: { title: "", description: "" },
-  },
 };
 
 const tabs = [

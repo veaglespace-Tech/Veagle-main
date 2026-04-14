@@ -33,7 +33,6 @@ const productDropdownLinks = [
 const headerLinksAfterAbout = [
   { href: "/career", label: "Career" },
   { href: "/contact", label: "Contact" },
-  { href: "/university/java-full-stack", label: "University" },
 ];
 
 function subscribeToSession(callback) {
@@ -79,23 +78,26 @@ export default function SiteHeader() {
       return null;
     }
   }, [sessionSnapshot]);
-  const isProductsActive = productDropdownLinks.some((item) => isActive(item.href));
 
   function isActive(href) {
     if (href === "/") {
       return pathname === "/";
     }
-
     return pathname === href || pathname?.startsWith(`${href}/`);
   }
+
+  const isProductsActive = productDropdownLinks.some((item) => isActive(item.href));
 
   function handleLogout() {
     clearStoredSession();
     setIsOpen(false);
   }
 
+  const activeEffect = "border-b-2 border-white/30 pb-1 text-white shadow-[0_4px_12px_-4px_rgba(255,255,255,0.2)]";
+  const inactiveEffect = "text-[color:var(--text-secondary)] hover:text-white";
+
   return (
-    <header className="fixed inset-x-0 top-0 z-50 border-b border-[color:var(--border)] bg-[rgba(10,13,18,0.82)] shadow-2xl shadow-blue-900/20 backdrop-blur-xl">
+    <header className="fixed inset-x-0 top-0 z-50 border-b border-[color:var(--border)] bg-[rgba(10,13,18,0.85)] shadow-2xl backdrop-blur-xl">
       <div className="mx-auto flex max-w-screen-2xl items-center justify-between gap-3 px-4 py-4 sm:gap-4 sm:px-6 lg:px-8">
         <BrandMark tone="light" />
 
@@ -105,10 +107,8 @@ export default function SiteHeader() {
               key={item.href}
               href={item.href}
               className={cn(
-                "font-headline text-sm font-medium tracking-tight transition-colors duration-300",
-                isActive(item.href)
-                  ? "border-b-2 border-[color:var(--accent)] pb-1 text-[color:var(--accent)]"
-                  : "text-[color:var(--text-secondary)] hover:text-white"
+                "font-headline text-sm font-semibold tracking-tight transition-all duration-300",
+                isActive(item.href) ? activeEffect : inactiveEffect
               )}
             >
               {item.label}
@@ -119,27 +119,25 @@ export default function SiteHeader() {
             <button
               type="button"
               className={cn(
-                "inline-flex items-center gap-1 font-headline text-sm font-medium tracking-tight transition-colors duration-300",
-                isProductsActive
-                  ? "border-b-2 border-[color:var(--accent)] pb-1 text-[color:var(--accent)]"
-                  : "text-[color:var(--text-secondary)] hover:text-white"
+                "inline-flex items-center gap-1 font-headline text-sm font-semibold tracking-tight transition-all duration-300",
+                isProductsActive ? activeEffect : inactiveEffect
               )}
             >
               Products
-              <ChevronDown className="h-4 w-4" />
+              <ChevronDown className="h-4 w-4 transition-transform group-hover:rotate-180" />
             </button>
 
-            <div className="invisible absolute left-0 top-full z-50 mt-3 w-56 translate-y-2 opacity-0 transition duration-200 group-hover:visible group-hover:translate-y-0 group-hover:opacity-100 group-focus-within:visible group-focus-within:translate-y-0 group-focus-within:opacity-100">
-              <div className="rounded-2xl border border-white/10 bg-slate-950/95 p-2 shadow-2xl shadow-blue-900/20 backdrop-blur-xl">
+            <div className="invisible absolute left-1/2 top-full z-50 mt-3 w-56 -translate-x-1/2 translate-y-2 opacity-0 transition-all duration-300 group-hover:visible group-hover:translate-y-0 group-hover:opacity-100">
+              <div className="rounded-2xl border border-white/10 bg-slate-950/98 p-2 shadow-2xl backdrop-blur-2xl">
                 {productDropdownLinks.map((item) => (
                   <Link
                     key={item.href}
                     href={item.href}
                     className={cn(
-                      "block rounded-xl px-3 py-2.5 font-headline text-sm font-medium transition",
+                      "block rounded-xl px-3 py-2.5 font-headline text-sm font-medium transition-colors",
                       isActive(item.href)
-                        ? "bg-[color:var(--accent)] text-white"
-                        : "text-[#c3c6d7] hover:bg-white/5 hover:text-white"
+                        ? "bg-white/10 text-white"
+                        : "text-[color:var(--text-muted)] hover:bg-white/5 hover:text-white"
                     )}
                   >
                     {item.label}
@@ -154,10 +152,8 @@ export default function SiteHeader() {
               key={item.href}
               href={item.href}
               className={cn(
-                "font-headline text-sm font-medium tracking-tight transition-colors duration-300",
-                isActive(item.href)
-                  ? "border-b-2 border-[color:var(--accent)] pb-1 text-[color:var(--accent)]"
-                  : "text-[color:var(--text-secondary)] hover:text-white"
+                "font-headline text-sm font-semibold tracking-tight transition-all duration-300",
+                isActive(item.href) ? activeEffect : inactiveEffect
               )}
             >
               {item.label}
@@ -166,33 +162,35 @@ export default function SiteHeader() {
         </nav>
 
         <div className="hidden items-center gap-4 md:flex">
-          {isStaffSession(session) ? (
-            <Link
-              href="/portal"
-              className="font-headline text-sm font-medium text-[color:var(--text-secondary)] transition-colors hover:text-white"
-            >
-              Portal
-            </Link>
-          ) : null}
           {session ? (
-            <button
-              type="button"
-              onClick={handleLogout}
-              className="font-headline text-sm font-medium text-[color:var(--text-secondary)] transition-colors hover:text-white"
-            >
-              Logout
-            </button>
+            <div className="flex items-center gap-4">
+              {isStaffSession(session) && (
+                <Link
+                  href="/portal"
+                  className="font-headline text-xs font-bold uppercase tracking-widest text-[color:var(--text-secondary)] transition-colors hover:text-white"
+                >
+                  Portal
+                </Link>
+              )}
+              <button
+                type="button"
+                onClick={handleLogout}
+                className="font-headline text-xs font-bold uppercase tracking-widest text-[color:var(--text-secondary)] transition-colors hover:text-white"
+              >
+                Logout
+              </button>
+            </div>
           ) : (
             <Link
               href="/login"
-              className="font-headline text-sm font-medium text-[color:var(--text-secondary)] transition-colors hover:text-white"
+              className="font-headline text-xs font-bold uppercase tracking-widest text-[color:var(--text-secondary)] transition-colors hover:text-white"
             >
               Login
             </Link>
           )}
           <Link
             href="/contact"
-            className={cn(primaryButtonClass, "min-h-0 px-6 py-2.5")}
+            className={cn(primaryButtonClass, "min-h-0 px-6 py-2.5 text-xs uppercase tracking-widest")}
           >
             Get Started
           </Link>
@@ -209,40 +207,42 @@ export default function SiteHeader() {
         </button>
       </div>
 
-      {isOpen ? (
-        <div className="border-t border-white/10 bg-slate-950/95 px-4 py-4 backdrop-blur-xl md:hidden">
-          <div className="mx-auto max-w-screen-2xl space-y-2">
-            {[...headerLinksBeforeAbout, ...headerLinksAfterAbout].map((item) => (
-              <Link
-                key={item.href}
-                href={item.href}
-                onClick={() => setIsOpen(false)}
-                className={cn(
-                  "block rounded-xl px-4 py-3 font-headline text-sm font-medium transition",
-                  isActive(item.href)
-                    ? "bg-[color:var(--accent)] text-white"
-                    : "bg-[color:var(--surface-strong)] text-[color:var(--text-primary)]"
-                )}
-              >
-                {item.label}
-              </Link>
-            ))}
+      {isOpen && (
+        <div className="border-t border-white/10 bg-slate-950/98 px-4 py-6 backdrop-blur-2xl md:hidden">
+          <div className="mx-auto max-w-screen-2xl space-y-4">
+            <div className="grid gap-2">
+              {[...headerLinksBeforeAbout, ...headerLinksAfterAbout].map((item) => (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  onClick={() => setIsOpen(false)}
+                  className={cn(
+                    "block rounded-xl px-4 py-3.5 font-headline text-sm font-bold transition-all",
+                    isActive(item.href)
+                      ? "bg-white/10 text-white"
+                      : "text-[color:var(--text-secondary)] hover:bg-white/5 hover:text-white"
+                  )}
+                >
+                  {item.label}
+                </Link>
+              ))}
+            </div>
 
-            <div className="rounded-xl border border-[color:var(--border)] bg-[color:var(--surface)] p-3">
-              <p className="px-2 pb-2 font-headline text-xs font-semibold uppercase tracking-[0.18em] text-[color:var(--text-muted)]">
-                Products Menu
+            <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
+              <p className="px-1 pb-3 text-[10px] font-black uppercase tracking-[0.25em] text-[color:var(--text-muted)] opacity-60">
+                Products & More
               </p>
-              <div className="space-y-1">
+              <div className="grid gap-1">
                 {productDropdownLinks.map((item) => (
                   <Link
                     key={item.href}
                     href={item.href}
                     onClick={() => setIsOpen(false)}
                     className={cn(
-                      "block rounded-lg px-3 py-2.5 font-headline text-sm font-medium transition",
+                      "block rounded-xl px-4 py-3 font-headline text-sm font-bold transition-all",
                       isActive(item.href)
-                        ? "bg-[color:var(--accent)] text-white"
-                        : "text-[#c3c6d7] hover:bg-white/5 hover:text-white"
+                        ? "text-[color:var(--accent)]"
+                        : "text-[color:var(--text-secondary)] hover:text-white"
                     )}
                   >
                     {item.label}
@@ -251,44 +251,27 @@ export default function SiteHeader() {
               </div>
             </div>
 
-            <div className="grid gap-2 pt-2">
-              {isStaffSession(session) ? (
-                <Link
-                  href="/portal"
-                  onClick={() => setIsOpen(false)}
-                  className={cn(secondaryButtonClass, "min-h-0 rounded-xl px-4 py-3")}
-                >
-                  Portal
-                </Link>
-              ) : null}
-              {session ? (
-                <button
-                  type="button"
-                  onClick={handleLogout}
-                  className={cn(secondaryButtonClass, "min-h-0 rounded-xl px-4 py-3")}
-                >
-                  Logout
-                </button>
-              ) : (
+            <div className="grid gap-3 pt-2">
+              <Link
+                href="/contact"
+                onClick={() => setIsOpen(false)}
+                className={cn(primaryButtonClass, "w-full rounded-xl py-4 text-xs uppercase tracking-widest")}
+              >
+                Get Started
+              </Link>
+              {!session && (
                 <Link
                   href="/login"
                   onClick={() => setIsOpen(false)}
-                  className={cn(secondaryButtonClass, "min-h-0 rounded-xl px-4 py-3")}
+                  className={cn(secondaryButtonClass, "w-full rounded-xl py-4 text-xs uppercase tracking-widest")}
                 >
                   Login
                 </Link>
               )}
-              <Link
-                href="/contact"
-                onClick={() => setIsOpen(false)}
-                className={cn(primaryButtonClass, "min-h-0 rounded-xl px-4 py-3")}
-              >
-                Get Started
-              </Link>
             </div>
           </div>
         </div>
-      ) : null}
+      )}
     </header>
   );
 }

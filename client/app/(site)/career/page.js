@@ -5,15 +5,16 @@ import { buildPageMetadata } from "@/lib/seo";
 import { COMPANY_NAME } from "@/lib/site";
 
 export const metadata = buildPageMetadata({
-  title: "Careers and Hiring",
+  title: "Careers and Hiring Opportunities",
   description:
-    `Explore open roles at ${COMPANY_NAME} and apply directly from a cleaner, validated careers experience.`,
+    `Explore open roles at ${COMPANY_NAME} across software, website development, design, marketing and business support functions.`,
   path: "/career",
   keywords: [
     `${COMPANY_NAME} careers`,
     "software jobs Pune",
     "frontend jobs Pune",
     "spring boot jobs Pune",
+    "digital marketing jobs Pune",
   ],
 });
 

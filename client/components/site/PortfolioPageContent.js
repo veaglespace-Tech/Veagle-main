@@ -9,6 +9,7 @@ import {
   PrimaryLink,
   filterButtonClass,
   pageClass,
+  pageHeroTitleClass,
   secondaryButtonClass,
 } from "@/components/site/UiBits";
 import { backendAssetUrl } from "@/lib/backend";
@@ -70,7 +71,7 @@ function getFocusStyles(index) {
   };
 }
 
-function protocolName(project) {
+function projectCode(project) {
   const firstTag = project?.tags?.[0] || "CORE";
   return `${firstTag.slice(0, 3).toUpperCase()}-${String(project?.id || "01")
     .replace(/[^0-9]/g, "")
@@ -160,9 +161,9 @@ export default function PortfolioPageContent({ content, portfolioData = [] }) {
     <main className={pageClass}>
       <section className="relative flex min-h-[72vh] items-center justify-center overflow-hidden px-4 pb-12 pt-28 sm:px-6 sm:pt-32 lg:px-8 lg:pt-36">
         <div className="absolute inset-0">
-          <Image
-            src={pageArtwork.hero}
-            alt="Portfolio orbital backdrop"
+            <Image
+              src={pageArtwork.hero}
+            alt="Portfolio background"
             fill
             priority
             className="object-cover opacity-35 grayscale"
@@ -176,12 +177,12 @@ export default function PortfolioPageContent({ content, portfolioData = [] }) {
           <span className="inline-flex items-center rounded-full border border-[color:var(--accent)]/28 bg-[color:var(--surface-strong)] px-4 py-2 text-[10px] font-black uppercase tracking-[0.24em] text-[color:var(--text-muted)]">
             {portfolio.eyebrow || "Portfolio"}
           </span>
-          <h1 className="mt-8 font-headline text-5xl font-black leading-[0.93] tracking-[-0.045em] text-white sm:text-7xl lg:text-8xl">
+          <h1 className={`mt-8 ${pageHeroTitleClass} text-white`}>
             {portfolio.title || "Project Showcase"}
           </h1>
           <p className="mx-auto mt-7 max-w-3xl text-base leading-8 text-[color:var(--text-secondary)] sm:text-lg">
             {portfolio.description ||
-              "Explore a curated selection of our high-performance software deployments and digital product architectures."}
+              "Explore examples of the websites, software interfaces and business-ready digital experiences we build."}
           </p>
         </div>
       </section>
@@ -234,7 +235,7 @@ export default function PortfolioPageContent({ content, portfolioData = [] }) {
                     <div className="flex items-center gap-2">
                       <span className="h-2 w-2 animate-pulse rounded-full bg-[#56e240]" />
                       <span className="text-[9px] font-black uppercase tracking-[0.18em] text-[color:var(--text-primary)]">
-                        Protocol: {protocolName(study)}
+                        Project Code: {projectCode(study)}
                       </span>
                     </div>
                   </div>
@@ -288,7 +289,7 @@ export default function PortfolioPageContent({ content, portfolioData = [] }) {
                         "mt-6 w-full border-white/10 bg-[rgba(21,27,35,0.82)] px-6 py-3 text-[10px] font-black uppercase tracking-[0.18em]"
                       )}
                     >
-                      Module Specifications
+                      Project Inquiry
                     </Link>
                   ) : null}
 
@@ -318,7 +319,7 @@ export default function PortfolioPageContent({ content, portfolioData = [] }) {
                           {throughputValue(study)}
                         </p>
                         <p className="mt-1 text-[9px] font-black uppercase tracking-[0.18em] text-[color:var(--text-muted)]">
-                          Operational Efficiency
+                          Delivery Impact
                         </p>
                       </div>
                     </div>
@@ -331,10 +332,10 @@ export default function PortfolioPageContent({ content, portfolioData = [] }) {
           {!filteredProjects.length ? (
             <div className="md:col-span-12 rounded-[1.2rem] border border-dashed border-white/14 bg-[#1a1d23] px-6 py-14 text-center">
               <h3 className="font-headline text-2xl font-black tracking-tight text-white">
-                Project Vault Empty
+                No portfolio items published yet
               </h3>
               <p className="mt-3 text-sm leading-7 text-[color:var(--text-muted)]">
-                Initialize your portfolio database via the admin panel to populate this showcase.
+                Add portfolio entries from the admin panel to publish your showcase here.
               </p>
             </div>
           ) : null}
@@ -347,15 +348,15 @@ export default function PortfolioPageContent({ content, portfolioData = [] }) {
             <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,rgba(179,197,255,0.2),transparent_45%)]" />
             <div className="relative z-10 mx-auto max-w-3xl">
               <h2 className="font-headline text-3xl font-black leading-tight tracking-[-0.03em] text-white sm:text-5xl">
-                {portfolio.ctaTitle || "Architect your next digital milestone"}
+                {portfolio.ctaTitle || "Ready to build your next digital milestone?"}
               </h2>
               <p className="mx-auto mt-5 max-w-2xl text-sm leading-8 text-[color:var(--text-secondary)] sm:text-base">
                 {portfolio.ctaDescription ||
-                  "Share your vision for the next iteration of your business and we will transform it into a precision-engineered reality."}
+                  "Share your requirement and we will help you turn it into a polished website, product showcase or software experience."}
               </p>
               <div className="mt-8">
                 <PrimaryLink href="/contact">
-                  Initiate Engagement
+                  Start a Project
                   <Rocket className="h-4 w-4" />
                 </PrimaryLink>
               </div>

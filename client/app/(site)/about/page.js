@@ -4,15 +4,16 @@ import { buildPageMetadata } from "@/lib/seo";
 import { COMPANY_NAME } from "@/lib/site";
 
 export const metadata = buildPageMetadata({
-  title: "About Us",
+  title: "About Veagle Space | Software and Website Company in Pune",
   description:
-    `Learn how ${COMPANY_NAME} approaches software, dynamic websites, admin dashboards and growth-ready digital experiences.`,
+    `Learn about ${COMPANY_NAME}, a Pune-based company offering software development, website development, ERP solutions, UI/UX and digital growth support.`,
   path: "/about",
   keywords: [
     `about ${COMPANY_NAME}`,
-    "software company Pune",
-    "website company Pune",
-    "admin dashboard solutions",
+    "software company in Pune",
+    "website development company in Pune",
+    "digital solutions company Pune",
+    "ERP and software company Pune",
   ],
 });
 

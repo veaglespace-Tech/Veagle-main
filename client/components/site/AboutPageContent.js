@@ -6,14 +6,15 @@ import {
   SecondaryLink,
   ctaShellClass,
   pageClass,
+  pageHeroTitleClass,
 } from "@/components/site/UiBits";
 import { pageArtwork } from "@/lib/visuals";
 
 const principleIcons = [BriefcaseBusiness, Eye, ShieldCheck];
 
 function resolveHeading(value) {
-  const title = value || "Practical Software, Business-Ready Delivery.";
-  const marker = "business-ready delivery";
+  const title = value || "Website development, software, ERP, digital marketing and business support services in one place";
+  const marker = "one place";
   const index = title.toLowerCase().indexOf(marker);
 
   if (index === -1) {
@@ -51,7 +52,7 @@ export default function AboutPageContent({ content }) {
       : [];
   const heroDescription =
     about.description ||
-    "Add your organization biography from the dashboard to describe your market position, operational model and delivery success.";
+    "Delivering high-performance digital infrastructure, scalable software modules, and automated operational frameworks for market-leading brands.";
   const missionLine = about.story || about.background;
 
   return (
@@ -70,9 +71,9 @@ export default function AboutPageContent({ content }) {
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_72%_24%,rgba(30,115,255,0.22),transparent_35%)]" />
         </div>
 
-        <div className="relative z-10 mx-auto w-full max-w-screen-2xl">
-          <div className="max-w-4xl text-center md:text-left">
-            <h1 className="font-headline text-4xl font-black leading-[0.93] tracking-[-0.04em] text-white sm:text-6xl lg:text-7xl">
+        <div className="relative z-10 mx-auto w-full max-w-screen-2xl flex flex-col items-center">
+          <div className="max-w-4xl text-center">
+            <h1 className={`${pageHeroTitleClass} text-white`}>
               {resolveHeading(about.title)}
             </h1>
             <p className="mt-6 max-w-3xl text-base leading-8 text-[color:var(--text-secondary)] sm:text-lg">
@@ -85,10 +86,10 @@ export default function AboutPageContent({ content }) {
             ) : null}
             <div className="mt-8 flex flex-col gap-4 sm:flex-row sm:flex-wrap sm:items-center">
               <PrimaryLink href="/services">
-                Explore Our Tech
+                Explore Services
               </PrimaryLink>
               <SecondaryLink href="/contact">
-                Mission Protocol
+                Contact Us
               </SecondaryLink>
             </div>
           </div>
@@ -106,9 +107,9 @@ export default function AboutPageContent({ content }) {
                 <p className="text-[10px] font-black uppercase tracking-[0.2em] text-[color:var(--accent)]">
                   {item.label}
                 </p>
-                <h2 className="mt-4 font-headline text-4xl font-black tracking-tight text-[color:var(--text-primary)] sm:text-5xl">
+                <h3 className="mt-4 font-headline text-4xl font-black tracking-tight text-white sm:text-5xl">
                   {item.value}
-                </h2>
+                </h3>
                 <p className="mt-3 text-sm leading-7 text-[color:var(--text-muted)]">{item.detail}</p>
               </article>
             ))
@@ -118,7 +119,7 @@ export default function AboutPageContent({ content }) {
                 No milestone data yet
               </h2>
               <p className="mt-3 text-sm leading-7 text-[color:var(--text-muted)]">
-                Add about milestones from the dashboard CMS and they will appear here automatically.
+                Add about-page milestones from the dashboard CMS and they will appear here automatically.
               </p>
             </article>
           )}
@@ -130,11 +131,11 @@ export default function AboutPageContent({ content }) {
           <div className="mb-10 flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
             <div className="max-w-2xl">
               <h2 className="font-headline text-4xl font-black tracking-tight text-[color:var(--text-primary)] sm:text-5xl">
-                Our Operational Model
+                How We Work
               </h2>
               <p className="mt-4 text-sm leading-7 text-[color:var(--text-secondary)] sm:text-base">
                 {about.background ||
-                  "Our engineering standards follow a rigorous delivery cycle designed for maximum stability, performance, and long-term business value."}
+                  "Our process combines planning, design, development and improvement so every delivery stays practical, scalable and easier to manage."}
               </p>
             </div>
             <div className="hidden h-[2px] w-20 bg-[color:var(--accent)] md:block" />
@@ -157,7 +158,7 @@ export default function AboutPageContent({ content }) {
                       0{index + 1}
                     </p>
                     <h3 className="mt-7 font-headline text-3xl font-black tracking-tight text-white">
-                      Node {index + 1}
+                      Step {index + 1}
                     </h3>
                     <p className={`relative z-10 mt-4 text-base leading-8 ${isAccent ? "text-[color:var(--text-secondary)]" : "text-[color:var(--text-secondary)]"}`}>
                       {step}
@@ -177,7 +178,7 @@ export default function AboutPageContent({ content }) {
                 No working model steps yet
               </h3>
               <p className="mt-3 text-sm leading-7 text-[color:var(--text-secondary)]">
-                Add the about-page workflow from the dashboard CMS and this section will render automatically.
+                Add the workflow from the dashboard CMS and this section will render automatically.
               </p>
             </div>
           )}
@@ -187,10 +188,10 @@ export default function AboutPageContent({ content }) {
       <section className="bg-[color:var(--page-bg)] px-4 py-16 sm:px-6 lg:px-8 lg:py-24">
         <div className="mx-auto max-w-screen-2xl text-center">
           <h2 className="font-headline text-4xl font-black tracking-tight text-[color:var(--text-primary)] sm:text-5xl">
-            Core Principles
+            Our Core Principles
           </h2>
           <p className="mx-auto mt-4 max-w-2xl text-sm leading-7 text-[color:var(--text-secondary)] sm:text-base">
-            The architectural pillars that define our mission delivery protocol.
+            The standards that guide every website, software and digital delivery engagement.
           </p>
         </div>
 
@@ -207,10 +208,10 @@ export default function AboutPageContent({ content }) {
                   <div className="flex h-16 w-16 items-center justify-center rounded-full bg-[color:var(--accent-soft)] text-[color:var(--accent)]">
                     <Icon className="h-7 w-7" />
                   </div>
-                  <h3 className="font-headline text-2xl font-black tracking-tight text-[color:var(--text-primary)]">
+                  <h3 className="mt-6 font-headline text-2xl font-black tracking-tight text-white">
                     {pillar.title}
                   </h3>
-                  <p className="mt-4 text-sm leading-7 text-[color:var(--text-muted)]">
+                  <p className="mt-4 text-sm leading-8 text-white/70">
                     {pillar.description}
                   </p>
                 </article>
@@ -222,7 +223,7 @@ export default function AboutPageContent({ content }) {
                 No principle cards yet
               </h3>
               <p className="mt-4 text-sm leading-7 text-[color:var(--text-muted)]">
-                Add about-page pillars from the dashboard CMS to replace this empty state.
+                Add about-page principles from the dashboard CMS to replace this empty state.
               </p>
             </article>
           )}
@@ -243,18 +244,18 @@ export default function AboutPageContent({ content }) {
             </div>
             <div className="relative z-10">
               <h2 className="font-headline text-4xl font-black tracking-tight text-white sm:text-5xl lg:text-6xl">
-                {about.ctaTitle || "Architect your next digital milestone"}
+                {about.ctaTitle || "Plan your next digital milestone with confidence"}
               </h2>
               <p className="mx-auto mt-5 max-w-3xl text-sm leading-8 text-[color:var(--text-secondary)] sm:text-lg">
                 {about.ctaDescription ||
-                  "Leverage our centralized engineering intelligence to execute your next software project with precision."}
+                  "From websites and dashboards to software systems and SEO-ready content, we help businesses move from idea to execution with clarity."}
               </p>
               <div className="mt-8 flex flex-col justify-center gap-4 sm:flex-row sm:flex-wrap sm:items-center">
                 <PrimaryLink href="/contact">
-                  Initiate Contact
+                  Start a Conversation
                 </PrimaryLink>
                 <SecondaryLink href="/services">
-                  View Tech Stack
+                  View Services
                 </SecondaryLink>
               </div>
             </div>

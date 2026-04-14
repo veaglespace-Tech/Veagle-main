@@ -1,5 +1,6 @@
-import { getServices } from "@/lib/backend";
+import { getProducts, getServices } from "@/lib/backend";
 import { SITE_URL } from "@/lib/site";
+import { slugify } from "@/lib/utils";
 
 const staticRoutes = [
   "",
@@ -15,7 +16,7 @@ const staticRoutes = [
 ];
 
 export default async function sitemap() {
-  const services = await getServices();
+  const [services, products] = await Promise.all([getServices(), getProducts()]);
 
   const staticEntries = staticRoutes.map((route) => ({
     url: `${SITE_URL}${route}`,
@@ -31,5 +32,12 @@ export default async function sitemap() {
     priority: 0.7,
   }));
 
-  return [...staticEntries, ...serviceEntries];
+  const productEntries = products.map((product) => ({
+    url: `${SITE_URL}/products/${product.slug || slugify(product.title || "product")}`,
+    lastModified: new Date(),
+    changeFrequency: "weekly",
+    priority: 0.7,
+  }));
+
+  return [...staticEntries, ...serviceEntries, ...productEntries];
 }

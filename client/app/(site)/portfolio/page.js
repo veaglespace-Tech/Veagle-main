@@ -5,11 +5,15 @@ import { buildPageMetadata } from "@/lib/seo";
 import { COMPANY_NAME } from "@/lib/site";
 
 export const metadata = buildPageMetadata({
-  title: "Portfolio",
+  title: "Portfolio | Website, Software and Digital Project Work",
   description:
-    `See the real project work, deployments and delivery outcomes from ${COMPANY_NAME}.`,
+    `See the kind of website, software, dashboard and digital delivery work ${COMPANY_NAME} is positioned to build for modern businesses.`,
   path: "/portfolio",
-  keywords: [`${COMPANY_NAME} portfolio`, "software company portfolio Pune"],
+  keywords: [
+    `${COMPANY_NAME} portfolio`,
+    "software company portfolio Pune",
+    "website development portfolio Pune",
+  ],
 });
 
 export default async function PortfolioPage() {

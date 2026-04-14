@@ -4,13 +4,12 @@ import Image from "next/image";
 import Link from "next/link";
 import {
   ArrowRight,
+  BriefcaseBusiness,
   Code2,
   Database,
   Globe2,
-  GraduationCap,
   Layers3,
   Megaphone,
-  Rocket,
   ShoppingCart,
   Sparkles,
 } from "lucide-react";
@@ -20,15 +19,15 @@ import {
   SecondaryLink,
   ctaShellClass,
   pageClass,
+  pageHeroTitleClass,
 } from "@/components/site/UiBits";
 import { resolveClientProfile } from "@/lib/fallback-data";
 import { backendAssetUrl } from "@/lib/backend";
-import { COMPANY_BRAND_NAME } from "@/lib/site";
 import { pageArtwork, resolveServiceIllustration } from "@/lib/visuals";
 
 const competenceIcons = [Globe2, ShoppingCart, Code2];
 const whyIcons = [Sparkles, Database, Layers3, Megaphone];
-const discoveryIcons = [Layers3, Database, GraduationCap];
+const discoveryIcons = [Layers3, Database, BriefcaseBusiness];
 
 function MarqueeRow({ items = [], showLabel = true }) {
   const values = items
@@ -106,7 +105,7 @@ function discoveryCards({ services, products, jobs }) {
       key: "services",
       eyebrow: "Sector 01",
       title: "Services",
-      description: `${services.length} active entries with cleaner discovery and direct enquiry flow.`,
+      description: `${services.length} service pages designed to explain offerings clearly and convert interest into inquiries.`,
       href: "/services",
       image: serviceImage,
       icon: discoveryIcons[0],
@@ -115,7 +114,7 @@ function discoveryCards({ services, products, jobs }) {
       key: "products",
       eyebrow: "Sector 02",
       title: "Products",
-      description: `${products.length} dashboard-managed product modules grouped for stronger presentation.`,
+      description: `${products.length} product and solution modules grouped to make business offerings easier to browse.`,
       href: "/products",
       image: productImage,
       icon: discoveryIcons[1],
@@ -123,10 +122,10 @@ function discoveryCards({ services, products, jobs }) {
     {
       key: "career",
       eyebrow: "Sector 03",
-      title: "Career & Univ.",
-      description: `${jobs.length} role${jobs.length === 1 ? "" : "s"} plus practical learning tracks in one system.`,
+      title: "Career",
+      description: `${jobs.length} open role${jobs.length === 1 ? "" : "s"} across development, design and business growth teams.`,
       href: "/career",
-      image: pageArtwork.university,
+      image: pageArtwork.career,
       icon: discoveryIcons[2],
     },
   ];
@@ -179,9 +178,9 @@ export default function HomePage({ content, services = [], products = [], jobs =
     <main className={pageClass}>
       <section className="relative flex min-h-[88vh] items-center justify-center overflow-hidden px-4 pb-16 pt-28 sm:px-6 sm:pt-32 lg:px-8">
         <div className="absolute inset-0">
-          <Image
-            src={pageArtwork.hero}
-            alt="Veagle orbital operations background"
+            <Image
+              src={pageArtwork.hero}
+              alt="Veagle Space homepage background"
             fill
             className="object-cover opacity-35"
             priority
@@ -195,20 +194,20 @@ export default function HomePage({ content, services = [], products = [], jobs =
           <div className="inline-flex items-center gap-2 rounded-full border border-white/14 bg-[color:var(--surface-strong)] px-4 py-2 backdrop-blur-sm">
             <span className="h-2 w-2 rounded-full bg-[#8ba8ff] shadow-[0_0_10px_rgba(139,168,255,0.4)]" />
             <span className="text-[10px] font-bold uppercase tracking-[0.24em] text-[color:var(--text-secondary)]">
-              System Ready: 2026-A1
+              {hero.label || "Dynamic websites, software and SEO services"}
             </span>
           </div>
 
-          <h1 className="mx-auto mt-8 max-w-5xl font-headline text-4xl font-black leading-[0.94] tracking-[-0.045em] text-white sm:text-6xl lg:text-8xl">
-            {hero.title || "We provide solutions for your"}{" "}
+          <h1 className={`mx-auto mt-8 max-w-5xl ${pageHeroTitleClass} text-white`}>
+            {hero.title || "Website development, software, ERP, digital marketing"} <br className="hidden lg:block" />
             <span className="text-glow bg-gradient-to-r from-[#e7ecff] via-[#bcd0ff] to-[#56e240] bg-clip-text text-transparent">
-              {hero.highlight || "business!"}
+              {hero.highlight || "and business support services in one place"}
             </span>
           </h1>
 
-          <p className="mx-auto mt-6 max-w-3xl text-base leading-8 text-[color:var(--text-secondary)] sm:text-lg">
+          <p className="mx-auto mt-6 max-w-3xl text-[1.1rem] leading-8 text-[color:var(--text-secondary)]">
             {hero.description ||
-              `${COMPANY_BRAND_NAME} architects high-performance software, dynamic web experiences, and scalable ERP systems for modern global brands.`}
+              "Engineering high-performance software ecosystems, dynamic web presence, and scalable ERP frameworks with precision technical execution."}
           </p>
 
           <div className="mt-8 flex flex-col items-center gap-4 sm:flex-row sm:flex-wrap sm:justify-center">
@@ -220,13 +219,13 @@ export default function HomePage({ content, services = [], products = [], jobs =
             </SecondaryLink>
           </div>
 
-          <div className="mx-auto mt-12 grid max-w-4xl gap-px overflow-hidden rounded-2xl border border-white/12 bg-white/8 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="mx-auto mt-14 grid max-w-5xl gap-px overflow-hidden rounded-[1.6rem] border border-white/10 bg-white/5 sm:grid-cols-2 lg:grid-cols-4 shadow-2xl">
             {stats.map((item) => (
-              <div key={`${item.value}-${item.label}`} className="bg-[#151922]/80 px-5 py-7 text-left">
-                <p className="font-headline text-3xl font-black tracking-tight text-[color:var(--text-primary)]">
+              <div key={`${item.value}-${item.label}`} className="bg-[#0f1219]/95 px-6 py-9 text-center transition-all duration-300 hover:bg-[#141a26]">
+                <p className="font-headline text-4xl font-black tracking-tight text-white mb-2">
                   {item.value}
                 </p>
-                <p className="mt-2 text-[10px] font-bold uppercase tracking-[0.22em] text-[color:var(--text-muted)]">
+                <p className="text-[10px] font-black uppercase tracking-[0.25em] text-white/60">
                   {item.label}
                 </p>
               </div>
@@ -237,15 +236,15 @@ export default function HomePage({ content, services = [], products = [], jobs =
 
       <section className="px-4 py-16 sm:px-6 lg:px-8 lg:py-24">
         <div className="mx-auto max-w-screen-2xl">
-          <div className="mb-10 flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
-            <h2 className="max-w-3xl font-headline text-3xl font-black leading-tight tracking-[-0.03em] text-white sm:text-5xl">
-              Cleaner service discovery without empty or overloaded sections
+          <div className="mb-14 flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
+            <h2 className="max-w-4xl font-headline text-4xl font-black leading-[1.05] tracking-[-0.03em] text-white sm:text-6xl">
+              Explore website, software, product and career sections
             </h2>
             <Link
               href="/services"
               className="inline-flex items-center gap-2 text-sm font-bold uppercase tracking-[0.18em] text-[color:var(--accent-soft)] transition hover:gap-3"
             >
-              Explore All Sectors
+              Explore All Services
               <ArrowRight className="h-4 w-4" />
             </Link>
           </div>
@@ -294,25 +293,30 @@ export default function HomePage({ content, services = [], products = [], jobs =
         <div className="mx-auto max-w-screen-2xl">
           <div className="mb-14 text-center">
             <p className="text-[11px] font-bold uppercase tracking-[0.24em] text-[color:var(--text-muted)]">
-              Our Engineering Stack
+              What We Help With
             </p>
             <h2 className="mt-4 font-headline text-3xl font-black tracking-tight text-white sm:text-5xl">
-              Core Competencies
+              Core Service Strengths
             </h2>
           </div>
 
-          <div className="grid gap-10 lg:grid-cols-3">
+          <div className="grid gap-12 lg:grid-cols-3">
             {competenceRows.map((item, index) => {
               const Icon = competenceIcons[index % competenceIcons.length];
               const title = item.title || item.label || `Competency 0${index + 1}`;
-              const description = item.description || item.detail || "Designed for clean execution and long-term scale.";
+              const description =
+                item.description ||
+                item.detail ||
+                "Planned to support usability, business clarity and long-term scalability.";
               return (
-                <article key={`${title}-${index}`} className="space-y-5">
-                  <div className="flex h-14 w-14 items-center justify-center rounded-2xl border border-white/15 bg-[#1f2533] text-[#9fb7ff]">
-                    <Icon className="h-6 w-6" />
+                <article key={`${title}-${index}`} className="flex flex-col items-center text-center space-y-6">
+                  <div className="flex h-16 w-16 items-center justify-center rounded-[1.2rem] border border-white/12 bg-white/5 text-[color:var(--accent-soft)] shadow-xl">
+                    <Icon className="h-7 w-7" />
                   </div>
-                  <h3 className="font-headline text-2xl font-black tracking-tight text-[color:var(--text-primary)]">{title}</h3>
-                  <p className="text-sm leading-8 text-[color:var(--text-secondary)]">{description}</p>
+                  <div className="space-y-3">
+                    <h3 className="font-headline text-2xl font-black tracking-tight text-white">{title}</h3>
+                    <p className="text-sm leading-8 text-white/70">{description}</p>
+                  </div>
                 </article>
               );
             })}
@@ -321,15 +325,15 @@ export default function HomePage({ content, services = [], products = [], jobs =
       </section>
 
       <section className="px-4 py-16 sm:px-6 lg:px-8 lg:py-24">
-        <div className="mx-auto grid max-w-screen-2xl gap-4 lg:grid-cols-4">
-          <div className="rounded-[1.4rem] border border-white/8 bg-[#242833] p-8 lg:col-span-2">
-            <h2 className="font-headline text-3xl font-black leading-tight tracking-[-0.03em] text-white sm:text-5xl">
-              Why mission leaders choose Veagle
-            </h2>
-            <p className="mt-6 max-w-2xl text-base leading-8 text-[color:var(--text-secondary)]">
-              We don&apos;t just build software; we architect resilient digital operations and robust internal systems that keep your teams focused.
-            </p>
-          </div>
+          <div className="mx-auto grid max-w-screen-2xl gap-4 lg:grid-cols-4">
+            <div className="rounded-[1.4rem] border border-white/8 bg-[#242833] p-8 lg:col-span-2">
+              <h2 className="font-headline text-3xl font-black leading-tight tracking-[-0.03em] text-white sm:text-5xl">
+                Why businesses choose Veagle Space
+              </h2>
+              <p className="mt-6 max-w-2xl text-base leading-8 text-[color:var(--text-secondary)]">
+                We combine website strategy, software execution and content clarity so your brand looks stronger online and your internal workflows stay easier to manage.
+              </p>
+            </div>
 
           {differentiators.map((item, index) => {
             const Icon = whyIcons[index % whyIcons.length];
@@ -366,20 +370,20 @@ export default function HomePage({ content, services = [], products = [], jobs =
           <div className="grid gap-8 xl:grid-cols-[0.88fr_1.12fr] xl:items-end">
             <div>
               <p className="text-[11px] font-bold uppercase tracking-[0.24em] text-[color:var(--text-muted)]">
-                Our Clients
+                Trust and Delivery
               </p>
               <h2 className="mt-4 max-w-3xl font-headline text-3xl font-black leading-tight tracking-[-0.03em] text-white sm:text-5xl">
-                Trusted by businesses across finance, software and operations
+                Built to support service brands, operations teams and digital-first businesses
               </h2>
               <p className="mt-5 max-w-2xl text-base leading-8 text-[color:var(--text-secondary)]">
                 {clients.description ||
-                  `Our network of trusted partners relies on our engineering standards for consistent, reliable product delivery.`}
+                  `Our delivery model is designed for businesses that need a reliable partner for websites, software systems and digital growth support.`}
               </p>
               <Link
                 href="/clients"
                 className="mt-6 inline-flex items-center gap-2 text-sm font-bold uppercase tracking-[0.18em] text-[color:var(--accent-soft)] transition hover:gap-3"
               >
-                Explore Client Network
+                Explore Industries
                 <ArrowRight className="h-4 w-4" />
               </Link>
             </div>
@@ -412,7 +416,7 @@ export default function HomePage({ content, services = [], products = [], jobs =
           <div className="mb-14 flex items-center gap-4">
             <div className="h-px flex-1 bg-white/10" />
             <h2 className="font-headline text-xl font-black uppercase tracking-[0.28em] text-[color:var(--text-muted)]">
-              The Flight Plan
+              Our Process
             </h2>
             <div className="h-px flex-1 bg-white/10" />
           </div>
@@ -435,7 +439,7 @@ export default function HomePage({ content, services = [], products = [], jobs =
       <section className="px-4 py-16 sm:px-6 lg:px-8 lg:py-24">
         <div className="mx-auto max-w-screen-2xl">
           <h2 className="mb-12 text-center font-headline text-3xl font-black tracking-tight text-white sm:text-5xl">
-            Dashboard Managed Solutions
+            Featured Products and Solutions
           </h2>
           <div className="grid gap-6 md:grid-cols-3">
             {featuredProducts.map((product) => (
@@ -463,7 +467,7 @@ export default function HomePage({ content, services = [], products = [], jobs =
                     href="/products"
                     className="mt-5 inline-flex items-center gap-2 text-sm font-bold uppercase tracking-[0.16em] text-[color:var(--text-muted)] transition group-hover:text-[#9fb7ff]"
                   >
-                    Review Module
+                    View Details
                     <ArrowRight className="h-4 w-4" />
                   </Link>
                 </div>
@@ -472,7 +476,7 @@ export default function HomePage({ content, services = [], products = [], jobs =
           </div>
           {!featuredProducts.length ? (
             <p className="mt-8 text-center text-[10px] font-black uppercase tracking-widest text-[color:var(--text-muted)]">
-              Add products from dashboard to see more modules here.
+              Add products from the dashboard to show your latest solutions here.
             </p>
           ) : null}
         </div>
@@ -486,11 +490,11 @@ export default function HomePage({ content, services = [], products = [], jobs =
             <div className="absolute inset-0 bg-[radial-gradient(circle_at_12%_8%,rgba(179,197,255,0.24),transparent_26%),radial-gradient(circle_at_86%_18%,rgba(86,226,64,0.12),transparent_20%)]" />
             <div className="relative z-10">
               <h2 className="mx-auto max-w-4xl font-headline text-3xl font-black leading-tight tracking-[-0.035em] text-white sm:text-5xl">
-                {finalCta.title || "Ready to build the next version of your website..."}
+                {finalCta.title || "Ready to upgrade your website, software or digital workflow?"}
               </h2>
               <p className="mx-auto mt-5 max-w-3xl text-base leading-8 text-[color:var(--text-secondary)]">
                 {finalCta.description ||
-                  "Share your vision for the next iteration of your business and we will transform it into a precision-engineered roadmap."}
+                  "Share your requirement and we will help you plan the right website, software, ERP or digital marketing solution for your business."}
               </p>
               <div className="mt-8 flex flex-col items-center gap-4 sm:flex-row sm:flex-wrap sm:justify-center">
                 <PrimaryLink href={finalCta.primaryHref || "/contact"}>
