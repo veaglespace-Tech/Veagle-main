@@ -117,7 +117,7 @@ export const defaultContent = {
     email: "info@veaglespace.com",
     phone: "+91 82379 99101",
     address:
-      "Kudale Patil Tower, Office No. 207, 2nd Floor, Jadhav Nagar, Near Shiv Temple, Vadgaon Budruk, Pune, Maharashtra 411041",
+      "Office no 207, Kudale Patil Chambers, Heritage, near Bhairavnath Temple, Jadhav Nagar, Vadgaon Budruk, Pune, Maharashtra 411041",
   },
   about: {
     eyebrow: "About Veagle Space",
@@ -125,7 +125,7 @@ export const defaultContent = {
     description:
       "Veagle Space Technology Pvt. Ltd. is a Pune-based technology company delivering software development, dynamic websites, ERP systems, UI/UX, SEO, digital marketing and business support services for growing brands.",
     story:
-      "We work with organizations that need a partner capable of understanding both business requirements and implementation detail. Our goal is to create digital systems that are easier to use, easier to manage and better aligned with real operations.",
+      "We help organizations turn business requirements into practical digital systems that are easier to use and manage.",
     background:
       "Our process connects planning, design, development, deployment and improvement so businesses can launch faster without sacrificing usability, performance or maintainability.",
     milestones: [

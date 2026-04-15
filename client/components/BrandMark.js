@@ -11,7 +11,7 @@ const variantClasses = {
   footer: {
     wrapper: "gap-4",
     title: "max-w-[19rem] text-base leading-tight sm:max-w-[24rem] sm:text-lg",
-    tagline: "mt-2 max-w-md text-sm leading-6 text-[color:var(--text-secondary)]",
+    tagline: "hidden",
   },
 };
 
@@ -45,7 +45,7 @@ export default function BrandMark({
       </div>
 
       <div className="min-w-0">
-        <p className={`font-black tracking-tighter ${textTone} ${styles.title}`}>
+        <p className={`font-headline tracking-tighter ${textTone} ${styles.title}`}>
           {COMPANY_BRAND_NAME}
         </p>
         {COMPANY_TAGLINE ? (

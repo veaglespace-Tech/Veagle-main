@@ -25,7 +25,7 @@ const quickLinks = [
 
 function FooterLink({ href, label, external = false }) {
   const className =
-    "group inline-flex items-center break-words text-sm leading-7 text-slate-400 transition-colors duration-300 hover:text-slate-100";
+    "group inline-flex items-center break-words text-sm leading-7 text-[color:var(--text-secondary)] transition-colors duration-300 hover:text-[color:var(--text-primary)]";
 
   if (external) {
     return (
@@ -71,13 +71,13 @@ export default function SiteFooter({ content, services }) {
     : COMPANY_ADDRESS_QUERY;
 
   return (
-    <footer className="w-full border-t border-slate-800/30 bg-[#0b0e14] pb-12 pt-24">
+    <footer className="w-full border-t border-[color:var(--border)] bg-[color:var(--page-bg)] pb-12 pt-24">
       <div className="mx-auto grid max-w-7xl grid-cols-1 gap-16 px-8 pb-24 md:grid-cols-4 md:px-12">
         <div className="space-y-8">
-          <div className="font-headline text-2xl font-bold tracking-tighter text-slate-50">
-            <BrandMark variant="footer" tone="light" />
+          <div className="font-headline text-2xl font-bold tracking-tighter text-[color:var(--text-primary)]">
+            <BrandMark variant="footer" tone="auto" />
           </div>
-          <p className="max-w-xs text-sm leading-relaxed text-slate-400">{COMPANY_TAGLINE}</p>
+          <p className="max-w-xs text-sm leading-relaxed text-[color:var(--text-secondary)]">{COMPANY_TAGLINE}</p>
           <div className="flex space-x-4">
             {socialLinksData.map((social) => {
               const Icon = social.icon;
@@ -194,20 +194,17 @@ export default function SiteFooter({ content, services }) {
         </div>
       </div>
 
-      <div className="mx-auto max-w-7xl border-t border-[color:var(--border)] px-8 pt-12 md:px-12">
-        <div className="flex flex-col items-center justify-between gap-8 md:flex-row">
-          <div className="text-[10px] font-black uppercase tracking-[0.2em] text-[color:var(--text-muted)] opacity-50">
+      <div className="mx-auto max-w-7xl border-t border-[color:var(--border)] px-8 pt-10 md:px-12">
+        <div className="flex flex-col items-center justify-center gap-6 text-center">
+          <div className="text-[11px] font-black uppercase tracking-[0.2em] text-[color:var(--text-muted)] opacity-60">
             Copyright {new Date().getFullYear()} {COMPANY_NAME}. All rights reserved.
           </div>
-          <div className="flex flex-wrap justify-center gap-8 text-[10px] font-black uppercase tracking-[0.2em] text-[color:var(--text-muted)]">
-            <Link href="/contact" className="transition-colors hover:text-[color:var(--text-primary)]">
+          <div className="flex flex-wrap justify-center gap-x-10 gap-y-4 text-[10px] font-black uppercase tracking-[0.25em] text-[color:var(--text-muted)]">
+            <Link href="/contact" className="transition-colors hover:text-[color:var(--accent-soft)]">
               Terms of Service
             </Link>
-            <Link href="/contact" className="transition-colors hover:text-[color:var(--text-primary)]">
+            <Link href="/contact" className="transition-colors hover:text-[color:var(--accent-soft)]">
               Privacy Policy
-            </Link>
-            <Link href="/login" className="transition-colors hover:text-[color:var(--text-primary)]">
-              Login
             </Link>
           </div>
         </div>

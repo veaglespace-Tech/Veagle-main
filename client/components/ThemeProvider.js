@@ -11,9 +11,10 @@ export const THEME_STORAGE_KEY = "veagle-theme";
 export const themeInitScript = `
   (function () {
     try {
-      document.documentElement.setAttribute("data-theme", "${DARK_THEME}");
-      document.documentElement.style.colorScheme = "dark";
-      localStorage.setItem("${THEME_STORAGE_KEY}", "${DARK_THEME}");
+      const storedTheme = localStorage.getItem("${THEME_STORAGE_KEY}");
+      const theme = storedTheme || "${DARK_THEME}";
+      document.documentElement.setAttribute("data-theme", theme);
+      document.documentElement.style.colorScheme = theme === "${DARK_THEME}" ? "dark" : "light";
     } catch (error) {}
   })();
 `;
@@ -42,30 +43,37 @@ export default function ThemeProvider({ children }) {
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
-    applyTheme(DARK_THEME);
-    setTheme(DARK_THEME);
+    const stored = localStorage.getItem(THEME_STORAGE_KEY);
+    if (stored === LIGHT_THEME) {
+      setTheme(LIGHT_THEME);
+      applyTheme(LIGHT_THEME);
+    } else {
+      applyTheme(DARK_THEME);
+    }
     setMounted(true);
   }, []);
 
-  useEffect(() => {
-    if (!mounted) {
-      return;
-    }
-
-    applyTheme(DARK_THEME);
-    localStorage.setItem(THEME_STORAGE_KEY, DARK_THEME);
-  }, [mounted]);
+  const toggleTheme = () => {
+    const nextTheme = theme === DARK_THEME ? LIGHT_THEME : DARK_THEME;
+    setTheme(nextTheme);
+    applyTheme(nextTheme);
+    localStorage.setItem(THEME_STORAGE_KEY, nextTheme);
+  };
 
   const value = useMemo(
     () => ({
-      theme: DARK_THEME,
-      isDark: true,
-      isLight: false,
-      setTheme: () => setTheme(DARK_THEME),
-      toggleTheme: () => setTheme(DARK_THEME),
+      theme,
+      isDark: theme === DARK_THEME,
+      isLight: theme === LIGHT_THEME,
+      setTheme: (t) => {
+        setTheme(t);
+        applyTheme(t);
+        localStorage.setItem(THEME_STORAGE_KEY, t);
+      },
+      toggleTheme,
       mounted,
     }),
-    [mounted]
+    [theme, mounted]
   );
 
   return <ThemeContext.Provider value={value}>{children}</ThemeContext.Provider>;

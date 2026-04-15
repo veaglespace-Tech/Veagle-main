@@ -164,28 +164,29 @@ export default function CareerPageContent({ jobs, content }) {
 
   return (
     <main className="overflow-hidden bg-[color:var(--page-bg)] text-[color:var(--text-secondary)]">
-      <section className="relative flex min-h-[70vh] items-center justify-center overflow-hidden px-4 pb-16 pt-28 sm:px-6 sm:pt-32 lg:px-8 lg:pt-36">
+      {/* Hero Section - Permanently Dark */}
+      <section className="relative flex min-h-[70vh] items-center justify-center overflow-hidden bg-[#0c0e18] px-4 pb-16 pt-28 sm:px-6 sm:pt-32 lg:px-8 lg:pt-36">
         <div className="absolute inset-0">
           <Image
             src={pageArtwork.hero}
             alt="Career command background"
             fill
-            className="object-cover opacity-35"
+            className="object-cover opacity-50 brightness-[0.4]"
             priority
             unoptimized
           />
-          <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(8,11,19,0.52),rgba(10,12,18,0.92))]" />
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_24%,rgba(25,94,226,0.28),transparent_34%),radial-gradient(circle_at_76%_14%,rgba(86,226,64,0.1),transparent_30%)]" />
+          <div className="absolute inset-0 bg-gradient-to-b from-[#0c0e18]/90 via-[#0c0e18]/40 to-[#0c0e18]" />
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_0%,#0c0e18_100%)] opacity-80" />
         </div>
 
         <div className="relative z-10 mx-auto w-full max-w-5xl text-center">
-            <span className="inline-flex items-center rounded-full border border-white/12 bg-[color:var(--surface-strong)] px-4 py-2 text-[10px] font-black uppercase tracking-[0.24em] text-[color:var(--text-muted)]">
+            <span className="inline-flex items-center rounded-full border border-white/10 bg-white/5 px-4 py-2 text-[10px] font-black uppercase tracking-[0.24em] text-blue-100/60">
             {career.eyebrow || "Careers at Veagle Space"}
             </span>
           <h1 className={`mx-auto mt-8 max-w-4xl ${pageHeroTitleClass} text-white`}>
             {renderHeroTitle(career.title)}
           </h1>
-            <p className="mx-auto mt-6 max-w-2xl text-base leading-8 text-[color:var(--text-secondary)] sm:text-lg">
+            <p className="mx-auto mt-6 max-w-2xl text-base leading-8 text-blue-100/70 sm:text-lg">
               {career.description ||
               "Join a team working on practical website, software, design, marketing and support projects for real businesses."}
             </p>
@@ -201,12 +202,12 @@ export default function CareerPageContent({ jobs, content }) {
               return (
                 <article
                   key={item.title}
-                  className="rounded-[1.2rem] border border-white/8 bg-[#1b1f27]/90 p-6 transition hover:border-[color:var(--accent)]/35 hover:bg-[#202632]"
+                  className="group veagle-premium-card rounded-[1.2rem] border border-[color:var(--border)] bg-[color:var(--surface)] p-6"
                 >
-                  <div className="mb-6 flex h-11 w-11 items-center justify-center rounded-2xl bg-white/[0.04] text-[color:var(--accent)]">
-                    <Icon className="h-5 w-5" />
+                  <div className="mb-6 flex h-11 w-11 items-center justify-center rounded-2xl bg-white/[0.04]">
+                    <Icon className="veagle-icon-animate h-5 w-5 text-white" />
                   </div>
-                  <h2 className="font-headline text-2xl font-black tracking-tight text-[color:var(--text-primary)]">
+                  <h2 className="font-headline text-2xl font-black tracking-tight text-white">
                     {item.title}
                   </h2>
                   <p className="mt-4 text-sm leading-7 text-[color:var(--text-muted)]">{item.description}</p>
@@ -217,14 +218,14 @@ export default function CareerPageContent({ jobs, content }) {
         </section>
       ) : null}
 
-      <section className="bg-[#0d0f13] px-4 py-16 sm:px-6 lg:px-8 lg:py-20">
+      <section className="veagle-inverse-surface bg-[#0d0f13] px-4 py-16 sm:px-6 lg:px-8 lg:py-20">
         <div className="mx-auto w-full max-w-screen-2xl">
           <div className="mb-10 flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
             <div>
-              <h2 className="font-headline text-4xl font-black tracking-tight text-[color:var(--text-primary)] sm:text-5xl">
+              <h2 className="font-headline text-4xl font-black tracking-tight text-white sm:text-5xl">
                 Open Positions
               </h2>
-              <p className="mt-4 max-w-xl text-sm leading-7 text-[color:var(--text-muted)]">
+              <p className="mt-4 max-w-xl text-sm leading-7 text-white/80">
                 Select a role and apply directly. We are looking for people who can learn fast, communicate clearly and build practical outcomes.
               </p>
             </div>
@@ -254,10 +255,10 @@ export default function CareerPageContent({ jobs, content }) {
                     key={job.id}
                     type="button"
                     onClick={() => handleJobClick(job)}
-                    className={`group flex w-full flex-col justify-between gap-6 rounded-[1.15rem] border p-6 text-left transition duration-300 md:flex-row md:items-center md:gap-8 ${
+                    className={`group veagle-premium-card flex w-full flex-col justify-between gap-6 rounded-[1.15rem] border p-6 text-left ${
                       isSelected
-                        ? "border-[color:var(--accent)]/60 bg-[#1f2530] shadow-[0_0_30px_rgba(25,94,226,0.15)]"
-                        : "border-white/8 bg-[#191d24]/92 hover:border-[color:var(--accent)]/40 hover:bg-[#1f2530]"
+                        ? "border-[color:var(--accent)]/60 bg-[color:var(--surface-strong)] shadow-[0_0_30px_rgba(0,0,0,0.05)]"
+                        : "border-[color:var(--border)] bg-[color:var(--surface)]"
                     }`}
                   >
                     <div className="space-y-3">
@@ -271,13 +272,13 @@ export default function CareerPageContent({ jobs, content }) {
                           {formatPostedLabel(job.createdAt)}
                         </span>
                         {isSelected ? (
-                          <span className="rounded-[0.6rem] bg-[color:var(--accent)]/20 px-2.5 py-1 text-[10px] font-black uppercase tracking-[0.18em] text-[color:var(--accent)]">
+                          <span className="rounded-[0.6rem] bg-white text-black px-2.5 py-1 text-[10px] font-black uppercase tracking-[0.18em]">
                             Selected
                           </span>
                         ) : null}
                       </div>
 
-                      <h3 className="font-headline text-2xl font-black tracking-tight text-[color:var(--text-primary)]">
+                      <h3 className="font-headline text-2xl font-black tracking-tight text-white">
                         {job.title}
                       </h3>
 
@@ -286,7 +287,7 @@ export default function CareerPageContent({ jobs, content }) {
                           {tags.map((tag) => (
                             <span
                               key={`${job.id}-${tag}`}
-                              className="rounded-[0.55rem] border border-white/8 bg-white/[0.04] px-2.5 py-1 text-[10px] font-black uppercase tracking-[0.14em] text-[color:var(--text-muted)]"
+                              className="rounded-[0.55rem] border border-white/10 bg-white/5 px-2.5 py-1 text-[10px] font-black uppercase tracking-[0.14em] text-white"
                             >
                               {tag}
                             </span>
@@ -295,7 +296,7 @@ export default function CareerPageContent({ jobs, content }) {
                       ) : null}
 
                       {job.description ? (
-                        <p className="max-w-3xl text-sm leading-7 text-[color:var(--text-secondary)]">{job.description}</p>
+                        <p className="line-clamp-3 max-w-3xl text-sm leading-7">{job.description}</p>
                       ) : null}
                     </div>
 
@@ -304,13 +305,13 @@ export default function CareerPageContent({ jobs, content }) {
                         <p className="text-[9px] font-black uppercase tracking-[0.18em] text-[color:var(--text-muted)]">
                           Location
                         </p>
-                        <p className="mt-2 flex items-center gap-2 text-sm font-medium text-[color:var(--text-primary)] md:justify-end">
-                          <MapPin className="h-4 w-4 text-[color:var(--accent)]" />
+                        <p className="mt-2 flex items-center gap-2 text-sm font-medium text-white md:justify-end">
+                          <MapPin className="veagle-icon-animate h-4 w-4" />
                           {job.location}
                         </p>
                       </div>
-                      <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-white/12 text-[color:var(--text-primary)] transition duration-300 group-hover:scale-105 group-hover:bg-[color:var(--accent)] group-hover:text-white">
-                        <ArrowUpRight className="h-4.5 w-4.5" />
+                      <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-white/12 text-white">
+                        <ArrowUpRight className="veagle-icon-animate h-4.5 w-4.5" />
                       </span>
                     </div>
                   </button>
@@ -318,11 +319,11 @@ export default function CareerPageContent({ jobs, content }) {
               })}
             </div>
           ) : (
-            <div className="rounded-[1.2rem] border border-dashed border-white/12 bg-[#171b22] px-6 py-12 text-center">
+            <div className="veagle-inverse-surface rounded-[1.2rem] border border-dashed border-white/12 bg-[#171b22] px-6 py-12 text-center">
               <h3 className="font-headline text-2xl font-black tracking-tight text-white">
                 No open positions yet
               </h3>
-              <p className="mx-auto mt-3 max-w-xl text-sm leading-7 text-[color:var(--text-muted)]">
+              <p className="mx-auto mt-3 max-w-xl text-sm leading-7 text-white/75">
                 Add jobs from the dashboard and this section will update automatically.
               </p>
             </div>
@@ -341,28 +342,28 @@ export default function CareerPageContent({ jobs, content }) {
                 "Share your details and resume. Our team reviews every profile for skill fit, communication and project alignment."}
             </p>
 
-            <div className="mt-10 overflow-hidden rounded-[1.2rem] border border-white/8 bg-[linear-gradient(150deg,#2b5fd4,#1d47ab)] p-6 shadow-[0_24px_70px_rgba(2,7,22,0.35)]">
-              <p className="text-[10px] font-black uppercase tracking-[0.22em] text-[color:var(--text-primary)]/70">
+            <div className="veagle-inverse-surface mt-10 overflow-hidden rounded-[1.2rem] border border-white/8 bg-[linear-gradient(150deg,#1a2a59,#0c0e18)] p-6 shadow-[0_24px_70px_rgba(2,7,22,0.35)]">
+              <p className="text-[10px] font-black uppercase tracking-[0.22em] text-white/70">
                 Selected Role
               </p>
               <h3 className="mt-2 font-headline text-3xl font-black tracking-tight text-white">
                 {selectedJob?.title || "Pending Selection"}
               </h3>
-              <p className="mt-2 text-sm text-[color:var(--text-secondary)]">
+              <p className="mt-2 text-sm text-white/80">
                 {selectedJob?.location || "Choose a role above to proceed with the application."}
               </p>
 
               <div className="mt-6 space-y-3">
                 {reasons.length ? (
                   reasons.map((item) => (
-                    <div key={item} className="flex items-center gap-3 text-sm text-[color:var(--text-secondary)]">
-                      <CheckCircle2 className="h-4.5 w-4.5 text-[color:var(--text-primary)]/60" />
+                    <div key={item} className="flex items-center gap-3 text-sm text-white/85">
+                      <CheckCircle2 className="h-4.5 w-4.5 text-white/65" />
                       <span>{item}</span>
                     </div>
                   ))
                 ) : (
-                  <div className="flex items-center gap-3 text-sm text-[color:var(--text-secondary)]">
-                    <CheckCircle2 className="h-4.5 w-4.5 text-[color:var(--text-primary)]/60" />
+                  <div className="flex items-center gap-3 text-sm text-white/85">
+                    <CheckCircle2 className="h-4.5 w-4.5 text-white/65" />
                     <span>We review applications and get back with the next steps when there is a fit.</span>
                   </div>
                 )}

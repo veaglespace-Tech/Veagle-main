@@ -16,10 +16,13 @@ export const COMPANY_EMAIL_LINK = `mailto:${COMPANY_EMAIL}`;
 export const COMPANY_PHONE = "+91 82379 99101";
 export const COMPANY_PHONE_LINK = "tel:+918237999101";
 export const COMPANY_ADDRESS =
-  "Kudale Patil Tower, Office No. 207, 2nd Floor, Jadhav Nagar, Near Shiv Temple, Vadgaon Budruk, Pune, Maharashtra 411041";
+  "Office no 207, Kudale Patil Chambers, Heritage, near Bhairavnath Temple, Jadhav Nagar, Vadgaon Budruk, Pune, Maharashtra 411041";
 export const COMPANY_LOCATION_LABEL = "Pune, Maharashtra";
+const COMPANY_ADDRESS_ENCODED = encodeURIComponent(COMPANY_ADDRESS);
 export const COMPANY_ADDRESS_QUERY =
-  "https://maps.google.com/?q=Kudale+Patil+Tower+Vadgaon+Budruk+Pune";
+  `https://www.google.com/maps/search/?api=1&query=${COMPANY_ADDRESS_ENCODED}`;
+export const COMPANY_MAP_EMBED_URL =
+  `https://www.google.com/maps?q=${COMPANY_ADDRESS_ENCODED}&z=17&output=embed`;
 export const COMPANY_WHATSAPP =
   "https://api.whatsapp.com/send/?phone=918237999101&text&type=phone_number&app_absent=0";
 export const COMPANY_FACEBOOK =

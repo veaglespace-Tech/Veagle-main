@@ -51,7 +51,7 @@ export default async function ProductDetailPage({ params }) {
     return (
       <main className="px-4 py-28 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-3xl text-center">
-          <h1 className="font-headline text-3xl font-black tracking-tight text-white sm:text-4xl">
+          <h1 className="font-headline text-3xl font-black tracking-tight text-[color:var(--text-primary)] sm:text-4xl">
             Product not found
           </h1>
           <p className="mt-4 text-sm leading-7 text-[color:var(--text-secondary)]">
@@ -143,12 +143,8 @@ export default async function ProductDetailPage({ params }) {
             </div>
 
             <div className="flex flex-wrap gap-2">
-              <Chip className="border-white/10 bg-white/[0.05] text-[#dce6fb]">
-                {categoryName}
-              </Chip>
-              <Chip className="border-white/10 bg-white/[0.05] text-[#dce6fb]">
-                Inquiry ready
-              </Chip>
+              <Chip>{categoryName}</Chip>
+              <Chip>Inquiry ready</Chip>
             </div>
 
             <div className="flex flex-col gap-3 sm:flex-row">
@@ -176,7 +172,7 @@ export default async function ProductDetailPage({ params }) {
                     <Link
                       key={itemSlug}
                       href={`/products/${itemSlug}`}
-                      className="group overflow-hidden rounded-[1.7rem] border border-[color:var(--border)] bg-[linear-gradient(180deg,#171b24,#1d222d)] shadow-[0_24px_70px_rgba(0,0,0,0.22)] transition duration-300 hover:-translate-y-1"
+                       className="group veagle-inverse-surface overflow-hidden rounded-[1.7rem] border border-[color:var(--border)] bg-[linear-gradient(180deg,#171b24,#1d222d)] shadow-[0_24px_70px_rgba(0,0,0,0.22)] transition duration-300 hover:-translate-y-1"
                     >
                       {item.imageUrl ? (
                         <div className="relative h-40 overflow-hidden">
@@ -192,7 +188,7 @@ export default async function ProductDetailPage({ params }) {
                         </div>
                       ) : null}
                       <div className="space-y-3 px-5 pb-5 pt-4">
-                        <h3 className="font-headline text-2xl font-black tracking-tight text-white">
+                        <h3 className="font-headline text-2xl font-black tracking-tight text-[color:var(--text-primary)]">
                           {item.title}
                         </h3>
                         <p className="text-sm leading-7 text-[color:var(--text-secondary)]">

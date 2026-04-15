@@ -300,8 +300,8 @@ export default function JobApplicationForm({
           <div
             className={
               status.type === "success"
-                ? "rounded-[0.9rem] border border-emerald-500/25 bg-emerald-500/10 px-4 py-3 text-sm text-emerald-200"
-                : "rounded-[0.9rem] border border-rose-500/25 bg-rose-500/10 px-4 py-3 text-sm text-rose-200"
+                ? "rounded-[0.9rem] border border-emerald-500/25 bg-emerald-500/10 px-4 py-3 text-sm text-emerald-600 dark:text-emerald-200"
+                : "rounded-[0.9rem] border border-rose-500/25 bg-rose-500/10 px-4 py-3 text-sm text-rose-600 dark:text-rose-200"
             }
           >
             {status.message}
@@ -334,19 +334,19 @@ function Field({ label, error, ...props }) {
 }
 
 function FieldError({ children }) {
-  return <span className="mt-2 block text-xs text-rose-300">{children}</span>;
+  return <span className="mt-2 block text-xs text-rose-600 dark:text-rose-300">{children}</span>;
 }
 
 function AccessBanner({ session, loginHref, registerHref, onLogout }) {
   if (isUserSession(session)) {
     return (
-      <div className="mb-6 rounded-2xl border border-emerald-500/20 bg-emerald-500/10 px-4 py-3 text-sm text-emerald-100">
+      <div className="mb-6 rounded-2xl border border-emerald-500/20 bg-emerald-500/10 px-4 py-3 text-sm text-emerald-700 dark:text-emerald-100">
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <div>
-            <p className="font-semibold">
+            <p className="font-semibold text-emerald-800 dark:text-emerald-100">
               Logged in as {session.username || session.email}
             </p>
-            <p className="mt-1 text-xs text-emerald-100/80">
+            <p className="mt-1 text-xs text-emerald-700/80 dark:text-emerald-100/80">
               {session.email}
               {session.contact ? ` / ${session.contact}` : ""}
             </p>
@@ -365,22 +365,22 @@ function AccessBanner({ session, loginHref, registerHref, onLogout }) {
 
   return (
     <div className={cn(accessBannerClass, "border-amber-500/30 bg-amber-500/5")}>
-      <p className="font-semibold text-amber-200">
+      <p className="font-semibold text-amber-700 dark:text-amber-200">
         Registration and Login required
       </p>
-      <p className="mt-2 text-xs leading-6 text-amber-100/70">
+      <p className="mt-2 text-xs leading-6 text-amber-800/70 dark:text-amber-100/70">
         Please sign in or create a profile to submit your job application securely.
       </p>
       <div className="mt-4 flex flex-wrap gap-3">
         <Link
           href={loginHref}
-          className={cn(primaryButtonClass, compactActionButtonClass, "bg-amber-600 hover:bg-amber-500")}
+          className={cn(primaryButtonClass, compactActionButtonClass, "bg-amber-600 hover:bg-amber-500 text-white")}
         >
           Sign In
         </Link>
         <Link
           href={registerHref}
-          className={cn(secondaryButtonClass, compactActionButtonClass, "border-amber-500/30 text-amber-200")}
+          className={cn(secondaryButtonClass, compactActionButtonClass, "border-amber-500/30 text-amber-700 dark:text-amber-200")}
         >
           Create Profile
         </Link>

@@ -37,7 +37,7 @@ export default async function ServiceDetailPage({ params }) {
     return (
       <main className="px-4 py-28 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-3xl text-center">
-          <h1 className="font-headline text-3xl font-black tracking-tight text-white sm:text-4xl">
+          <h1 className="font-headline text-3xl font-black tracking-tight text-[color:var(--text-primary)] sm:text-4xl">
             Service not found
           </h1>
           <p className="mt-4 text-sm leading-7 text-[color:var(--text-secondary)]">

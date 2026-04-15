@@ -40,40 +40,40 @@ export default function ServiceDetailPageContent({ service, relatedServices }) {
     return (blocks || []).map((block, index) => {
       if (block.type === "hero") {
         return (
-          <section key={block.id || index} className={`${firstSectionClass} relative flex min-h-[70vh] items-center overflow-hidden pb-24 sm:pb-32 lg:pb-40`}>
+          <section key={block.id || index} className={`${firstSectionClass} relative flex min-h-[70vh] items-center overflow-hidden bg-[#0c0e18] pb-24 sm:pb-32 lg:pb-40`}>
             {block.content.imageUrl && (
               <div className="absolute inset-0 z-0">
                 <Image 
                   src={block.content.imageUrl} 
                   alt={block.content.title}
                   fill
-                  className="object-cover opacity-30 brightness-[0.5] grayscale-[0.2]"
+                  className="object-cover opacity-50 brightness-[0.4] grayscale-[0.2]"
                   unoptimized
                   priority
                 />
-                <div className="absolute inset-0 bg-gradient-to-b from-[color:var(--page-bg)]/80 via-[color:var(--page-bg)]/40 to-[color:var(--page-bg)]" />
-                <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_0%,var(--page-bg)_100%)]" />
+                <div className="absolute inset-0 bg-gradient-to-b from-[#0c0e18]/80 via-[#0c0e18]/20 to-[#0c0e18]" />
+                <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_0%,#0c0e18_100%)] opacity-60" />
               </div>
             )}
             
             <div className="veagle-section-wash" />
-            <div className="veagle-grid-background pointer-events-none" />
+            <div className="veagle-grid-background pointer-events-none opacity-40" />
             
             <div className={`${containerClass} relative z-10 mx-auto max-w-6xl`}>
               <div className="flex flex-col items-center text-center">
-                <Eyebrow className="mb-8">
+                <Eyebrow className="mb-8 text-blue-100/60 after:bg-blue-100/20">
                   Service Overview
                 </Eyebrow>
-                <h1 className={`${pageHeroTitleClass} text-[color:var(--text-primary)]`}>
+                <h1 className={`${pageHeroTitleClass} text-white`}>
                   {block.content.title}
                 </h1>
-                <p className="mt-10 max-w-3xl text-lg leading-relaxed text-[color:var(--text-secondary)] opacity-90 sm:text-xl lg:text-2xl">
+                <p className="mt-10 max-w-3xl text-lg leading-relaxed text-blue-100/70 opacity-90 sm:text-xl lg:text-2xl">
                   {block.content.description}
                 </p>
                 <div className="mt-12 flex flex-col items-center gap-4 sm:flex-row">
                   <PrimaryLink href="#initiate">Discuss This Service</PrimaryLink>
-                  <div className="h-px w-12 bg-[color:var(--border)] sm:h-12 sm:w-px" />
-                  <span className="text-[10px] font-black uppercase tracking-[0.3em] text-[color:var(--text-muted)]">
+                  <div className="h-px w-12 bg-white/10 sm:h-12 sm:w-px" />
+                  <span className="text-[10px] font-black uppercase tracking-[0.3em] text-blue-100/40">
                     Section {String(index + 1).padStart(2, "0")}
                   </span>
                 </div>
@@ -245,9 +245,9 @@ export default function ServiceDetailPageContent({ service, relatedServices }) {
             <div className={`${containerClass} relative z-10 grid gap-12 xl:grid-cols-[1.02fr_0.98fr] xl:items-center`}>
               <div className="relative group">
                 <div className="absolute -inset-4 rounded-[2.5rem] bg-[color:var(--accent)]/10 blur-3xl transition duration-700 group-hover:bg-[color:var(--accent)]/20" />
-                <div className="relative overflow-hidden rounded-[2.5rem] border border-[color:var(--border-strong)] bg-[linear-gradient(180deg,#171b24,#1d222d)] p-4 shadow-[color:var(--shadow-card)]">
-                  <div className="relative overflow-hidden rounded-[2rem] border border-[color:var(--border)] bg-[#101622] p-6 lg:p-10">
-                    <div className="relative flex min-h-[320px] items-center justify-center overflow-hidden rounded-[1.5rem] bg-[linear-gradient(180deg,#0f1724,#111b29)] sm:min-h-[440px]">
+                <div className="relative overflow-hidden rounded-[2.5rem] border border-[color:var(--border-strong)] bg-[color:var(--surface)] p-4 shadow-[color:var(--shadow-card)]">
+                  <div className="relative overflow-hidden rounded-[2rem] border border-[color:var(--border)] bg-[color:var(--surface-strong)] p-6 lg:p-10">
+                    <div className="relative flex min-h-[320px] items-center justify-center overflow-hidden rounded-[1.5rem] bg-[color:var(--surface-muted)] sm:min-h-[440px]">
                       <Image
                         alt={service.title}
                         className="object-contain p-10 drop-shadow-[0_20px_50px_rgba(0,0,0,0.5)] transition duration-700 group-hover:scale-105"

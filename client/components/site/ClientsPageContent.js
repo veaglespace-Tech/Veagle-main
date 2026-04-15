@@ -160,23 +160,23 @@ function FeaturedClientCard({ client }) {
   return (
     <ClientCardShell
       client={client}
-      className="group flex h-full flex-col rounded-[1.9rem] bg-[color:var(--surface)] p-6 shadow-[0_26px_80px_-44px_rgba(0,0,0,0.9)] ring-1 ring-white/6 backdrop-blur-[14px] transition duration-300 hover:-translate-y-1 hover:bg-[color:var(--surface-strong)]"
+      className="group veagle-premium-card flex h-full flex-col rounded-[1.9rem] bg-[color:var(--surface)] p-6 shadow-[0_26px_80px_-44px_rgba(0,0,0,0.1)] border border-[color:var(--border)] backdrop-blur-[14px]"
     >
       <div className="flex items-start justify-between gap-4">
         <LogoBadge client={client} />
-        <span className="rounded-full bg-[color:var(--accent-success)]/12 px-3 py-1 text-[10px] font-black uppercase tracking-[0.22em] text-[color:var(--accent-success)]">
+        <span className="rounded-full bg-white/10 px-3 py-1 text-[10px] font-black uppercase tracking-[0.22em] text-white">
           Active
         </span>
       </div>
-      <h3 className="mt-10 font-headline text-2xl font-black tracking-tight text-[color:var(--text-primary)]">
+      <h3 className="mt-10 font-headline text-2xl font-black tracking-tight text-white">
         {client.name}
       </h3>
-      <p className="mt-3 text-sm leading-7 text-[color:var(--text-secondary)]">
+      <p className="mt-3 line-clamp-3 text-sm leading-7 text-[color:var(--text-secondary)]">
         {buildClientSummary(client, "partners")}
       </p>
-      <div className="mt-auto pt-8 text-[10px] font-black uppercase tracking-[0.22em] text-[color:var(--accent)] group-hover:text-[color:var(--text-primary)]">
+      <div className="mt-auto pt-8 text-[10px] font-black uppercase tracking-[0.22em] text-white">
         Client Profile
-        <ArrowRight className="ml-2 inline h-4 w-4 transition group-hover:translate-x-1" />
+        <ArrowRight className="veagle-icon-animate ml-2 inline h-4 w-4" />
       </div>
     </ClientCardShell>
   );
@@ -209,7 +209,7 @@ function WideClientCard({ client }) {
         <h3 className="font-headline text-2xl font-black tracking-tight text-[color:var(--text-primary)]">
           {client.name}
         </h3>
-        <p className="mt-3 text-sm leading-7 text-[color:var(--text-secondary)]">
+        <p className="mt-3 line-clamp-3 text-sm leading-7 text-[color:var(--text-secondary)]">
           {buildClientSummary(client, "technology")}
         </p>
       </div>
@@ -301,7 +301,7 @@ export default function ClientsPageContent({ content, clientsData = [] }) {
 
   return (
     <main className={pageClass}>
-      <section className="relative overflow-hidden pb-16 pt-32 sm:pb-20 sm:pt-36 lg:pb-24 lg:pt-40">
+      <section className="veagle-inverse-surface relative overflow-hidden pb-16 pt-32 sm:pb-20 sm:pt-36 lg:pb-24 lg:pt-40">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_18%,rgba(25,94,226,0.18),transparent_26%),linear-gradient(180deg,rgba(11,14,20,0.2),rgba(11,13,18,0.9))]" />
         <div className="absolute inset-0 opacity-40 [background-image:linear-gradient(to_right,rgba(25,94,226,0.08)_1px,transparent_1px),linear-gradient(to_bottom,rgba(25,94,226,0.08)_1px,transparent_1px)] [background-size:56px_56px]" />
 
@@ -392,7 +392,7 @@ export default function ClientsPageContent({ content, clientsData = [] }) {
                     <h3 className="mt-4 font-headline text-2xl font-black tracking-tight text-[color:var(--text-primary)]">
                       {item.title}
                     </h3>
-                    <p className="mt-3 text-sm leading-7 text-[color:var(--text-secondary)]">
+                    <p className="mt-3 line-clamp-3 text-sm leading-7 text-[color:var(--text-secondary)]">
                       {item.description}
                     </p>
                   </div>
@@ -410,7 +410,7 @@ export default function ClientsPageContent({ content, clientsData = [] }) {
           >
             <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,rgba(25,94,226,0.18),transparent_32%),linear-gradient(180deg,transparent,rgba(8,10,15,0.34))]" />
             <div className="relative z-10">
-              <h2 className="mx-auto max-w-4xl font-headline text-3xl font-black leading-tight tracking-[-0.035em] text-white sm:text-5xl">
+              <h2 className="mx-auto max-w-4xl font-headline text-3xl font-black leading-tight tracking-[-0.035em] text-[color:var(--text-primary)] sm:text-5xl">
                 {clients.ctaTitle || "Need a partner for stronger websites, smoother software and better digital visibility?"}
               </h2>
               <p className="mx-auto mt-5 max-w-3xl text-lg leading-8 text-[color:var(--text-secondary)]">

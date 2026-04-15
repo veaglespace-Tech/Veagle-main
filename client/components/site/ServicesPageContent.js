@@ -2,81 +2,51 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import {
-  ArrowRight,
-  ArrowUpRight,
-  Boxes,
-  BriefcaseBusiness,
-  Code2,
-  Database,
-  Globe,
-  Megaphone,
-  ShoppingCart,
-  Smartphone,
-  Sparkles,
-  Users2,
-} from "lucide-react";
-
-import { cn } from "@/lib/utils";
+import { ArrowRight } from "lucide-react";
 
 import {
-  EmptyState,
   Eyebrow,
   PrimaryLink,
   SecondaryLink,
   buttonGroupClass,
-  containerClass,
   ctaShellClass,
-  firstSectionClass,
   pageClass,
   pageHeroTitleClass,
-  sectionClass,
 } from "@/components/site/UiBits";
-
-const iconMatchers = [
-  { pattern: /(website|web|design|ui|ux)/i, icon: Globe },
-  { pattern: /(e-commerce|commerce|shop|store)/i, icon: ShoppingCart },
-  { pattern: /(software|development|platform|code)/i, icon: Code2 },
-  { pattern: /(erp|system|dashboard|data)/i, icon: Database },
-  { pattern: /(mobile|android|ios|app)/i, icon: Smartphone },
-  { pattern: /(marketing|seo|smo|growth)/i, icon: Megaphone },
-  { pattern: /(resource|outsour|staff)/i, icon: Users2 },
-];
-
-const ctaIcons = [Sparkles, Boxes, Database, Globe];
-
-function resolveServiceIcon(title) {
-  return iconMatchers.find((item) => item.pattern.test(title || ""))?.icon || BriefcaseBusiness;
-}
-
+import { cn, slugify } from "@/lib/utils";
+import { pageArtwork } from "@/lib/visuals";
 
 export default function ServicesPageContent({ services, content }) {
   const pageContent = content?.servicesPage || {};
+  const activeServices = Array.isArray(services) ? services : [];
+
   const heroTitle =
-    pageContent.title ||
-    "Website development, software, ERP, digital marketing and business support services in one place";
+    pageContent.title || "Full-stack website development, custom software systems and technical SEO services.";
   const heroDescription =
     pageContent.description ||
-    "Unified technical delivery for enterprise-grade software, high-conversion web platforms, and automated business workflows.";
-  const moduleHighlights = pageContent?.highlights?.length
-    ? pageContent.highlights.slice(0, 4)
-    : [
-        `${services.length} enterprise-grade service modules ready for deployment.`,
-        "Proprietary engineering standards applied to every delivery node.",
-        "Dynamic page builder integration for custom service blueprints.",
-        "Real-time metadata management via centralized admin portal.",
-      ];
+    "We design, build and optimize digital products that are easier for teams to manage and better for brands to scale.";
 
   return (
     <main className={pageClass}>
-      <section className={`${firstSectionClass} relative overflow-hidden pb-14 sm:pb-16`}>
-        <div className="veagle-section-wash" />
-        <div className="veagle-grid-background" />
+      {/* Hero Section - Permanently Dark */}
+      <section className="relative flex min-h-[90vh] items-center justify-center overflow-hidden bg-[#0c0e18] px-4 pb-16 pt-28 sm:px-6 sm:pt-32 lg:px-8 lg:pt-36">
+        <div className="absolute inset-0">
+          <Image
+            src={pageArtwork.services}
+            alt="Services background"
+            fill
+            className="object-cover opacity-50 brightness-[0.4]"
+            priority
+            unoptimized
+          />
+          <div className="absolute inset-0 bg-gradient-to-b from-[#0c0e18]/90 via-[#0c0e18]/60 to-[#0c0e18]" />
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_0%,#0c0e18_100%)] opacity-80" />
+        </div>
 
-        <div className={`${containerClass} relative z-10 flex flex-col items-center text-center`}>
-          <div className="max-w-4xl space-y-10">
-            <div className="flex flex-col items-center space-y-6">
-              <Eyebrow>
+        <div className="relative z-10 w-full max-w-7xl mx-auto px-4 text-center">
+          <div className="max-w-4xl mx-auto">
+            <div className="flex flex-col items-center space-y-8">
+              <Eyebrow className="text-blue-100/60 after:bg-blue-100/20">
                 {pageContent.eyebrow || "Our Services"}
               </Eyebrow>
 
@@ -84,26 +54,26 @@ export default function ServicesPageContent({ services, content }) {
                 <h1 className={`${pageHeroTitleClass} text-white`}>
                   {heroTitle}
                 </h1>
-                <p className="mx-auto max-w-2xl text-[1.1rem] leading-8 text-[color:var(--text-secondary)]">
+                <p className="mx-auto max-w-2xl text-[1.1rem] leading-8 text-blue-100/70">
                   {heroDescription}
                 </p>
               </div>
 
               <div className={cn(buttonGroupClass, "justify-center")}>
                 <PrimaryLink href="/contact">Discuss Your Requirement</PrimaryLink>
-                <SecondaryLink href="/contact">
+                <SecondaryLink href="/contact" className="border-white/10 text-white hover:bg-white/5">
                   Request a Quote
                 </SecondaryLink>
               </div>
             </div>
 
-            <div className="mx-auto grid max-w-3xl gap-4 sm:grid-cols-3">
+            <div className="mx-auto grid max-w-3xl gap-4 sm:grid-cols-3 mt-16">
               <div className="rounded-[1.5rem] border border-white/10 bg-white/[0.04] p-5 backdrop-blur-sm transition-colors hover:bg-white/[0.06]">
                 <p className="text-[10px] font-black uppercase tracking-[0.24em] text-white/90">
                   Active Services
                 </p>
                 <p className="mt-3 font-headline text-3xl font-black tracking-tight text-white">
-                  {services.length}
+                  {activeServices.length}
                 </p>
               </div>
               <div className="rounded-[1.5rem] border border-white/10 bg-white/[0.04] p-5 backdrop-blur-sm transition-colors hover:bg-white/[0.06]">
@@ -127,139 +97,100 @@ export default function ServicesPageContent({ services, content }) {
         </div>
       </section>
 
-      <section className={`${sectionClass} pt-8`}>
-        <div className={containerClass}>
-          <div className="mb-8 flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
-            <div className="space-y-2">
-              <p className="font-headline text-[11px] font-black uppercase tracking-[0.24em] text-white">
-                Service Directory
-              </p>
-              <p className="text-sm text-[color:var(--text-secondary)]">
-                Open any service card to learn more about the scope, features and next steps.
-              </p>
-            </div>
-            <div className="inline-flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.28em] text-[#8ba8ff]">
-              <span className="h-2 w-2 rounded-full bg-[#8ba8ff] shadow-[0_0_8px_rgba(139,168,255,0.4)]" />
-              SEO-Ready, Mobile-Friendly Pages
-            </div>
+      {/* Briefing Section - Unified Pattern */}
+      <section className="bg-[color:var(--page-bg-soft)] px-4 py-20 sm:px-6 lg:px-8 lg:py-24 border-y border-[color:var(--border)]">
+        <div className="mx-auto max-w-screen-2xl">
+          <div className="mb-14 text-center max-w-3xl mx-auto">
+            <Eyebrow className="text-[color:var(--accent)]">
+              What We Help With
+            </Eyebrow>
+            <h2 className="mt-6 font-headline text-4xl font-black tracking-tight text-[color:var(--text-primary)] sm:text-5xl">
+              Core Service Strengths
+            </h2>
+            <p className="mt-4 text-sm leading-7 text-[color:var(--text-secondary)]">
+              Strategic technical delivery across multiple engineering nodes, optimized for business scalability and operational clarity.
+            </p>
           </div>
 
-          {services.length ? (
-            <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
-              {services.map((service, index) => {
-                const Icon = resolveServiceIcon(service.title);
-                const detailHref = service.slug ? `/services/${service.slug}` : "/services";
+          <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+            {activeServices.map((service, index) => {
+              const serviceSlug = service.slug || slugify(service.title);
 
-                return (
-                  <Link
-                    key={service.slug || service.id || service.title}
-                    href={detailHref}
-                    className="group overflow-hidden rounded-[1.4rem] border border-[color:var(--border)] bg-[linear-gradient(180deg,#171b24,#1d222d)] shadow-[0_24px_70px_rgba(0,0,0,0.24)] transition duration-300 hover:-translate-y-1 hover:border-[color:var(--border-strong)] hover:shadow-[0_26px_80px_rgba(25,94,226,0.15)]"
-                  >
-                    {/* Image section */}
-                    <div className="relative h-44 overflow-hidden sm:h-48">
-                      <Image
-                        alt={service.title}
-                        className="object-cover transition duration-500 group-hover:scale-105"
-                        fill
-                        sizes="(max-width: 1280px) 100vw, 33vw"
-                        src={service.imageUrl}
-                        unoptimized
-                      />
-                      <div className="absolute inset-0 bg-[linear-gradient(180deg,transparent_40%,rgba(15,18,26,0.85))]" />
-                      <div className="absolute bottom-3 left-4 flex items-center gap-2">
-                        <div className="flex h-8 w-8 items-center justify-center rounded-xl border border-white/12 bg-[rgba(15,18,26,0.75)] text-white backdrop-blur-sm">
-                          <Icon className="h-4 w-4" />
-                        </div>
-                        <span className="text-[10px] font-black uppercase tracking-[0.24em] text-[color:var(--text-muted)]">
-                          Service 0{index + 1}
-                        </span>
-                      </div>
+              return (
+                <article
+                  key={service.id || `service-${index}`}
+                  className="group veagle-premium-card relative flex flex-col overflow-hidden rounded-[1.25rem]"
+                >
+                  <div className="relative z-10 flex h-full flex-col p-8">
+                    <div className="mb-8 flex items-center justify-between">
+                      <div className="h-[2px] w-12 bg-[color:var(--accent)] transition-all duration-500 group-hover:w-20" />
+                      <span className="text-[10px] font-black uppercase tracking-[0.2em] text-[color:var(--text-muted)]">
+                        0{index + 1}
+                      </span>
                     </div>
 
-                    {/* Content section */}
-                    <div className="space-y-4 px-4 pb-4 pt-3.5">
-                      <div>
-                        <h3 className="font-headline text-2xl font-black tracking-tight text-white leading-tight">
-                          {service.title}
-                        </h3>
-                        <p className="mt-2.5 min-h-[64px] text-[13px] leading-6 text-[color:var(--text-secondary)]">
-                          {service.description}
-                        </p>
-                      </div>
+                    <h3 className="font-headline text-3xl font-black tracking-tight text-white sm:text-4xl">
+                      {service.title}
+                    </h3>
+                    
+                    <p className="mt-6 flex-grow text-sm leading-8 text-[color:var(--text-muted)] group-hover:text-white/90 transition-colors">
+                      {service.content ||
+                        "Full-cycle development from discovery to deployment, ensuring a project that is easier for you to manage and scale."}
+                    </p>
 
-                      <div className="space-y-2.5">
-                        {(service.features || []).slice(0, 3).map((feature) => (
-                          <div
-                            key={feature.id || feature.name}
-                            className="flex items-center gap-3"
-                          >
-                            <div className="h-1 w-1 shrink-0 rounded-full bg-[color:var(--accent)] shadow-[0_0_8px_rgba(25,94,226,0.3)]" />
-                            <span className="text-[13px] font-medium leading-none text-[color:var(--text-secondary)]">
-                              {feature.name}
-                            </span>
-                          </div>
-                        ))}
-                      </div>
+                    <Link
+                      href={`/services/${serviceSlug}`}
+                      className="mt-10 inline-flex items-center gap-2.5 text-[10px] font-black uppercase tracking-[0.25em] text-[color:var(--accent)] transition-all hover:gap-4"
+                    >
+                      Discovery Details <ArrowRight className="h-4 w-4" />
+                    </Link>
+                  </div>
+                </article>
+              );
+            })}
+          </div>
 
-                      <div className="flex flex-wrap items-center justify-between gap-3 border-t border-white/6 pt-4">
-                        <span className="inline-flex items-center gap-2 text-sm font-black uppercase tracking-[0.2em] text-white transition group-hover:text-[#9fb7ff]">
-                          View Service
-                          <ArrowRight className="h-4 w-4 transition duration-300 group-hover:translate-x-1" />
-                        </span>
-                        <ArrowUpRight className="h-4 w-4 text-[#9ec0ff] transition duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
-                      </div>
-                    </div>
-                  </Link>
-                );
-              })}
+          {!activeServices.length ? (
+            <div className="mt-8 rounded-[1.25rem] border border-dashed border-[color:var(--border)] bg-[color:var(--surface)] px-6 py-12 text-center">
+              <h3 className="font-headline text-2xl font-black tracking-tight text-[color:var(--text-primary)]">
+                No active services listed yet
+              </h3>
+              <p className="mx-auto mt-3 max-w-xl text-sm leading-7 text-[color:var(--text-muted)]">
+                Add services from the dashboard to populate your official service directory here.
+              </p>
             </div>
-          ) : (
-            <EmptyState
-              title="No services published yet"
-              description="Add services from the dashboard and this page will render them automatically."
-            />
-          )}
+          ) : null}
         </div>
       </section>
 
-      <section className="pb-24 sm:pb-28">
-        <div className={containerClass}>
-          <div
-            className={`${ctaShellClass} grid gap-6 bg-[linear-gradient(135deg,#1c2f6b,#18275a)] p-6 shadow-[0_30px_90px_rgba(6,12,28,0.32)] lg:grid-cols-[1.08fr_0.92fr] lg:items-center lg:p-8`}
-          >
-            <div className="space-y-5">
-              <Eyebrow>
-                Need a custom solution?
-              </Eyebrow>
-              <div className="space-y-4">
-                <h2 className="max-w-xl font-headline text-3xl font-black tracking-tight text-[color:var(--text-primary)] sm:text-4xl">
-                  {pageContent.ctaTitle || "Need a website, software platform or marketing-ready business system?"}
-                </h2>
-                <p className="max-w-xl text-base leading-8 text-[color:var(--text-secondary)]">
-                  {pageContent.ctaDescription ||
-                    "We can combine website development, software, ERP, mobile apps, SEO and support services into a solution that matches your business goals."}
-                </p>
-              </div>
-              <PrimaryLink href="/contact">Discuss Your Requirement</PrimaryLink>
+      {/* CTA Section - Unified Pattern */}
+      <section className="px-4 py-20 sm:px-6 lg:px-8 lg:py-24">
+        <div className={`mx-auto max-w-6xl ${ctaShellClass} border border-white/10 bg-[linear-gradient(135deg,#182a59,#101a33)] shadow-[0_30px_90px_-44px_rgba(6,12,28,0.72)]`}>
+          <div className="relative px-6 py-14 text-center sm:px-10 lg:px-14 lg:py-16">
+            <div className="absolute inset-0 opacity-[0.12]">
+              <Image
+                src={pageArtwork.hero}
+                alt="CTA texture"
+                fill
+                className="object-cover"
+                unoptimized
+              />
             </div>
-
-            <div className="grid gap-4 sm:grid-cols-2">
-              {moduleHighlights.map((item, index) => {
-                const Icon = ctaIcons[index % ctaIcons.length];
-
-                return (
-                  <div
-                    key={item}
-                    className="flex min-h-[116px] flex-col justify-between rounded-[1.55rem] bg-[rgba(18,24,38,0.58)] p-5"
-                  >
-                    <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-white/[0.06] text-[color:var(--text-primary)]">
-                      <Icon className="h-4.5 w-4.5" />
-                    </div>
-                    <p className="text-sm leading-6 text-[color:var(--text-secondary)]">{item}</p>
-                  </div>
-                );
-              })}
+            <div className="relative z-10">
+              <h2 className="font-headline text-4xl font-black tracking-tight text-white sm:text-5xl lg:text-6xl">
+                Ready to engineer your next milestone?
+              </h2>
+              <p className="mx-auto mt-5 max-w-3xl text-sm leading-8 text-blue-100/70 sm:text-lg">
+                Let&apos;s discuss how we can build a technical infrastructure that scales with your ambition.
+              </p>
+              <div className="mt-8 flex flex-col justify-center gap-4 sm:flex-row sm:flex-wrap sm:items-center">
+                <PrimaryLink href="/contact">
+                  Start a Conversation
+                </PrimaryLink>
+                <SecondaryLink href="/portfolio" className="border-white/10 text-white hover:bg-white/5">
+                  View Our Portfolio
+                </SecondaryLink>
+              </div>
             </div>
           </div>
         </div>

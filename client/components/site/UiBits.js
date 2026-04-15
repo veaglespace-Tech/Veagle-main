@@ -15,18 +15,26 @@ export const surfaceCardClass =
 export const mutedCardClass =
   "rounded-[1.5rem] border border-[color:var(--border)] bg-[color:var(--surface-muted)] p-5 shadow-[color:var(--shadow-soft)] sm:p-6";
 export const eyebrowClass =
-  "inline-flex items-center gap-2 rounded-full border border-[color:var(--accent)]/40 bg-[color:var(--accent)]/15 px-4 py-2 text-[10px] font-black uppercase tracking-[0.3em] text-[#93c5fd] shadow-[0_0_20px_rgba(25,94,226,0.15)]";
+  "inline-flex items-center gap-2 rounded-full border border-[color:var(--accent)]/30 bg-[color:var(--accent)]/10 px-4 py-2 text-[10px] font-black uppercase tracking-[0.3em] text-[color:var(--accent)] shadow-[0_0_20px_rgba(25,94,226,0.12)]";
 export const chipClass =
   "inline-flex items-center rounded-full border border-[color:var(--border)] bg-[color:var(--surface-strong)] px-3 py-1.5 text-xs font-semibold tracking-[0.08em] text-[color:var(--text-secondary)]";
 export const buttonBaseClass =
-  "inline-flex min-h-[3.15rem] items-center justify-center gap-2 rounded-full px-6 py-3.5 text-center text-sm font-bold leading-none transition duration-300 sm:px-7";
+  "inline-flex min-h-[3.15rem] items-center justify-center gap-2 rounded-full px-6 py-3.5 text-center text-sm font-bold leading-none transition duration-300 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[color:var(--ring)] sm:px-7";
 export const primaryButtonClass = cn(
   buttonBaseClass,
-  "border border-transparent bg-[linear-gradient(135deg,var(--accent),var(--accent-strong))] text-[color:var(--button-ink)] shadow-[color:var(--shadow-accent)] hover:-translate-y-0.5 hover:brightness-110 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[color:var(--ring)]"
+  "border border-white/10 bg-[linear-gradient(135deg,#1a2a59,#2563eb)] text-[color:var(--button-ink)] shadow-[0_10px_30px_rgba(26,42,89,0.3)] hover:-translate-y-1 hover:brightness-110"
 );
 export const secondaryButtonClass = cn(
   buttonBaseClass,
-  "border border-[color:var(--border-strong)] bg-[rgba(21,27,35,0.82)] text-[color:var(--text-primary)] shadow-[color:var(--shadow-soft)] backdrop-blur-[12px] hover:-translate-y-0.5 hover:border-[color:var(--border-strong)] hover:bg-[rgba(25,94,226,0.12)] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[color:var(--ring)]"
+  "border border-[color:var(--border)] bg-[color:var(--surface)] text-[color:var(--text-primary)] shadow-[0_12px_32px_-24px_rgba(15,23,42,0.32)] backdrop-blur-sm transition-all hover:-translate-y-1 hover:border-[color:var(--border-strong)] hover:bg-[color:var(--surface-strong)]"
+);
+export const inversePrimaryButtonClass = cn(
+  buttonBaseClass,
+  "border border-white bg-white text-[#0c0e18] shadow-[0_18px_45px_-24px_rgba(255,255,255,0.42)] hover:-translate-y-1 hover:bg-white/92 hover:text-[#0c0e18]"
+);
+export const inverseSecondaryButtonClass = cn(
+  buttonBaseClass,
+  "border border-white/20 bg-white/10 text-white shadow-[0_18px_45px_-28px_rgba(6,12,28,0.52)] backdrop-blur-sm hover:-translate-y-1 hover:border-white/30 hover:bg-white/14"
 );
 export const buttonGroupClass =
   "flex flex-col gap-4 sm:flex-row sm:flex-wrap sm:items-center";
@@ -82,18 +90,37 @@ export function SectionIntro({
   );
 }
 
-export function PrimaryLink({ href, children, className = "" }) {
+export function PrimaryLink({ href, children, className = "", tone = "default" }) {
   return (
-    <Link className={cn(primaryButtonClass, "group", className)} href={href}>
+    <Link
+      className={cn(
+        tone === "inverse" || tone === "solid-inverse"
+          ? inversePrimaryButtonClass
+          : primaryButtonClass,
+        "group",
+        className
+      )}
+      href={href}
+    >
       {children}
-      <ArrowRight className="h-4 w-4 transition duration-300 group-hover:translate-x-0.5" />
+      <ArrowRight className="veagle-icon-animate h-4 w-4" />
     </Link>
   );
 }
 
-export function SecondaryLink({ href, children, className = "" }) {
+export function SecondaryLink({ href, children, className = "", tone = "default" }) {
   return (
-    <Link className={cn(secondaryButtonClass, className)} href={href}>
+    <Link
+      className={cn(
+        tone === "solid-inverse"
+          ? inversePrimaryButtonClass
+          : tone === "inverse"
+            ? inverseSecondaryButtonClass
+            : secondaryButtonClass,
+        className
+      )}
+      href={href}
+    >
       {children}
     </Link>
   );

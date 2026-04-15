@@ -34,40 +34,40 @@ function getCardLayout(index) {
 function getFocusStyles(index) {
   if (index % 4 === 0) {
     return {
-      badge: "text-[color:var(--accent)]",
+      badge: "text-[color:var(--text-primary)]",
       title: "text-[color:var(--text-primary)]",
       copy: "text-[color:var(--text-secondary)]",
       overlay:
-        "bg-[linear-gradient(180deg,rgba(6,10,17,0)_12%,rgba(7,11,18,0.92)_100%)]",
+        "bg-[linear-gradient(180deg,transparent_12%,color-mix(in srgb,var(--page-bg) 95%,transparent)_100%)]",
     };
   }
 
   if (index % 4 === 1) {
     return {
-      badge: "text-[color:var(--accent)]/90",
+      badge: "text-[color:var(--text-primary)]/90",
       title: "text-[color:var(--text-primary)]",
       copy: "text-[color:var(--text-secondary)]",
       overlay:
-        "bg-[linear-gradient(180deg,rgba(6,10,17,0.06),rgba(6,10,17,0.94))]",
+        "bg-[linear-gradient(180deg,color-mix(in srgb,var(--page-bg) 6%,transparent),color-mix(in srgb,var(--page-bg) 98%,transparent))]",
     };
   }
 
   if (index % 4 === 2) {
     return {
-      badge: "text-[color:var(--accent)]/80",
+      badge: "text-[color:var(--text-primary)]/80",
       title: "text-[color:var(--text-primary)]",
       copy: "text-[color:var(--text-secondary)]",
       overlay:
-        "bg-[linear-gradient(180deg,rgba(6,10,17,0.02),rgba(6,10,17,0.94))]",
+        "bg-[linear-gradient(180deg,color-mix(in srgb,var(--page-bg) 2%,transparent),color-mix(in srgb,var(--page-bg) 98%,transparent))]",
     };
   }
 
   return {
-    badge: "text-[color:var(--accent)]/70",
+    badge: "text-[color:var(--text-primary)]/70",
     title: "text-[color:var(--text-primary)]",
     copy: "text-[color:var(--text-secondary)]",
     overlay:
-      "bg-[linear-gradient(180deg,rgba(6,10,17,0.06),rgba(6,10,17,0.9))]",
+      "bg-[linear-gradient(180deg,color-mix(in srgb,var(--page-bg) 6%,transparent),color-mix(in srgb,var(--page-bg) 95%,transparent))]",
   };
 }
 
@@ -159,30 +159,30 @@ export default function PortfolioPageContent({ content, portfolioData = [] }) {
 
   return (
     <main className={pageClass}>
-      <section className="relative flex min-h-[72vh] items-center justify-center overflow-hidden px-4 pb-12 pt-28 sm:px-6 sm:pt-32 lg:px-8 lg:pt-36">
+      {/* Hero Section - Permanently Dark */}
+      <section className="relative flex min-h-[75vh] items-center justify-center overflow-hidden bg-[#0c0e18] px-4 pb-16 pt-28 sm:px-6 sm:pt-32 lg:px-8 lg:pt-36">
         <div className="absolute inset-0">
-            <Image
-              src={pageArtwork.hero}
+          <Image
+            src={pageArtwork.hero}
             alt="Portfolio background"
             fill
+            className="object-cover opacity-50 brightness-[0.4]"
             priority
-            className="object-cover opacity-35 grayscale"
             unoptimized
           />
-          <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(8,11,18,0.48),rgba(8,11,18,0.9))]" />
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_18%,rgba(179,197,255,0.2),transparent_35%)]" />
+          <div className="absolute inset-0 bg-gradient-to-b from-[#0c0e18]/90 via-[#0c0e18]/40 to-[#0c0e18]" />
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_0%,#0c0e18_100%)] opacity-80" />
         </div>
 
         <div className="relative z-10 mx-auto w-full max-w-5xl text-center">
-          <span className="inline-flex items-center rounded-full border border-[color:var(--accent)]/28 bg-[color:var(--surface-strong)] px-4 py-2 text-[10px] font-black uppercase tracking-[0.24em] text-[color:var(--text-muted)]">
-            {portfolio.eyebrow || "Portfolio"}
-          </span>
-          <h1 className={`mt-8 ${pageHeroTitleClass} text-white`}>
-            {portfolio.title || "Project Showcase"}
+            <span className="inline-flex items-center rounded-full border border-white/10 bg-white/5 px-4 py-2 text-[10px] font-black uppercase tracking-[0.24em] text-blue-100/60">
+              {portfolio.eyebrow || "Veagle Project Portfolio"}
+            </span>
+          <h1 className={`mx-auto mt-8 max-w-4xl ${pageHeroTitleClass} text-white`}>
+            {portfolio.title || "Selected Software and Website Deliveries"}
           </h1>
-          <p className="mx-auto mt-7 max-w-3xl text-base leading-8 text-[color:var(--text-secondary)] sm:text-lg">
-            {portfolio.description ||
-              "Explore examples of the websites, software interfaces and business-ready digital experiences we build."}
+          <p className="mx-auto mt-6 max-w-2xl text-base leading-8 text-blue-100/70 sm:text-lg">
+            {portfolio.description || "A showcase of technical expertise across website development, software engineering, and digital branding projects."}
           </p>
         </div>
       </section>
@@ -217,7 +217,7 @@ export default function PortfolioPageContent({ content, portfolioData = [] }) {
             return (
               <article
                 key={study.id}
-                className={`group relative overflow-hidden rounded-[1.1rem] border border-white/8 bg-[#1a1d23] ${getCardLayout(index)}`}
+                className={`group relative overflow-hidden rounded-[1.1rem] border border-[color:var(--border)] bg-[color:var(--surface)] ${getCardLayout(index)}`}
               >
                 <Image
                   src={study.imageUrl}
@@ -231,7 +231,7 @@ export default function PortfolioPageContent({ content, portfolioData = [] }) {
                 <div className={`absolute inset-0 ${styles.overlay}`} />
 
                 {isLargeLead ? (
-                  <div className="absolute right-5 top-5 rounded-full border border-white/14 bg-[#1f2634]/70 px-4 py-2 backdrop-blur-md">
+                  <div className="veagle-inverse-surface absolute right-5 top-5 rounded-full border border-white/14 bg-[#1f2634]/70 px-4 py-2 backdrop-blur-md">
                     <div className="flex items-center gap-2">
                       <span className="h-2 w-2 animate-pulse rounded-full bg-[#56e240]" />
                       <span className="text-[9px] font-black uppercase tracking-[0.18em] text-[color:var(--text-primary)]">
@@ -242,7 +242,7 @@ export default function PortfolioPageContent({ content, portfolioData = [] }) {
                 ) : null}
 
                 <div
-                  className={`absolute bottom-0 left-0 right-0 ${isCompact ? "p-6" : "p-7 sm:p-8"}`}
+                  className={`group veagle-premium-card absolute bottom-0 left-0 right-0 ${isCompact ? "p-6" : "p-7 sm:p-8"}`}
                 >
                   {isLargeLead ? (
                     <p className={`text-[10px] font-black uppercase tracking-[0.22em] ${styles.badge}`}>
@@ -264,7 +264,7 @@ export default function PortfolioPageContent({ content, portfolioData = [] }) {
                     {study.title}
                   </h2>
 
-                  <p className={`mt-3 max-w-2xl text-[13px] leading-7 ${styles.copy}`}>
+                  <p className={`mt-3 max-w-2xl line-clamp-3 text-[13px] leading-7 ${styles.copy}`}>
                     {study.summary}
                   </p>
 
@@ -273,7 +273,7 @@ export default function PortfolioPageContent({ content, portfolioData = [] }) {
                       {(study.tags || []).slice(0, 2).map((tag) => (
                         <span
                           key={`${study.id}-${tag}`}
-                          className="rounded-full border border-white/14 bg-white/[0.06] px-3 py-1 text-[9px] font-black uppercase tracking-[0.14em] text-[color:var(--text-muted)]"
+                          className="veagle-icon-animate rounded-full border border-white/20 bg-white/10 px-3 py-1 text-[9px] font-black uppercase tracking-[0.14em]"
                         >
                           {tag}
                         </span>
@@ -314,7 +314,7 @@ export default function PortfolioPageContent({ content, portfolioData = [] }) {
 
                   {isWideStat ? (
                     <div className="mt-6 sm:absolute sm:bottom-8 sm:right-8 sm:mt-0">
-                      <div className="w-fit rounded-[1rem] border border-white/14 bg-[#1f2634]/72 px-5 py-4 text-center backdrop-blur-md">
+                      <div className="w-fit rounded-[1rem] border border-[color:var(--border)] bg-[color:var(--surface-strong)] px-5 py-4 text-center backdrop-blur-md">
                         <p className="font-headline text-3xl font-black tracking-tight text-[color:var(--text-primary)]">
                           {throughputValue(study)}
                         </p>
@@ -330,7 +330,7 @@ export default function PortfolioPageContent({ content, portfolioData = [] }) {
           })}
 
           {!filteredProjects.length ? (
-            <div className="md:col-span-12 rounded-[1.2rem] border border-dashed border-white/14 bg-[#1a1d23] px-6 py-14 text-center">
+            <div className="veagle-inverse-surface md:col-span-12 rounded-[1.2rem] border border-dashed border-white/14 bg-[#1a1d23] px-6 py-14 text-center">
               <h3 className="font-headline text-2xl font-black tracking-tight text-white">
                 No portfolio items published yet
               </h3>
@@ -344,10 +344,10 @@ export default function PortfolioPageContent({ content, portfolioData = [] }) {
 
       <section className="px-4 pb-20 sm:px-6 lg:px-8 lg:pb-24">
         <div className="mx-auto max-w-7xl">
-          <div className="relative overflow-hidden rounded-[1.25rem] bg-[linear-gradient(135deg,#2a2e37,#1d2129)] px-6 py-14 text-center sm:px-10 lg:px-16 lg:py-20">
-            <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,rgba(179,197,255,0.2),transparent_45%)]" />
+          <div className="relative overflow-hidden rounded-[1.25rem] bg-[color:var(--surface-strong)] px-6 py-14 text-center sm:px-10 lg:px-16 lg:py-20 border border-[color:var(--border)] shadow-[color:var(--shadow-soft)]">
+            <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,color-mix(in srgb,var(--accent) 15%,transparent),transparent_45%)]" />
             <div className="relative z-10 mx-auto max-w-3xl">
-              <h2 className="font-headline text-3xl font-black leading-tight tracking-[-0.03em] text-white sm:text-5xl">
+              <h2 className="font-headline text-3xl font-black leading-tight tracking-[-0.03em] text-[color:var(--text-primary)] sm:text-5xl">
                 {portfolio.ctaTitle || "Ready to build your next digital milestone?"}
               </h2>
               <p className="mx-auto mt-5 max-w-2xl text-sm leading-8 text-[color:var(--text-secondary)] sm:text-base">

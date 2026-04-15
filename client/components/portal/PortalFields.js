@@ -19,18 +19,18 @@ export const portalShellClass =
 export const portalLayoutClass =
   "relative z-10 grid min-h-screen lg:grid-cols-[280px_minmax(0,1fr)] xl:grid-cols-[300px_minmax(0,1fr)]";
 export const portalSidebarClass =
-  "border-b border-[color:var(--border)] bg-[linear-gradient(180deg,#10141d,#171b24)] p-4 shadow-[color:var(--shadow-soft)] backdrop-blur-xl lg:sticky lg:top-0 lg:h-screen lg:overflow-y-auto lg:border-b-0 lg:border-r lg:p-5";
+  "border-b border-[color:var(--border)] bg-[color:var(--page-bg-soft)] p-4 shadow-[color:var(--shadow-soft)] backdrop-blur-xl lg:sticky lg:top-0 lg:h-screen lg:overflow-y-auto lg:border-b-0 lg:border-r lg:p-5";
 export const portalCardClass =
-  "rounded-[1.2rem] border border-[color:var(--border)] bg-[linear-gradient(180deg,rgba(26,29,35,0.96),rgba(20,23,29,0.94))] p-3 shadow-[color:var(--shadow-card)] backdrop-blur-sm sm:p-3.5";
+  "rounded-[1.2rem] border border-[color:var(--border)] bg-[color:var(--surface)] p-3 shadow-[color:var(--shadow-card)] backdrop-blur-sm sm:p-3.5";
 export const portalSubcardClass =
-  "rounded-[1rem] border border-[color:var(--border)] bg-[linear-gradient(180deg,rgba(27,31,39,0.96),rgba(20,23,29,0.92))] p-2.5 shadow-[color:var(--shadow-soft)]";
+  "rounded-[1rem] border border-[color:var(--border)] bg-[color:var(--surface-strong)] p-2.5 shadow-[color:var(--shadow-soft)]";
 export const portalTabListClass = "grid gap-1.5 sm:grid-cols-2 lg:grid-cols-1";
 export const portalTabClass = (active) =>
   cn(
     "group flex w-full items-center gap-2.5 rounded-[0.9rem] border px-3.5 py-2.5 text-left text-[12px] font-semibold transition duration-300 [&_svg]:shrink-0",
     active
-      ? "border-[#4e85f3] bg-[linear-gradient(135deg,rgba(25,94,226,0.24),rgba(179,197,255,0.16))] text-white shadow-[color:var(--shadow-accent)]"
-      : "border-[color:var(--border)] bg-[rgba(255,255,255,0.03)] text-[color:var(--text-secondary)] hover:-translate-y-0.5 hover:border-[color:var(--border-strong)] hover:bg-[rgba(25,94,226,0.08)] hover:text-white"
+      ? "border-[color:var(--accent)] bg-[color:var(--accent-contrast)] text-[color:var(--accent)] shadow-[color:var(--shadow-accent)]"
+      : "border-[color:var(--border)] bg-[color:var(--surface-muted)] text-[color:var(--text-secondary)] hover:-translate-y-0.5 hover:border-[color:var(--border-strong)] hover:text-[color:var(--text-primary)]"
   );
 export const portalButtonPrimaryClass =
   "inline-flex items-center justify-center gap-2 rounded-full border border-transparent bg-[linear-gradient(135deg,var(--accent),var(--accent-strong))] px-4 py-2 text-[12px] font-bold text-[color:var(--button-ink)] shadow-[color:var(--shadow-accent)] transition duration-300 hover:-translate-y-0.5 hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-60";
@@ -312,16 +312,16 @@ export function StatusBadge({ value }) {
     normalized === "done" ||
     normalized === "qualified" ||
     normalized === "selected"
-      ? "border-emerald-500/20 bg-emerald-500/10 text-emerald-200"
+      ? "border-emerald-500/20 bg-emerald-500/10 text-emerald-600 dark:text-emerald-200"
       : normalized === "blocked" ||
           normalized === "high" ||
           normalized === "new" ||
           normalized === "applied"
-        ? "border-amber-500/20 bg-amber-500/10 text-amber-200"
+        ? "border-amber-500/20 bg-amber-500/10 text-amber-600 dark:text-amber-200"
         : normalized === "contacted" || normalized === "in-progress"
-          ? "border-sky-500/20 bg-sky-500/10 text-sky-200"
+          ? "border-sky-500/20 bg-sky-500/10 text-sky-600 dark:text-sky-200"
           : normalized === "rejected"
-            ? "border-rose-500/20 bg-rose-500/10 text-rose-200"
+            ? "border-rose-500/20 bg-rose-500/10 text-rose-600 dark:text-rose-200"
           : "border-[color:var(--border)] bg-[color:var(--surface-strong)] text-[color:var(--text-secondary)]";
 
   return (

@@ -52,7 +52,7 @@ const timelineOptions = [
 ];
 
 const accessBannerClass =
-  "mb-6 rounded-[1.35rem] border border-[color:var(--border-strong)] bg-[linear-gradient(135deg,rgba(25,94,226,0.18),rgba(18,22,30,0.94))] px-4 py-4 text-sm text-[color:var(--text-primary)] shadow-[color:var(--shadow-soft)] backdrop-blur-md";
+  "mb-6 rounded-[1.35rem] border border-[color:var(--border-strong)] bg-[color:var(--surface-muted)] px-4 py-4 text-sm text-[color:var(--text-primary)] shadow-[color:var(--shadow-soft)] backdrop-blur-md";
 const compactActionButtonClass =
   "min-h-0 px-4 py-2 text-xs uppercase tracking-[0.18em]";
 
@@ -594,8 +594,8 @@ export default function LeadCaptureForm({
           <div
             className={
               status.type === "success"
-                ? "rounded-xl border border-emerald-500/20 bg-emerald-500/10 px-4 py-3 text-xs text-emerald-200"
-                : "rounded-xl border border-rose-500/20 bg-rose-500/10 px-4 py-3 text-xs text-rose-200"
+                ? "rounded-xl border border-emerald-500/20 bg-emerald-500/10 px-4 py-3 text-xs text-emerald-600 dark:text-emerald-200"
+                : "rounded-xl border border-rose-500/20 bg-rose-500/10 px-4 py-3 text-xs text-rose-600 dark:text-rose-200"
             }
           >
             {status.message}
@@ -648,13 +648,13 @@ function FieldError({ children }) {
 function AccessBanner({ session, loginHref, registerHref, onLogout }) {
   if (isUserSession(session)) {
     return (
-      <div className="mb-6 rounded-2xl border border-emerald-500/20 bg-emerald-500/10 px-4 py-3 text-sm text-emerald-100">
+      <div className="mb-6 rounded-2xl border border-emerald-500/20 bg-emerald-500/10 px-4 py-3 text-sm text-[color:var(--text-primary)]">
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <div>
-            <p className="font-semibold">
+            <p className="font-semibold text-emerald-600 dark:text-emerald-100">
               Logged in as {session.username || session.email}
             </p>
-            <p className="mt-1 text-xs text-emerald-100/80">
+            <p className="mt-1 text-xs text-emerald-600/80 dark:text-emerald-100/80">
               {session.email}
               {session.contact ? ` / ${session.contact}` : ""}
             </p>
@@ -673,10 +673,10 @@ function AccessBanner({ session, loginHref, registerHref, onLogout }) {
 
   return (
     <div className={accessBannerClass}>
-      <p className="font-semibold text-amber-200">
+      <p className="font-semibold text-amber-600 dark:text-amber-200">
         Registration and Login required
       </p>
-      <p className="mt-2 text-xs leading-6 text-amber-100/70">
+      <p className="mt-2 text-xs leading-6 text-amber-700 dark:text-amber-100/70">
         Please sign in or create a profile to submit your enquiry and track follow-up safely.
       </p>
       <div className="mt-4 flex flex-wrap gap-3">

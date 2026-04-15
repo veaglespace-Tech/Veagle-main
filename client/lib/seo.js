@@ -85,8 +85,7 @@ export function buildOrganizationSchema() {
     ],
     address: {
       "@type": "PostalAddress",
-      streetAddress:
-        "Kudale Patil Tower, Office No. 207, 2nd Floor, Jadhav Nagar, Near Shiv Temple, Vadgaon Budruk",
+      streetAddress: COMPANY_ADDRESS,
       addressLocality: "Pune",
       addressRegion: "Maharashtra",
       postalCode: "411041",

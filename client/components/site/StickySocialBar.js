@@ -1,5 +1,6 @@
 "use client";
 
+import { useTheme } from "@/components/ThemeProvider";
 import {
   COMPANY_FACEBOOK,
   COMPANY_INSTAGRAM,
@@ -89,8 +90,16 @@ export const socialLinksData = [
 ];
 
 export default function StickySocialBar() {
+  const { isDark } = useTheme();
+
   return (
-    <div className="fixed right-0 top-1/2 z-50 flex -translate-y-1/2 flex-col gap-2 rounded-l-2xl border-y border-l border-[color:var(--border)] bg-[color:var(--surface)] p-2 shadow-2xl backdrop-blur-xl transition-all max-md:hidden">
+    <div
+      className={`fixed right-0 top-1/2 z-50 flex -translate-y-1/2 flex-col gap-2 rounded-l-2xl border-y border-l p-2 shadow-2xl backdrop-blur-xl transition-all max-md:hidden ${
+        isDark
+          ? "border-[#29427e] bg-[linear-gradient(180deg,rgba(26,42,89,0.98),rgba(12,20,44,0.96))] shadow-[0_30px_70px_-30px_rgba(37,99,235,0.45)]"
+          : "border-[color:var(--border)] bg-[color:var(--surface)]"
+      }`}
+    >
       {socialLinksData.map((social) => {
         const Icon = social.icon;
         return (
@@ -101,10 +110,20 @@ export default function StickySocialBar() {
             rel="noreferrer"
             aria-label={social.label}
             title={social.label}
-            className={`group relative flex h-11 w-11 items-center justify-center rounded-xl bg-[color:var(--surface-muted)] text-[color:var(--text-secondary)] transition-all duration-300 hover:text-white ${social.colorClass}`}
+            className={`group relative flex h-11 w-11 items-center justify-center rounded-xl transition-all duration-300 hover:text-white ${
+              isDark
+                ? "bg-[rgba(10,18,38,0.72)] text-white/78 ring-1 ring-white/8 hover:ring-transparent"
+                : "bg-[color:var(--surface-muted)] text-[color:var(--text-secondary)]"
+            } ${social.colorClass}`}
           >
             <Icon className="h-5 w-5 transition-transform duration-300 group-hover:scale-110" />
-            <span className="absolute right-full mr-3 whitespace-nowrap rounded-lg border border-[color:var(--border)] bg-[color:var(--surface-strong)] px-3 py-1.5 text-xs font-bold tracking-widest text-white opacity-0 shadow-lg transition-all duration-300 group-hover:opacity-100">
+            <span
+              className={`absolute right-full mr-3 whitespace-nowrap rounded-lg border px-3 py-1.5 text-xs font-bold tracking-widest opacity-0 shadow-lg transition-all duration-300 group-hover:opacity-100 ${
+                isDark
+                  ? "border-[#35508f] bg-[#16284f] text-white"
+                  : "border-[color:var(--border)] bg-[color:var(--surface-strong)] text-[color:var(--text-primary)]"
+              }`}
+            >
               {social.label}
             </span>
           </a>
