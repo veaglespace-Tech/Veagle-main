@@ -40,3 +40,8 @@ jwt:
 
 admin:
   secret: ${ADMIN_SECRET:admin123}
+
+# ── Chatbot (Cerebras AI) ──────────────────────────────────────────────────────
+cerebras:
+  api:
+    key: ${CEREBRAS_API_KEY:csk-vm4tt5et9x6t44m5wmntwcx25epy54hrcdyrfmh8xymf9yrw}

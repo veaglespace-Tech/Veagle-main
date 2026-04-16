@@ -22,29 +22,16 @@ public class SecurityConfig {
     @Autowired
     private JwtFilter jwtFilter;
 
-
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
         http.cors(cors -> {}); // ✅ IMPORTANT
         http.csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(req ->
-//                        req.requestMatchers(
-//                                        "/login", "/register", "/auth/**",
-//                                        "/api/**",
-//                                        "/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html",
-//                                        "/uploads/**"
-//                                ).permitAll()
-//                                .requestMatchers(HttpMethod.GET, "/categories/**").permitAll()
-//                                .requestMatchers("/admin/**").hasAnyRole("ADMIN", "SADMIN")
-//                                .requestMatchers("/sadmin/**").hasRole("SADMIN")
-//                                .requestMatchers("/user/**").hasRole("USER")
-
                                 req.requestMatchers(
                                         "/auth/**",
                                         "/api/verify-otp",
                                         "/api/v1/auth/**",
-                                        // "/api/auth/register",
                                         "/api/v1/categories/**",
                                         "/api/v1/clients/**",
                                         "/api/v1/jobs/**",
@@ -54,6 +41,7 @@ public class SecurityConfig {
                                         "/api/v1/applications",
                                         "/api/v1/site-content",
                                         "/api/v1/contacts",
+                                        "/api/v1/chatbot/**",   // ✅ Chatbot endpoints — public, no auth needed
                                         "/uploads/**"
                                 ).permitAll()
 
@@ -75,8 +63,7 @@ public class SecurityConfig {
     }
 
     @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration config)throws Exception{
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
         return config.getAuthenticationManager();
     }
-
 }
