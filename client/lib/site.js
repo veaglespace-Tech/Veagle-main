@@ -2,6 +2,8 @@ export const SITE_URL =
   process.env.NEXT_PUBLIC_SITE_URL || "https://www.veaglespace.com";
 export const API_BASE_URL =
   process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:8080";
+export const CLOUDINARY_CLOUD_NAME =
+  process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME || "dbehhnhhi";
 
 export const COMPANY_NAME = "Veagle Space";
 export const COMPANY_LEGAL_NAME = "Veagle Space Technology Pvt. Ltd.";

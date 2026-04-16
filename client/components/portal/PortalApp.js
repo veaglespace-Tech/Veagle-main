@@ -45,9 +45,44 @@ import {
   portalTabListClass,
 } from "@/components/portal/PortalFields";
 import { Eyebrow } from "@/components/site/UiBits";
-import { authHeaders, requestJson } from "@/lib/portal-api";
 import { clearStoredSession, readStoredSession } from "@/lib/auth-session";
-import { API_BASE_URL } from "@/lib/site";
+import { useUpdateApplicationStatusMutation } from "@/store/api/applications.api";
+import {
+  useDeleteCategoryMutation,
+  useSaveCategoryMutation,
+} from "@/store/api/categories.api";
+import {
+  useDeleteClientMutation,
+  useSaveClientMutation,
+} from "@/store/api/clients.api";
+import {
+  useDeleteTaskMutation,
+  useSaveTaskMutation,
+  useUpdateLeadStatusMutation,
+  useUpdateSiteContentMutation,
+} from "@/store/api/cms.api";
+import {
+  useDeleteJobMutation,
+  useSaveJobMutation,
+} from "@/store/api/jobs.api";
+import {
+  useDeletePortfolioMutation,
+  useSavePortfolioMutation,
+} from "@/store/api/portfolio.api";
+import {
+  useDeleteProductMutation,
+  useSaveProductMutation,
+  useToggleProductStatusMutation,
+} from "@/store/api/products.api";
+import {
+  useDeleteServiceMutation,
+  useSaveServiceMutation,
+} from "@/store/api/services.api";
+import {
+  useDeleteUserMutation,
+  useSaveUserMutation,
+  useToggleUserStatusMutation,
+} from "@/store/api/users.api";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import {
   addContentListItem as addContentListItemAction,
@@ -240,6 +275,27 @@ export default function PortalApp() {
   const [clientForm, setClientForm] = useState(initialClientForm);
   const [portfolioForm, setPortfolioForm] = useState(initialPortfolioForm);
   const [userForm, setUserForm] = useState(initialUserForm);
+  const [updateSiteContent] = useUpdateSiteContentMutation();
+  const [saveServiceMutation] = useSaveServiceMutation();
+  const [deleteServiceMutation] = useDeleteServiceMutation();
+  const [saveProductMutation] = useSaveProductMutation();
+  const [toggleProductStatusMutation] = useToggleProductStatusMutation();
+  const [deleteProductMutation] = useDeleteProductMutation();
+  const [saveCategoryMutation] = useSaveCategoryMutation();
+  const [deleteCategoryMutation] = useDeleteCategoryMutation();
+  const [saveJobMutation] = useSaveJobMutation();
+  const [deleteJobMutation] = useDeleteJobMutation();
+  const [saveClientMutation] = useSaveClientMutation();
+  const [deleteClientMutation] = useDeleteClientMutation();
+  const [savePortfolioMutation] = useSavePortfolioMutation();
+  const [deletePortfolioMutation] = useDeletePortfolioMutation();
+  const [saveUserMutation] = useSaveUserMutation();
+  const [toggleUserStatusMutation] = useToggleUserStatusMutation();
+  const [deleteUserMutation] = useDeleteUserMutation();
+  const [saveTaskMutation] = useSaveTaskMutation();
+  const [deleteTaskMutation] = useDeleteTaskMutation();
+  const [updateLeadStatusMutation] = useUpdateLeadStatusMutation();
+  const [updateApplicationStatusMutation] = useUpdateApplicationStatusMutation();
 
   const visibleTabs = useMemo(
     () => tabs.filter((tab) => !tab.superadminOnly || session?.role === "SADMIN"),
@@ -467,11 +523,10 @@ export default function PortalApp() {
 
   async function saveContent() {
     await runAction("content", async () => {
-      const nextContent = await requestJson("/api/cms/content", {
-        method: "PUT",
-        headers: authHeaders(session.token),
-        body: JSON.stringify(content),
-      });
+      const nextContent = await updateSiteContent({
+        token: session.token,
+        content,
+      }).unwrap();
       dispatch(setPortalContent(nextContent));
       pushNotice("Website content updated successfully.");
     });
@@ -517,6 +572,26 @@ export default function PortalApp() {
     pushNotice,
     pushError,
     resetForms,
+    deleteCategoryMutation,
+    deleteClientMutation,
+    deleteJobMutation,
+    deletePortfolioMutation,
+    deleteProductMutation,
+    deleteServiceMutation,
+    deleteTaskMutation,
+    deleteUserMutation,
+    saveCategoryMutation,
+    saveClientMutation,
+    saveJobMutation,
+    savePortfolioMutation,
+    saveProductMutation,
+    saveServiceMutation,
+    saveTaskMutation,
+    saveUserMutation,
+    toggleProductStatusMutation,
+    toggleUserStatusMutation,
+    updateApplicationStatusMutation,
+    updateLeadStatusMutation,
   });
 
   if (!sessionReady || !session) {
@@ -745,6 +820,26 @@ function createPortalActions(context) {
     pushNotice,
     pushError,
     resetForms,
+    deleteCategoryMutation,
+    deleteClientMutation,
+    deleteJobMutation,
+    deletePortfolioMutation,
+    deleteProductMutation,
+    deleteServiceMutation,
+    deleteTaskMutation,
+    deleteUserMutation,
+    saveCategoryMutation,
+    saveClientMutation,
+    saveJobMutation,
+    savePortfolioMutation,
+    saveProductMutation,
+    saveServiceMutation,
+    saveTaskMutation,
+    saveUserMutation,
+    toggleProductStatusMutation,
+    toggleUserStatusMutation,
+    updateApplicationStatusMutation,
+    updateLeadStatusMutation,
   } = context;
 
   return {
@@ -778,23 +873,16 @@ function createPortalActions(context) {
           .map((value) => value.trim())
           .filter(Boolean)
           .map((name) => ({ name }));
-        const payload = new FormData();
-        payload.append(
-          "data",
-          JSON.stringify({
-            title: serviceForm.title.trim(),
-            description: serviceForm.description.trim(),
-            detailTitle: serviceForm.detailTitle.trim(),
-            detailDescription: serviceForm.detailDescription.trim(),
-            features,
-          })
-        );
-        if (serviceForm.file) payload.append("file", serviceForm.file);
-        await requestJson(serviceForm.id ? `${API_BASE_URL}/api/v1/admin/services/${serviceForm.id}` : `${API_BASE_URL}/api/v1/admin/services`, {
-          method: serviceForm.id ? "PUT" : "POST",
-          headers: authHeaders(session.token, false),
-          body: payload,
-        });
+        await saveServiceMutation({
+          token: session.token,
+          id: serviceForm.id || undefined,
+          title: serviceForm.title,
+          description: serviceForm.description,
+          detailTitle: serviceForm.detailTitle,
+          detailDescription: serviceForm.detailDescription,
+          features,
+          file: serviceForm.file,
+        }).unwrap();
         setServiceForm(initialServiceForm);
         await hydrate(session);
         pushNotice("Service saved successfully.");
@@ -803,10 +891,7 @@ function createPortalActions(context) {
     async deleteService(id) {
       if (!window.confirm("Delete this service?")) return;
       await runAction(`service-delete-${id}`, async () => {
-        await requestJson(`${API_BASE_URL}/api/v1/admin/services/${id}`, {
-          method: "DELETE",
-          headers: authHeaders(session.token, false),
-        });
+        await deleteServiceMutation({ token: session.token, id }).unwrap();
         await hydrate(session);
         pushNotice("Service deleted.");
       });
@@ -826,14 +911,15 @@ function createPortalActions(context) {
         return;
       }
       await runAction("product", async () => {
-        const payload = new FormData();
-        payload.append("request", JSON.stringify({ title: productForm.title.trim(), description: productForm.description.trim(), imageUrl: "", categoryId: Number(productForm.categoryId), isActive: productForm.isActive }));
-        if (productForm.file) payload.append("file", productForm.file);
-        await requestJson(productForm.id ? `${API_BASE_URL}/api/v1/admin/products/${productForm.id}` : `${API_BASE_URL}/api/v1/admin/products`, {
-          method: productForm.id ? "PUT" : "POST",
-          headers: authHeaders(session.token, false),
-          body: payload,
-        });
+        await saveProductMutation({
+          token: session.token,
+          id: productForm.id || undefined,
+          title: productForm.title,
+          description: productForm.description,
+          categoryId: productForm.categoryId,
+          isActive: productForm.isActive,
+          file: productForm.file,
+        }).unwrap();
         setProductForm(initialProductForm);
         await hydrate(session);
         pushNotice("Product saved successfully.");
@@ -841,11 +927,11 @@ function createPortalActions(context) {
     },
     async toggleProductStatus(item) {
       await runAction(`product-status-${item.id}`, async () => {
-        await requestJson(`${API_BASE_URL}/api/v1/admin/products/${item.id}/status`, {
-          method: "PATCH",
-          headers: authHeaders(session.token),
-          body: JSON.stringify({ isActive: !item.isActive }),
-        });
+        await toggleProductStatusMutation({
+          token: session.token,
+          id: item.id,
+          isActive: !item.isActive,
+        }).unwrap();
         await hydrate(session);
         pushNotice("Product status updated.");
       });
@@ -853,10 +939,7 @@ function createPortalActions(context) {
     async deleteProduct(id) {
       if (!window.confirm("Delete this product?")) return;
       await runAction(`product-delete-${id}`, async () => {
-        await requestJson(`${API_BASE_URL}/api/v1/admin/products/${id}`, {
-          method: "DELETE",
-          headers: authHeaders(session.token, false),
-        });
+        await deleteProductMutation({ token: session.token, id }).unwrap();
         await hydrate(session);
         pushNotice("Product deleted.");
       });
@@ -871,11 +954,12 @@ function createPortalActions(context) {
         return;
       }
       await runAction("category", async () => {
-        await requestJson(categoryForm.id ? `${API_BASE_URL}/api/v1/admin/categories/${categoryForm.id}` : `${API_BASE_URL}/api/v1/admin/categories`, {
-          method: categoryForm.id ? "PUT" : "POST",
-          headers: authHeaders(session.token),
-          body: JSON.stringify({ name: categoryForm.name.trim(), description: categoryForm.description.trim() }),
-        });
+        await saveCategoryMutation({
+          token: session.token,
+          id: categoryForm.id || undefined,
+          name: categoryForm.name,
+          description: categoryForm.description,
+        }).unwrap();
         setCategoryForm(initialCategoryForm);
         await hydrate(session);
         pushNotice("Category saved successfully.");
@@ -884,10 +968,7 @@ function createPortalActions(context) {
     async deleteCategory(id) {
       if (!window.confirm("Delete this category?")) return;
       await runAction(`category-delete-${id}`, async () => {
-        await requestJson(`${API_BASE_URL}/api/v1/admin/categories/${id}`, {
-          method: "DELETE",
-          headers: authHeaders(session.token, false),
-        });
+        await deleteCategoryMutation({ token: session.token, id }).unwrap();
         await hydrate(session);
         pushNotice("Category deleted.");
       });
@@ -902,11 +983,14 @@ function createPortalActions(context) {
         return;
       }
       await runAction("job", async () => {
-        await requestJson(jobForm.id ? `${API_BASE_URL}/api/v1/admin/jobs/${jobForm.id}` : `${API_BASE_URL}/api/v1/admin/jobs`, {
-          method: jobForm.id ? "PUT" : "POST",
-          headers: authHeaders(session.token),
-          body: JSON.stringify({ title: jobForm.title.trim(), description: jobForm.description.trim(), location: jobForm.location.trim(), skills: jobForm.skills.trim() }),
-        });
+        await saveJobMutation({
+          token: session.token,
+          id: jobForm.id || undefined,
+          title: jobForm.title,
+          description: jobForm.description,
+          location: jobForm.location,
+          skills: jobForm.skills,
+        }).unwrap();
         setJobForm(initialJobForm);
         await hydrate(session);
         pushNotice("Job saved successfully.");
@@ -915,10 +999,7 @@ function createPortalActions(context) {
     async deleteJob(id) {
       if (!window.confirm("Delete this job?")) return;
       await runAction(`job-delete-${id}`, async () => {
-        await requestJson(`${API_BASE_URL}/api/v1/admin/jobs/${id}`, {
-          method: "DELETE",
-          headers: authHeaders(session.token, false),
-        });
+        await deleteJobMutation({ token: session.token, id }).unwrap();
         await hydrate(session);
         pushNotice("Job deleted.");
       });
@@ -944,26 +1025,15 @@ function createPortalActions(context) {
         return;
       }
       await runAction("client", async () => {
-        const payload = new FormData();
-        payload.append("name", clientForm.name.trim());
-        payload.append("websiteUrl", clientForm.websiteUrl.trim());
-        payload.append("description", clientForm.description.trim());
-        if (clientForm.displayOrder) {
-          payload.append("displayOrder", clientForm.displayOrder.trim());
-        }
-        if (clientForm.file) {
-          payload.append("logo", clientForm.file);
-        }
-        await requestJson(
-          clientForm.id
-            ? `${API_BASE_URL}/api/v1/admin/clients/${clientForm.id}`
-            : `${API_BASE_URL}/api/v1/admin/clients`,
-          {
-            method: clientForm.id ? "PUT" : "POST",
-            headers: authHeaders(session.token, false),
-            body: payload,
-          }
-        );
+        await saveClientMutation({
+          token: session.token,
+          id: clientForm.id || undefined,
+          name: clientForm.name,
+          websiteUrl: clientForm.websiteUrl,
+          description: clientForm.description,
+          displayOrder: clientForm.displayOrder,
+          file: clientForm.file,
+        }).unwrap();
         setClientForm(initialClientForm);
         await hydrate(session);
         pushNotice("Client saved successfully.");
@@ -972,10 +1042,7 @@ function createPortalActions(context) {
     async deleteClient(id) {
       if (!window.confirm("Delete this client?")) return;
       await runAction(`client-delete-${id}`, async () => {
-        await requestJson(`${API_BASE_URL}/api/v1/admin/clients/${id}`, {
-          method: "DELETE",
-          headers: authHeaders(session.token, false),
-        });
+        await deleteClientMutation({ token: session.token, id }).unwrap();
         await hydrate(session);
         pushNotice("Client deleted.");
       });
@@ -1001,24 +1068,15 @@ function createPortalActions(context) {
         return;
       }
       await runAction("portfolio", async () => {
-        const payload = new FormData();
-        payload.append("title", portfolioForm.title.trim());
-        payload.append("description", portfolioForm.description.trim());
-        payload.append("projectUrl", portfolioForm.projectUrl.trim());
-        payload.append("githubUrl", portfolioForm.githubUrl.trim());
-        if (portfolioForm.file) {
-          payload.append("image", portfolioForm.file);
-        }
-        await requestJson(
-          portfolioForm.id
-            ? `${API_BASE_URL}/api/v1/admin/portfolio/${portfolioForm.id}`
-            : `${API_BASE_URL}/api/v1/admin/portfolio`,
-          {
-            method: portfolioForm.id ? "PUT" : "POST",
-            headers: authHeaders(session.token, false),
-            body: payload,
-          }
-        );
+        await savePortfolioMutation({
+          token: session.token,
+          id: portfolioForm.id || undefined,
+          title: portfolioForm.title,
+          description: portfolioForm.description,
+          projectUrl: portfolioForm.projectUrl,
+          githubUrl: portfolioForm.githubUrl,
+          file: portfolioForm.file,
+        }).unwrap();
         setPortfolioForm(initialPortfolioForm);
         await hydrate(session);
         pushNotice("Portfolio project saved successfully.");
@@ -1027,10 +1085,7 @@ function createPortalActions(context) {
     async deletePortfolio(id) {
       if (!window.confirm("Delete this portfolio project?")) return;
       await runAction(`portfolio-delete-${id}`, async () => {
-        await requestJson(`${API_BASE_URL}/api/v1/admin/portfolio/${id}`, {
-          method: "DELETE",
-          headers: authHeaders(session.token, false),
-        });
+        await deletePortfolioMutation({ token: session.token, id }).unwrap();
         await hydrate(session);
         pushNotice("Portfolio project deleted.");
       });
@@ -1049,11 +1104,15 @@ function createPortalActions(context) {
         return;
       }
       await runAction("user", async () => {
-        await requestJson(userForm.id ? `${API_BASE_URL}/api/v1/admin/users/${userForm.id}` : `${API_BASE_URL}/api/v1/admin/users`, {
-          method: userForm.id ? "PUT" : "POST",
-          headers: authHeaders(session.token),
-          body: JSON.stringify({ username: userForm.username.trim(), email: userForm.email.trim(), contact: userForm.contact.trim(), password: userForm.password.trim(), role: userForm.role }),
-        });
+        await saveUserMutation({
+          token: session.token,
+          id: userForm.id || undefined,
+          username: userForm.username,
+          email: userForm.email,
+          contact: userForm.contact,
+          password: userForm.password,
+          role: userForm.role,
+        }).unwrap();
         setUserForm(initialUserForm);
         await hydrate(session);
         pushNotice("User saved successfully.");
@@ -1061,10 +1120,7 @@ function createPortalActions(context) {
     },
     async toggleUserStatus(id) {
       await runAction(`user-status-${id}`, async () => {
-        await requestJson(`${API_BASE_URL}/api/v1/admin/users/${id}/status`, {
-          method: "PATCH",
-          headers: authHeaders(session.token, false),
-        });
+        await toggleUserStatusMutation({ token: session.token, id }).unwrap();
         await hydrate(session);
         pushNotice("User status updated.");
       });
@@ -1072,10 +1128,7 @@ function createPortalActions(context) {
     async deleteUser(id) {
       if (!window.confirm("Delete this user?")) return;
       await runAction(`user-delete-${id}`, async () => {
-        await requestJson(`${API_BASE_URL}/api/v1/admin/users/${id}`, {
-          method: "DELETE",
-          headers: authHeaders(session.token, false),
-        });
+        await deleteUserMutation({ token: session.token, id }).unwrap();
         await hydrate(session);
         pushNotice("User deleted.");
       });
@@ -1090,11 +1143,10 @@ function createPortalActions(context) {
         return;
       }
       await runAction("task", async () => {
-        await requestJson("/api/cms/tasks", {
-          method: taskForm.id ? "PATCH" : "POST",
-          headers: authHeaders(session.token),
-          body: JSON.stringify(taskForm.id ? { id: taskForm.id, ...taskForm } : taskForm),
-        });
+        await saveTaskMutation({
+          token: session.token,
+          ...taskForm,
+        }).unwrap();
         setTaskForm(initialTaskForm);
         await hydrate(session);
         pushNotice("Task allocation saved.");
@@ -1102,11 +1154,7 @@ function createPortalActions(context) {
     },
     async updateTaskStatus(id, status) {
       await runAction(`task-status-${id}`, async () => {
-        await requestJson("/api/cms/tasks", {
-          method: "PATCH",
-          headers: authHeaders(session.token),
-          body: JSON.stringify({ id, status }),
-        });
+        await saveTaskMutation({ token: session.token, id, status }).unwrap();
         await hydrate(session);
         pushNotice("Task status updated.");
       });
@@ -1114,34 +1162,29 @@ function createPortalActions(context) {
     async deleteTaskEntry(id) {
       if (!window.confirm("Delete this task allocation?")) return;
       await runAction(`task-delete-${id}`, async () => {
-        await requestJson(`/api/cms/tasks?id=${id}`, {
-          method: "DELETE",
-          headers: authHeaders(session.token, false),
-        });
+        await deleteTaskMutation({ token: session.token, id }).unwrap();
         await hydrate(session);
         pushNotice("Task deleted.");
       });
     },
     async updateLeadStatus(id, status) {
       await runAction(`lead-status-${id}`, async () => {
-        await requestJson("/api/cms/leads", {
-          method: "PATCH",
-          headers: authHeaders(session.token),
-          body: JSON.stringify({ id, status }),
-        });
+        await updateLeadStatusMutation({
+          token: session.token,
+          id,
+          status,
+        }).unwrap();
         await hydrate(session);
         pushNotice("Lead updated.");
       });
     },
     async updateApplicationStatus(id, status) {
       await runAction(`application-status-${id}`, async () => {
-        await requestJson(
-          `${API_BASE_URL}/api/v1/admin/applications/${id}/status?status=${encodeURIComponent(status)}`,
-          {
-            method: "PATCH",
-            headers: authHeaders(session.token, false),
-          }
-        );
+        await updateApplicationStatusMutation({
+          token: session.token,
+          id,
+          status,
+        }).unwrap();
         await hydrate(session);
         pushNotice("Application status updated.");
       });

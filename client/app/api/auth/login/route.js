@@ -1,20 +1,11 @@
+import { AUTH_BACKEND_ROUTES, buildAuthBackendCandidates } from "@/lib/auth-routes";
 import { API_BASE_URL } from "@/lib/site";
 import { normalizeRole } from "@/lib/utils";
 
 export async function POST(request) {
   try {
     const body = await request.json();
-    const fallbackBaseUrl = API_BASE_URL.includes("localhost")
-      ? API_BASE_URL.replace("localhost", "127.0.0.1")
-      : API_BASE_URL;
-    const loginEndpoints = [
-      ...new Set([
-        `${API_BASE_URL}/api/v1/auth/login`,
-        `${API_BASE_URL}/auth/login`,
-        `${fallbackBaseUrl}/api/v1/auth/login`,
-        `${fallbackBaseUrl}/auth/login`,
-      ]),
-    ];
+    const loginEndpoints = buildAuthBackendCandidates(AUTH_BACKEND_ROUTES.login);
     let response = null;
     let lastError = null;
 

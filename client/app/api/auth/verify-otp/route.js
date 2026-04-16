@@ -1,17 +1,12 @@
+import { AUTH_BACKEND_ROUTES, buildAuthBackendCandidates } from "@/lib/auth-routes";
 import { API_BASE_URL } from "@/lib/site";
 import { normalizeRole } from "@/lib/utils";
 
 export async function POST(request) {
   const body = await request.json();
-  const fallbackBaseUrl = API_BASE_URL.includes("localhost")
-    ? API_BASE_URL.replace("localhost", "127.0.0.1")
-    : API_BASE_URL;
-  const verifyEndpoints = [
-    ...new Set([
-      `${API_BASE_URL}/api/verify-otp`,
-      `${fallbackBaseUrl}/api/verify-otp`,
-    ]),
-  ];
+  const verifyEndpoints = buildAuthBackendCandidates(
+    AUTH_BACKEND_ROUTES.verifyOtp
+  );
   let response = null;
   let lastError = null;
 

@@ -26,9 +26,9 @@ import {
   TextAreaField,
 } from "@/components/portal/PortalFields";
 import { backendAssetUrl } from "@/lib/backend";
-import { authHeaders, requestJson } from "@/lib/portal-api";
-import { API_BASE_URL } from "@/lib/site";
 import { cn, formatDate } from "@/lib/utils";
+import { useSaveServiceMutation } from "@/store/api/services.api";
+import { getErrorMessage } from "@/store/api/baseApi";
 
 export function OverviewPanel({ metrics, leads, visibleTasks }) {
   const newLeadCount = leads.filter((lead) => lead.status === "new").length;
@@ -635,6 +635,7 @@ export function ServicesPanel({
   busyAction,
 }) {
   const [activeBuilderService, setActiveBuilderService] = useState(null);
+  const [saveBuiltService] = useSaveServiceMutation();
 
   const previewUrl = useMemo(
     () => (serviceForm.file ? URL.createObjectURL(serviceForm.file) : ""),
@@ -650,28 +651,20 @@ export function ServicesPanel({
   }, [previewUrl]);
 
   const handleBuilderSave = async (serviceItem, pageContentJson) => {
-    const formData = new FormData();
-    const servicePayload = {
-      title: serviceItem.title,
-      description: serviceItem.description,
-      detailTitle: serviceItem.detailTitle,
-      detailDescription: serviceItem.detailDescription,
-      pageContent: pageContentJson,
-      features: (serviceItem.features || []).map((f) => ({
-        name: typeof f === "string" ? f : f.name,
-      })),
-    };
-    formData.append("data", JSON.stringify(servicePayload));
-    
     try {
-      await requestJson(`${API_BASE_URL}/api/v1/admin/services/${serviceItem.id}`, {
-        method: "PUT",
-        headers: authHeaders(session.token, false),
-        body: formData,
-      });
+      await saveBuiltService({
+        token: session.token,
+        id: serviceItem.id,
+        title: serviceItem.title,
+        description: serviceItem.description,
+        detailTitle: serviceItem.detailTitle,
+        detailDescription: serviceItem.detailDescription,
+        pageContent: pageContentJson,
+        features: serviceItem.features || [],
+      }).unwrap();
       setActiveBuilderService(null);
-    } catch(e) {
-      console.error("Save failed", e);
+    } catch (error) {
+      console.error("Save failed", getErrorMessage(error, "Unable to save service page."));
     }
   };
 

@@ -1,7 +1,7 @@
 import {
   withServiceSlugs,
 } from "@/lib/fallback-data";
-import { API_BASE_URL } from "@/lib/site";
+import { API_BASE_URL, CLOUDINARY_CLOUD_NAME } from "@/lib/site";
 import { slugify } from "@/lib/utils";
 import {
   resolveProductIllustration,
@@ -13,15 +13,39 @@ export function backendAssetUrl(value) {
     return null;
   }
 
-  if (/^https?:\/\//i.test(value)) {
-    return value;
+  const trimmedValue = String(value).trim();
+  if (!trimmedValue) {
+    return null;
   }
 
-  if (/^\/?uploads\//i.test(value)) {
-    return `${API_BASE_URL}${value.startsWith("/") ? value : `/${value}`}`;
+  if (/^(data|blob):/i.test(trimmedValue)) {
+    return trimmedValue;
   }
 
-  return value;
+  if (/^https?:\/\//i.test(trimmedValue)) {
+    return trimmedValue;
+  }
+
+  if (/^\/?uploads\//i.test(trimmedValue)) {
+    return `${API_BASE_URL}${trimmedValue.startsWith("/") ? trimmedValue : `/${trimmedValue}`}`;
+  }
+
+  if (trimmedValue.startsWith("/")) {
+    return trimmedValue;
+  }
+
+  const [folderName] = trimmedValue.split("/");
+  const cloudinaryFolders = new Set(["services", "products", "portfolio", "clients"]);
+  if (CLOUDINARY_CLOUD_NAME && cloudinaryFolders.has(folderName)) {
+    const encodedPublicId = trimmedValue
+      .split("/")
+      .map((segment) => encodeURIComponent(segment))
+      .join("/");
+
+    return `https://res.cloudinary.com/${CLOUDINARY_CLOUD_NAME}/image/upload/f_auto,q_auto/${encodedPublicId}`;
+  }
+
+  return trimmedValue;
 }
 
 async function fetchJson(path, fallback, options = {}) {
