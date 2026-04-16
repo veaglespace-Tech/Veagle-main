@@ -1,20 +1,11 @@
+import { AUTH_BACKEND_ROUTES, buildAuthBackendCandidates } from "@/lib/auth-routes";
 import { API_BASE_URL } from "@/lib/site";
 
 export async function POST(request) {
   const body = await request.json();
-  const fallbackBaseUrl = API_BASE_URL.includes("localhost")
-    ? API_BASE_URL.replace("localhost", "127.0.0.1")
-    : API_BASE_URL;
-  const registerEndpoints = [
-    ...new Set([
-      `${API_BASE_URL}/api/v1/auth/register`,
-      `${API_BASE_URL}/register`,
-      `${API_BASE_URL}/auth/register`,
-      `${fallbackBaseUrl}/api/v1/auth/register`,
-      `${fallbackBaseUrl}/register`,
-      `${fallbackBaseUrl}/auth/register`,
-    ]),
-  ];
+  const registerEndpoints = buildAuthBackendCandidates(
+    AUTH_BACKEND_ROUTES.register
+  );
   let response = null;
   let lastError = null;
 

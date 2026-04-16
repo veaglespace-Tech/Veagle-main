@@ -33,6 +33,11 @@ const nextConfig = {
         hostname: "veaglespace.com",
         pathname: "/img/**",
       },
+      {
+        protocol: "https",
+        hostname: "res.cloudinary.com",
+        pathname: "/**",
+      },
     ],
   },
 };

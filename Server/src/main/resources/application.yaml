@@ -40,3 +40,9 @@ jwt:
 
 admin:
   secret: ${ADMIN_SECRET:admin123}
+
+  # 🔹 CLOUDINARY (same as it is)
+cloudinary:
+  cloud-name: dbehhnhhi
+  api-key: 266323574446942
+  api-secret: jiEAtmhR144qAZFvZLIWDwsRrKA

@@ -113,10 +113,9 @@ public class ORG_ServicesService {
     }
 
     private ServicesResponseDTO mapToDTO(Services service) {
-        List<FeatureResponseDTO> features =
-                service.getFeatures() == null
-                        ? List.of()
-                        : service.getFeatures().stream()
+        List<FeatureResponseDTO> features = service.getFeatures() == null
+                ? List.of()
+                : service.getFeatures().stream()
                         .map(feature -> new FeatureResponseDTO(feature.getId(), feature.getName()))
                         .toList();
 
@@ -128,8 +127,7 @@ public class ORG_ServicesService {
                 service.getDetailDescription(),
                 service.getPageContent(),
                 service.getImageUrl(),
-                features
-        );
+                features);
     }
 
     private String normalizeText(String value) {

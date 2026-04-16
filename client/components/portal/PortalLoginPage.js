@@ -25,6 +25,8 @@ import {
   writeStoredSession,
 } from "@/lib/auth-session";
 import { COMPANY_NAME } from "@/lib/site";
+import { useLoginMutation, useVerifyOtpMutation } from "@/store/api/auth.api";
+import { getErrorMessage } from "@/store/api/baseApi";
 
 const roleMeta = {
   USER: { id: "USER", label: "User", icon: User },
@@ -61,6 +63,8 @@ export default function PortalLoginPage({
   const [otpMessage, setOtpMessage] = useState("");
   const [error, setError] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [login] = useLoginMutation();
+  const [verifyOtpRequest] = useVerifyOtpMutation();
 
   const canRegister =
     typeof showRegister === "boolean"
@@ -98,19 +102,7 @@ export default function PortalLoginPage({
   }
 
   async function requestOtp() {
-    const response = await fetch("/api/auth/login", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(form),
-    });
-
-    const payload = await response.json();
-
-    if (!response.ok) {
-      throw new Error(payload.error || "Invalid login credentials.");
-    }
+    const payload = await login(form).unwrap();
 
     if (payload.otpRequired) {
       setOtpPendingEmail(form.email.trim());
@@ -129,22 +121,10 @@ export default function PortalLoginPage({
   }
 
   async function verifyOtp() {
-    const response = await fetch("/api/auth/verify-otp", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
+    const payload = await verifyOtpRequest({
         email: otpPendingEmail || form.email.trim(),
         otp: otpCode.trim(),
-      }),
-    });
-
-    const payload = await response.json();
-
-    if (!response.ok) {
-      throw new Error(payload.error || "OTP verification failed.");
-    }
+      }).unwrap();
 
     if (payload.normalizedRole !== selectedRole) {
       throw new Error(
@@ -185,7 +165,7 @@ export default function PortalLoginPage({
         writeStoredSession(nextSession);
         router.replace(routeForPortalRole(payload.normalizedRole, nextPath));
       } catch (submitError) {
-        setError(submitError.message || "Login is unavailable right now.");
+        setError(getErrorMessage(submitError, "Login is unavailable right now."));
       } finally {
         setIsSubmitting(false);
       }
@@ -418,7 +398,7 @@ export default function PortalLoginPage({
                     try {
                       await requestOtp();
                     } catch (submitError) {
-                      setError(submitError.message || "Unable to resend OTP.");
+                      setError(getErrorMessage(submitError, "Unable to resend OTP."));
                     } finally {
                       setIsSubmitting(false);
                     }

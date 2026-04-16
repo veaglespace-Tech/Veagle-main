@@ -1,7 +1,7 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
 import { defaultContent } from "@/lib/cms/default-content";
-import { fetchPortalDashboard } from "@/lib/portal-api";
+import { dashboardApi } from "@/store/api/dashboard.api";
 
 function createInitialContent() {
   return JSON.parse(JSON.stringify(defaultContent));
@@ -54,11 +54,19 @@ function createInitialState() {
 
 export const loadPortalDashboard = createAsyncThunk(
   "portal/loadDashboard",
-  async (session, { rejectWithValue }) => {
+  async (session, { dispatch, rejectWithValue }) => {
+    const request = dispatch(
+      dashboardApi.endpoints.getPortalDashboard.initiate(session, {
+        forceRefetch: true,
+      })
+    );
+
     try {
-      return await fetchPortalDashboard(session);
+      return await request.unwrap();
     } catch (error) {
       return rejectWithValue(error.message || "Failed to load portal data.");
+    } finally {
+      request.unsubscribe();
     }
   }
 );

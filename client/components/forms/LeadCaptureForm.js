@@ -21,8 +21,9 @@ import {
   selectClass,
   textareaClass,
 } from "@/components/site/UiBits";
-import { postContact } from "@/lib/backend";
 import { cn } from "@/lib/utils";
+import { useSubmitLeadMutation } from "@/store/api/cms.api";
+import { getErrorMessage } from "@/store/api/baseApi";
 
 const initialState = {
   name: "",
@@ -92,6 +93,7 @@ export default function LeadCaptureForm({
   const [status, setStatus] = useState({ type: "", message: "" });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [session, setSession] = useState(null);
+  const [submitLead] = useSubmitLeadMutation();
 
   const normalizedServiceOptions = useMemo(() => {
     const options = serviceOptions.map((option) =>
@@ -173,29 +175,17 @@ export default function LeadCaptureForm({
 
     startTransition(async () => {
       try {
-        const subject =
-          form.serviceInterest?.trim() || "General enquiry";
-        const details = [
-          form.company?.trim() ? `Company: ${form.company.trim()}` : null,
-          form.budget?.trim() ? `Budget: ${form.budget.trim()}` : null,
-          form.timeline?.trim() ? `Timeline: ${form.timeline.trim()}` : null,
-          form.phone?.trim() ? `Phone: ${form.phone.trim()}` : null,
-        ].filter(Boolean);
-        const message = [
-          form.message.trim(),
-          details.length ? "" : null,
-          ...details,
-        ]
-          .filter((item) => item !== null)
-          .join("\n");
-
-        await postContact({
+        await submitLead({
+          ...form,
           name: form.name.trim(),
           email: form.email.trim(),
-          contact: form.phone?.trim() || "",
-          subject,
-          message,
-        });
+          phone: form.phone?.trim() || "",
+          company: form.company?.trim() || "",
+          serviceInterest: form.serviceInterest?.trim() || "",
+          budget: form.budget?.trim() || "",
+          timeline: form.timeline?.trim() || "",
+          message: form.message.trim(),
+        }).unwrap();
 
         setForm({
           ...initialState,
@@ -211,7 +201,10 @@ export default function LeadCaptureForm({
       } catch (error) {
         setStatus({
           type: "error",
-          message: error?.message || "Something went wrong while submitting the form.",
+          message: getErrorMessage(
+            error,
+            "Something went wrong while submitting the form."
+          ),
         });
       } finally {
         setIsSubmitting(false);

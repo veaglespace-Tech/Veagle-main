@@ -18,6 +18,8 @@ import {
   getSafeNextPath,
 } from "@/lib/auth-session";
 import { COMPANY_NAME } from "@/lib/site";
+import { useRegisterMutation } from "@/store/api/auth.api";
+import { getErrorMessage } from "@/store/api/baseApi";
 
 const leftPanelItems = [
   {
@@ -80,6 +82,7 @@ export default function PortalRegisterPage() {
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [registerAccount] = useRegisterMutation();
 
   function handleChange(event) {
     const { name, value } = event.target;
@@ -106,27 +109,14 @@ export default function PortalRegisterPage() {
     setIsSubmitting(true);
 
     try {
-      const registerResponse = await fetch("/api/auth/register", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(form),
-      });
-
-      const registerPayload = await registerResponse.json();
-
-      if (!registerResponse.ok) {
-        setError(registerPayload.error || "Registration failed.");
-        return;
-      }
+      await registerAccount(form).unwrap();
 
       setSuccess("Account created successfully. Redirecting you to OTP sign-in...");
       router.replace(
         `${loginHref}&email=${encodeURIComponent(form.email.trim())}&registered=1`
       );
-    } catch {
-      setError("Registration is unavailable right now.");
+    } catch (submitError) {
+      setError(getErrorMessage(submitError, "Registration is unavailable right now."));
     } finally {
       setIsSubmitting(false);
     }

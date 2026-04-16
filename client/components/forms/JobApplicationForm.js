@@ -16,8 +16,9 @@ import {
   primaryButtonClass,
   secondaryButtonClass,
 } from "@/components/site/UiBits";
-import { postJobApplication } from "@/lib/backend";
 import { cn } from "@/lib/utils";
+import { useSubmitJobApplicationMutation } from "@/store/api/applications.api";
+import { getErrorMessage } from "@/store/api/baseApi";
 
 const initialState = {
   name: "",
@@ -86,6 +87,7 @@ export default function JobApplicationForm({
   const [status, setStatus] = useState({ type: "", message: "" });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [session, setSession] = useState(null);
+  const [submitJobApplication] = useSubmitJobApplicationMutation();
 
   const selectedJob = useMemo(
     () => jobs.find((job) => String(job.id) === form.jobId),
@@ -164,14 +166,14 @@ export default function JobApplicationForm({
           return;
         }
 
-        const payload = new FormData();
-        payload.append("name", form.name.trim());
-        payload.append("email", form.email.trim());
-        payload.append("phone", form.phone.trim());
-        payload.append("jobId", form.jobId);
-        payload.append("file", form.file);
-
-        await postJobApplication(payload, session?.token);
+        await submitJobApplication({
+          token: session?.token,
+          name: form.name.trim(),
+          email: form.email.trim(),
+          phone: form.phone.trim(),
+          jobId: form.jobId,
+          file: form.file,
+        }).unwrap();
         setStatus({
           type: "success",
           message: `Application submitted for ${selectedJob?.title || "the selected role"}.`,
@@ -186,7 +188,10 @@ export default function JobApplicationForm({
       } catch (error) {
         setStatus({
           type: "error",
-          message: error.message || "Unable to submit your application right now.",
+          message: getErrorMessage(
+            error,
+            "Unable to submit your application right now."
+          ),
         });
       } finally {
         setIsSubmitting(false);
