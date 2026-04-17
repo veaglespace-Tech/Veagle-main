@@ -23,6 +23,7 @@ public class Portfolio {
     private String description;
 
     private String imageUrl;
+    private String publicId;
 
     private String projectUrl;   // live demo link
 

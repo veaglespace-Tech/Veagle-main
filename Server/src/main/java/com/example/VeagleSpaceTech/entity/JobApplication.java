@@ -25,6 +25,7 @@ public class JobApplication {
     private String phone;
 
     private String resumeUrl;
+    private String publicId;
 
     @Enumerated(EnumType.STRING)
     private ApplicationStatus status;

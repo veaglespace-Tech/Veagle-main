@@ -14,6 +14,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class ORG_ServicesService {
@@ -21,10 +22,14 @@ public class ORG_ServicesService {
     @Autowired
     private ORG_ServicesRepo orgServicesRepo;
 
+//    @Autowired
+//    private FileService fileService;
+
     @Autowired
-    private FileService fileService;
+    private CloudinaryService cloudinaryService;
 
     public ServicesResponseDTO save(MultipartFile file, ServiceRequestDTO request) {
+
         if (file == null || file.isEmpty()) {
             throw new RuntimeException("Service image is required");
         }
@@ -35,7 +40,14 @@ public class ORG_ServicesService {
         service.setDetailTitle(normalizeText(request.detailTitle()));
         service.setDetailDescription(normalizeText(request.detailDescription()));
         service.setPageContent(normalizeText(request.pageContent()));
-        service.setImageUrl(fileService.uploadImage(file, "services"));
+//        service.setImageUrl(fileService.uploadImage(file, "services")); // Stored in locally in public folder
+
+        // 🔥 CLOUDINARY UPLOAD
+        Map result = cloudinaryService.upload(file);
+
+        service.setImageUrl(result.get("secure_url").toString());
+        service.setPublicId(result.get("public_id").toString());
+
         service.setFeatures(new ArrayList<>());
 
         if (request.features() != null) {
@@ -46,11 +58,11 @@ public class ORG_ServicesService {
                 service.getFeatures().add(feature);
             }
         }
-
         return mapToDTO(orgServicesRepo.save(service));
     }
 
     public ServicesResponseDTO update(Long id, MultipartFile file, ServiceRequestDTO request) {
+
         Services service = orgServicesRepo.findById(id)
                 .orElseThrow(() -> new RuntimeException("Service not found"));
 
@@ -60,9 +72,17 @@ public class ORG_ServicesService {
         service.setDetailDescription(normalizeText(request.detailDescription()));
         service.setPageContent(normalizeText(request.pageContent()));
 
+        // ☁️ CLOUDINARY IMAGE UPDATE
         if (file != null && !file.isEmpty()) {
-            fileService.delete(service.getImageUrl());
-            service.setImageUrl(fileService.uploadImage(file, "services"));
+
+            if (service.getPublicId() != null) {
+                cloudinaryService.delete(service.getPublicId());
+            }
+
+            Map result = cloudinaryService.upload(file);
+
+            service.setImageUrl(result.get("secure_url").toString());
+            service.setPublicId(result.get("public_id").toString());
         }
 
         if (service.getFeatures() == null) {
@@ -84,11 +104,17 @@ public class ORG_ServicesService {
     }
 
     public void deleted(Long id) {
+
         Services service = orgServicesRepo.findById(id)
                 .orElseThrow(() -> new RuntimeException("Service not found"));
 
+        // ☁️ delete image from Cloudinary first
+        if (service.getPublicId() != null) {
+            cloudinaryService.delete(service.getPublicId());
+        }
+
+        // 🗑 delete DB record
         orgServicesRepo.delete(service);
-        fileService.delete(service.getImageUrl());
     }
 
     public @Nullable ServicesResponseDTO getServiceById(Long id) {

@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class JobApplicationService {
@@ -35,7 +36,9 @@ public class JobApplicationService {
     private EmailService emailService;
 
     @Autowired
-    private FileService fileService;
+    private CloudinaryService cloudinaryService;
+//    @Autowired
+//    private FileService fileService;
 
     public List<JobApplicationResponseDTO> getAll() {
         return repo.findAllByOrderByCreatedAtDesc()
@@ -99,6 +102,7 @@ public class JobApplicationService {
 
         User user = resolveUser(request.email());
 
+        // Check User is Block or Not
         if (user != null && user.getStatus() == UserStatus.BLOCKED) {
             throw new RuntimeException("You are blocked by the organization.");
         }
@@ -119,16 +123,22 @@ public class JobApplicationService {
             throw new RuntimeException("You already applied for this job");
         }
 
-        String resumePath = fileService.uploadDocument(file, "resumes");
+
 
         JobApplication app = new JobApplication();
         app.setName(request.name());
         app.setEmail(request.email());
         app.setPhone(request.phone());
-        app.setResumeUrl(resumePath);
+//        app.setResumeUrl(fileService.uploadDocument(file, "resumes"));
         app.setStatus(ApplicationStatus.APPLIED);
         app.setJob(job);
         app.setUser(user);
+
+        // Save Image in cloudinary
+        Map result = cloudinaryService.upload(file);
+
+        app.setResumeUrl(result.get("secure_url").toString());
+        app.setPublicId(result.get("public_id").toString());
 
         JobApplication saved = repo.save(app);
 
@@ -140,7 +150,6 @@ public class JobApplicationService {
 
         return mapToDTO(saved);
     }
-
     private User resolveUser(String requestEmail) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 

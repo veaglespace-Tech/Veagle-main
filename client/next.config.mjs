@@ -13,14 +13,17 @@ const nextConfig = {
     remotePatterns: [
       {
         protocol: "http",
-        hostname: "localhost",
-        port: "8080",
+        hostname: "82.112.237.155",
         pathname: "/uploads/**",
       },
       {
         protocol: "https",
-        hostname: "localhost",
-        port: "8080",
+        hostname: "veaglespace.com",
+        pathname: "/uploads/**",
+      },
+      {
+        protocol: "https",
+        hostname: "www.veaglespace.com",
         pathname: "/uploads/**",
       },
       {

@@ -1,7 +1,7 @@
 export const SITE_URL =
-  process.env.NEXT_PUBLIC_SITE_URL || "https://www.veaglespace.com";
+  process.env.NEXT_PUBLIC_SITE_URL || "https://veaglespace.com";
 export const API_BASE_URL =
-  process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:8080";
+  process.env.NEXT_PUBLIC_API_BASE_URL || "https://veaglespace.com"; // Hostinger VPS: 82.112.237.155
 export const CLOUDINARY_CLOUD_NAME =
   process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME || "dbehhnhhi";
 

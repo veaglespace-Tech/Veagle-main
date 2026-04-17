@@ -35,6 +35,7 @@ public class Services { // Organization Services
     private String pageContent;
 
     private String imageUrl;
+    private String publicId;
 
     @OneToMany(mappedBy = "service", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Feature> features;

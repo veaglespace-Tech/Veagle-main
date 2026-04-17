@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class ProductsService {
@@ -21,8 +22,11 @@ public class ProductsService {
     @Autowired
     private CategoryRepository categoryRepository;
 
+//    @Autowired
+//    private FileService fileService;
+
     @Autowired
-    private FileService fileService;
+    private CloudinaryService cloudinaryService;
 
     public ProductResponseDTO addProduct(ProductRequestDTO request, MultipartFile file) {
         if (file == null || file.isEmpty()) {
@@ -37,7 +41,12 @@ public class ProductsService {
         product.setDescription(request.description());
         product.setCategory(category);
         product.setIsActive(request.isActive() != null ? request.isActive() : true);
-        product.setImageUrl(fileService.uploadImage(file, "products"));
+//        product.setImageUrl(fileService.uploadImage(file, "products"));
+
+        // ☁️ CLOUDINARY UPLOAD
+        Map result = cloudinaryService.upload(file);
+        product.setImageUrl(result.get("secure_url").toString());
+        product.setPublicId(result.get("public_id").toString());
 
         return mapToDTO(productRepo.save(product));
     }
@@ -61,12 +70,18 @@ public class ProductsService {
                 .orElseThrow(() -> new RuntimeException("Product not found"));
 
         productRepo.delete(product);
-        fileService.delete(product.getImageUrl());
+//        fileService.delete(product.getImageUrl());
+
+        // ☁️ delete image from Cloudinary
+        if (product.getPublicId() != null) {
+            cloudinaryService.delete(product.getPublicId());
+        }
 
         return "Product deleted successfully";
     }
 
     public ProductResponseDTO updateProduct(Long id, ProductRequestDTO request, MultipartFile file) {
+
         Product product = productRepo.findById(id)
                 .orElseThrow(() -> new RuntimeException("Product not found"));
 
@@ -82,8 +97,17 @@ public class ProductsService {
         }
 
         if (file != null && !file.isEmpty()) {
-            fileService.delete(product.getImageUrl());
-            product.setImageUrl(fileService.uploadImage(file, "products"));
+
+            // ☁️ delete old image from Cloudinary
+            if (product.getPublicId() != null) {
+                cloudinaryService.delete(product.getPublicId());
+            }
+
+            // ☁️ upload new image
+            Map result = cloudinaryService.upload(file);
+
+            product.setImageUrl(result.get("secure_url").toString());
+            product.setPublicId(result.get("public_id").toString());
         }
 
         return mapToDTO(productRepo.save(product));

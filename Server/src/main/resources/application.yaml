@@ -3,7 +3,9 @@ spring:
     name: VeagleSpaceTech
 
   datasource:
-    url: ${DB_URL:jdbc:mysql://localhost:3306/veagledb?createDatabaseIfNotExist=true&useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Kolkata}
+    # HOSTINGER VPS: Update these with your Hostinger MySQL credentials
+    # Local dev: jdbc:mysql://localhost:3306/veagledb
+    url: ${DB_URL:jdbc:mysql://127.0.0.1:3306/veagledb?createDatabaseIfNotExist=true&useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Kolkata}
     username: ${DB_USERNAME:root}
     password: ${DB_PASSWORD:Veagle@123}
     driver-class-name: com.mysql.cj.jdbc.Driver
@@ -40,3 +42,12 @@ jwt:
 
 admin:
   secret: ${ADMIN_SECRET:admin123}
+
+cloudinary:
+  cloud-name: dbehhnhhi
+  api-key: 266323574446942
+  api-secret: jiEAtmhR144qAZFvZLIWDwsRrKA
+
+server:
+  port: 8080
+

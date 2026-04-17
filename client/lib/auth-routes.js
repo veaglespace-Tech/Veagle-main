@@ -10,9 +10,7 @@ export const AUTH_BACKEND_ROUTES = Object.freeze({
 });
 
 export function buildAuthBackendCandidates(path) {
-  const fallbackBaseUrl = API_BASE_URL.includes("localhost")
-    ? API_BASE_URL.replace("localhost", "127.0.0.1")
-    : API_BASE_URL;
-
-  return [...new Set([`${API_BASE_URL}${path}`, `${fallbackBaseUrl}${path}`])];
+  // Hostinger VPS: 82.112.237.155 / https://veaglespace.com
+  // Localhost fallback removed for production
+  return [`${API_BASE_URL}${path}`];
 }
