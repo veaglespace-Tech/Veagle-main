@@ -9,7 +9,6 @@ import {
   buildLoginHref,
   buildRegisterHref,
   clearStoredSession,
-  isUserSession,
   readStoredSession,
 } from "@/lib/auth-session";
 import {
@@ -120,7 +119,7 @@ export default function LeadCaptureForm({
       const nextSession = readStoredSession();
       setSession(nextSession);
 
-      if (isUserSession(nextSession)) {
+      if (nextSession?.token) {
         setForm((current) => ({
           ...current,
           name: nextSession.username || current.name,
@@ -142,7 +141,7 @@ export default function LeadCaptureForm({
     "text-[10px] font-bold uppercase tracking-[0.18em] text-[color:var(--text-muted)]";
   const orbitalFieldInputClass =
     "mt-2 w-full rounded-[0.95rem] border border-[color:var(--border)] bg-[color:var(--surface-strong)] px-4 py-3.5 text-sm text-[color:var(--text-primary)] outline-none transition placeholder:text-[color:var(--text-muted)] focus:border-[color:var(--border-strong)] focus:ring-2 focus:ring-[color:var(--ring)]";
-  const userLocked = isUserSession(session);
+  const sessionLocked = Boolean(session?.token);
   const loginHref = buildLoginHref(pathname || "/contact");
   const registerHref = buildRegisterHref(pathname || "/contact");
 
@@ -159,14 +158,6 @@ export default function LeadCaptureForm({
 
     if (Object.keys(nextErrors).length > 0) {
       setErrors(nextErrors);
-      return;
-    }
-
-    if (!isUserSession(session)) {
-      setStatus({
-        type: "error",
-        message: "Authentication required. Please sign in to submit your project brief.",
-      });
       return;
     }
 
@@ -246,7 +237,7 @@ export default function LeadCaptureForm({
               name="name"
               value={form.name}
               onChange={handleChange}
-              readOnly={userLocked}
+              readOnly={sessionLocked}
               error={errors.name}
               placeholder="Your name"
             />
@@ -257,7 +248,7 @@ export default function LeadCaptureForm({
               type="email"
               value={form.email}
               onChange={handleChange}
-              readOnly={userLocked}
+              readOnly={sessionLocked}
               error={errors.email}
               placeholder="john@company.com"
             />
@@ -330,7 +321,7 @@ export default function LeadCaptureForm({
               name="name"
               value={form.name}
               onChange={handleChange}
-              readOnly={userLocked}
+              readOnly={sessionLocked}
               placeholder="Your full name"
             />
             {errors.name ? <FieldError>{errors.name}</FieldError> : null}
@@ -356,7 +347,7 @@ export default function LeadCaptureForm({
               name="email"
               value={form.email}
               onChange={handleChange}
-              readOnly={userLocked}
+              readOnly={sessionLocked}
               placeholder="official@domain.com"
             />
             {errors.email ? <FieldError>{errors.email}</FieldError> : null}
@@ -369,7 +360,7 @@ export default function LeadCaptureForm({
               name="phone"
               value={form.phone}
               onChange={handleChange}
-              readOnly={userLocked}
+              readOnly={sessionLocked}
               placeholder="+91"
             />
             {errors.phone ? <FieldError>{errors.phone}</FieldError> : null}
@@ -512,7 +503,7 @@ export default function LeadCaptureForm({
             name="name"
             value={form.name}
             onChange={handleChange}
-            readOnly={userLocked}
+            readOnly={sessionLocked}
             error={errors.name}
             placeholder="Your name"
           />
@@ -530,7 +521,7 @@ export default function LeadCaptureForm({
             type="email"
             value={form.email}
             onChange={handleChange}
-            readOnly={userLocked}
+            readOnly={sessionLocked}
             error={errors.email}
             placeholder="name@domain.com"
           />
@@ -539,7 +530,7 @@ export default function LeadCaptureForm({
             name="phone"
             value={form.phone}
             onChange={handleChange}
-            readOnly={userLocked}
+            readOnly={sessionLocked}
             error={errors.phone}
             placeholder="+91"
           />
@@ -639,7 +630,7 @@ function FieldError({ children }) {
 }
 
 function AccessBanner({ session, loginHref, registerHref, onLogout }) {
-  if (isUserSession(session)) {
+  if (session?.token) {
     return (
       <div className="mb-6 rounded-2xl border border-emerald-500/20 bg-emerald-500/10 px-4 py-3 text-sm text-[color:var(--text-primary)]">
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
@@ -667,10 +658,10 @@ function AccessBanner({ session, loginHref, registerHref, onLogout }) {
   return (
     <div className={accessBannerClass}>
       <p className="font-semibold text-amber-600 dark:text-amber-200">
-        Registration and Login required
+        Sign in is optional
       </p>
       <p className="mt-2 text-xs leading-6 text-amber-700 dark:text-amber-100/70">
-        Please sign in or create a profile to submit your enquiry and track follow-up safely.
+        You can submit this enquiry directly. If you sign in or create a profile, we can prefill your details for faster follow-up.
       </p>
       <div className="mt-4 flex flex-wrap gap-3">
         <Link

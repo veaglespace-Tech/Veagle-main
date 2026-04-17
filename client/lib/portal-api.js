@@ -1,4 +1,5 @@
 import { API_BASE_URL } from "@/lib/site";
+import { mapLeadRecord } from "@/lib/leads";
 export { PORTAL_STORAGE_KEY } from "@/lib/auth-session";
 
 export async function requestJson(url, options = {}) {
@@ -34,7 +35,7 @@ export async function fetchPortalDashboard(session) {
     requestJson("/api/cms/content", {
       headers: authHeaders(session.token, false),
     }),
-    requestJson("/api/cms/leads", {
+    requestJson(`${API_BASE_URL}/api/v1/admin/contacts`, {
       headers: authHeaders(session.token, false),
     }),
     requestJson("/api/cms/tasks", {
@@ -42,13 +43,14 @@ export async function fetchPortalDashboard(session) {
     }),
   ]);
 
-  const [content, leads, tasks] = primaryResults.map((result, index) => {
+  const [content, rawLeads, tasks] = primaryResults.map((result, index) => {
     if (result.status === "fulfilled") {
       return result.value;
     }
 
     return [{}, [], []][index];
   });
+  const leads = Array.isArray(rawLeads) ? rawLeads.map((item) => mapLeadRecord(item)) : [];
 
   const results = await Promise.allSettled([
     requestJson(`${API_BASE_URL}/api/v1/services`),

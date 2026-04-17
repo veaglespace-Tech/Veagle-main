@@ -1,5 +1,6 @@
 import { authHeaders } from "@/lib/portal-api";
-import { baseApi } from "@/store/api/baseApi";
+import { buildLeadPayload, mapLeadRecord } from "@/lib/leads";
+import { baseApi, buildBackendUrl } from "@/store/api/baseApi";
 
 export const cmsApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
@@ -21,26 +22,52 @@ export const cmsApi = baseApi.injectEndpoints({
     }),
     getLeads: builder.query({
       query: (token) => ({
-        url: "/api/cms/leads",
+        url: buildBackendUrl("/api/v1/admin/contacts"),
         headers: authHeaders(token, false),
       }),
+      transformResponse: (response) =>
+        Array.isArray(response) ? response.map((item) => mapLeadRecord(item)) : [],
       providesTags: ["Lead"],
     }),
     submitLead: builder.mutation({
       query: (body) => ({
-        url: "/api/cms/leads",
+        url: buildBackendUrl("/api/v1/contacts"),
         method: "POST",
-        body,
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: buildLeadPayload(body),
       }),
       invalidatesTags: ["Lead", "PortalDashboard"],
     }),
     updateLeadStatus: builder.mutation({
-      query: ({ token, id, status }) => ({
-        url: "/api/cms/leads",
-        method: "PATCH",
-        headers: authHeaders(token),
-        body: { id, status },
-      }),
+      async queryFn({ token, id, status }, _api, _extraOptions, baseQuery) {
+        if (!id) {
+          return {
+            error: {
+              status: 400,
+              data: { error: "Lead id is required" },
+              message: "Lead id is required",
+            },
+          };
+        }
+
+        if (!status || status === "new") {
+          return { data: { ok: true } };
+        }
+
+        const result = await baseQuery({
+          url: buildBackendUrl(`/api/v1/admin/contacts/${encodeURIComponent(id)}/read`),
+          method: "PATCH",
+          headers: authHeaders(token, false),
+        });
+
+        if (result.error) {
+          return { error: result.error };
+        }
+
+        return { data: result.data };
+      },
       invalidatesTags: ["Lead", "PortalDashboard"],
     }),
     getTasks: builder.query({
