@@ -7,6 +7,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
+
 @Setter
 @Getter
 @AllArgsConstructor
@@ -28,8 +30,13 @@ public class User {
     @Column(nullable = false, unique = true)
     private String contact;
 
-    @Column(nullable = false)
+
+    @Column(nullable = true)
     private String password;
+
+    private String verificationToken;
+
+    private LocalDateTime tokenExpiry;
 
     @Column(nullable = false)
     private String role; // ROLE_USER, ROLE_ADMIN

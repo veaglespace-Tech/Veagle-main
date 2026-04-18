@@ -17,19 +17,19 @@ public class PortalTaskController {
     private final PortalTaskService portalTaskService;
 
     @PreAuthorize("hasAnyRole('ADMIN','SADMIN')")
-    @GetMapping("/api/v1/admin/tasks")
+    @GetMapping("/api/admin/tasks")
     public ResponseEntity<List<PortalTaskResponseDTO>> getTasks() {
         return ResponseEntity.ok(portalTaskService.getAllTasks());
     }
 
     @PreAuthorize("hasRole('SADMIN')")
-    @PostMapping("/api/v1/admin/tasks")
+    @PostMapping("/api/admin/tasks")
     public ResponseEntity<PortalTaskResponseDTO> createTask(@RequestBody PortalTaskRequestDTO request) {
         return ResponseEntity.status(201).body(portalTaskService.createTask(request));
     }
 
     @PreAuthorize("hasAnyRole('ADMIN','SADMIN')")
-    @PatchMapping("/api/v1/admin/tasks/{id}")
+    @PatchMapping("/api/admin/tasks/{id}")
     public ResponseEntity<PortalTaskResponseDTO> updateTask(
             @PathVariable Long id,
             @RequestBody PortalTaskRequestDTO request
@@ -38,7 +38,7 @@ public class PortalTaskController {
     }
 
     @PreAuthorize("hasRole('SADMIN')")
-    @DeleteMapping("/api/v1/admin/tasks/{id}")
+    @DeleteMapping("/api/admin/tasks/{id}")
     public ResponseEntity<String> deleteTask(@PathVariable Long id) {
         portalTaskService.deleteTask(id);
         return ResponseEntity.ok("Task deleted successfully");

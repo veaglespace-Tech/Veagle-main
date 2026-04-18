@@ -14,13 +14,13 @@ public class SiteContentController {
 
     private final SiteContentService siteContentService;
 
-    @GetMapping("/api/v1/site-content")
+    @GetMapping("/api/public/site-content")
     public ResponseEntity<Map<String, Object>> getContent() {
         return ResponseEntity.ok(siteContentService.getContent());
     }
 
     @PreAuthorize("hasAnyRole('ADMIN','SADMIN')")
-    @PutMapping("/api/v1/admin/site-content")
+    @PutMapping("/api/admin/site-content")
     public ResponseEntity<Map<String, Object>> updateContent(@RequestBody Map<String, Object> content) {
         return ResponseEntity.ok(siteContentService.saveContent(content));
     }

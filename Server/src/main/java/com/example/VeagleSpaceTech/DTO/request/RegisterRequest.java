@@ -15,9 +15,9 @@ public record RegisterRequest(
 
         @NotBlank(message = "Contact is required")
         @Pattern(regexp = "\\d{10}", message = "Contact must be 10 digits")
-        String contact,
+        String contact
 
-        @NotBlank(message = "Password is required")
-        @Size(min = 6, message = "Password must be at least 6 characters")
-        String password
+//        @NotBlank(message = "Password is required")
+//        @Size(min = 6, message = "Password must be at least 6 characters")
+//        String password
 ) {}

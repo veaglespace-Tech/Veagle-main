@@ -1,13 +1,11 @@
 package com.example.VeagleSpaceTech.controller;
 
 import com.example.VeagleSpaceTech.service.ClientService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.RestController;
 import com.example.VeagleSpaceTech.DTO.request.ClientRequestDTO;
 import com.example.VeagleSpaceTech.DTO.response.ClientResponseDTO;
-import lombok.AllArgsConstructor;
-
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -15,29 +13,26 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.List;
 
 @RestController
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class ClientController {
 
-		@Autowired
-    private ClientService clientService;
-
-
+    private final ClientService clientService;
 
     // ✅ GET ALL (PUBLIC)
-    @GetMapping("/api/v1/clients")
+    @GetMapping("/api/public/clients")
     public ResponseEntity<List<ClientResponseDTO>> getAllClients() {
         return ResponseEntity.ok(clientService.getAllClients());
     }
 
     // ✅ GET BY ID (PUBLIC)
-    @GetMapping("/api/v1/clients/{id}")
+    @GetMapping("/api/public/clients/{id}")
     public ResponseEntity<ClientResponseDTO> getClientById(@PathVariable Long id) {
         return ResponseEntity.ok(clientService.getClientById(id));
     }
 
     // ✅ CREATE (ADMIN)
     @PreAuthorize("hasAnyRole('ADMIN','SADMIN')")
-    @PostMapping("/api/v1/admin/clients")
+    @PostMapping("/api/admin/clients")
     public ResponseEntity<ClientResponseDTO> createClient(
             @ModelAttribute ClientRequestDTO dto,
             @RequestPart("logo") MultipartFile logo
@@ -47,7 +42,7 @@ public class ClientController {
 
     // ✅ UPDATE (ADMIN)
     @PreAuthorize("hasAnyRole('ADMIN','SADMIN')")
-    @PutMapping("/api/v1/admin/clients/{id}")
+    @PutMapping("/api/admin/clients/{id}")
     public ResponseEntity<ClientResponseDTO> updateClient(
             @PathVariable Long id,
             @ModelAttribute ClientRequestDTO dto,
@@ -58,7 +53,7 @@ public class ClientController {
 
     //  DELETE (ADMIN)
     @PreAuthorize("hasAnyRole('ADMIN','SADMIN')")
-    @DeleteMapping("/api/v1/admin/clients/{id}")
+    @DeleteMapping("/api/admin/clients/{id}")
     public ResponseEntity<String> deleteClient(@PathVariable Long id) {
         clientService.deleteClient(id);
         return ResponseEntity.ok("Client deleted successfully");

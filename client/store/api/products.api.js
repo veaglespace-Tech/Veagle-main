@@ -25,13 +25,13 @@ function buildProductFormData(payload) {
 export const productsApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
     getProducts: builder.query({
-      query: () => buildBackendUrl("/api/v1/products"),
+      query: () => buildBackendUrl("/api/public/products"),
       providesTags: ["Product"],
     }),
     saveProduct: builder.mutation({
       query: ({ token, id, ...payload }) => ({
         url: buildBackendUrl(
-          id ? `/api/v1/admin/products/${id}` : "/api/v1/admin/products"
+          id ? `/api/admin/products/${id}` : "/api/admin/products"
         ),
         method: id ? "PUT" : "POST",
         headers: authHeaders(token, false),
@@ -41,7 +41,7 @@ export const productsApi = baseApi.injectEndpoints({
     }),
     toggleProductStatus: builder.mutation({
       query: ({ token, id, isActive }) => ({
-        url: buildBackendUrl(`/api/v1/admin/products/${id}/status`),
+        url: buildBackendUrl(`/api/admin/products/${id}/status`),
         method: "PATCH",
         headers: authHeaders(token),
         body: { isActive },
@@ -50,7 +50,7 @@ export const productsApi = baseApi.injectEndpoints({
     }),
     deleteProduct: builder.mutation({
       query: ({ token, id }) => ({
-        url: buildBackendUrl(`/api/v1/admin/products/${id}`),
+        url: buildBackendUrl(`/api/admin/products/${id}`),
         method: "DELETE",
         headers: authHeaders(token, false),
       }),

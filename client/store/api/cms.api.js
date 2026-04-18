@@ -6,14 +6,14 @@ export const cmsApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
     getSiteContent: builder.query({
       query: (token) => ({
-        url: "/api/cms/content",
-        headers: authHeaders(token, false),
+        url: buildBackendUrl("/api/public/site-content"),
+        headers: token ? authHeaders(token, false) : undefined,
       }),
       providesTags: ["SiteContent"],
     }),
     updateSiteContent: builder.mutation({
       query: ({ token, content }) => ({
-        url: "/api/cms/content",
+        url: buildBackendUrl("/api/admin/site-content"),
         method: "PUT",
         headers: authHeaders(token),
         body: content,
@@ -22,7 +22,7 @@ export const cmsApi = baseApi.injectEndpoints({
     }),
     getLeads: builder.query({
       query: (token) => ({
-        url: buildBackendUrl("/api/v1/admin/contacts"),
+        url: buildBackendUrl("/api/admin/contacts"),
         headers: authHeaders(token, false),
       }),
       transformResponse: (response) =>
@@ -31,7 +31,7 @@ export const cmsApi = baseApi.injectEndpoints({
     }),
     submitLead: builder.mutation({
       query: (body) => ({
-        url: buildBackendUrl("/api/v1/contacts"),
+        url: buildBackendUrl("/api/public/contacts"),
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -57,7 +57,7 @@ export const cmsApi = baseApi.injectEndpoints({
         }
 
         const result = await baseQuery({
-          url: buildBackendUrl(`/api/v1/admin/contacts/${encodeURIComponent(id)}/read`),
+          url: buildBackendUrl(`/api/admin/contacts/${encodeURIComponent(id)}/read`),
           method: "PATCH",
           headers: authHeaders(token, false),
         });
@@ -72,23 +72,25 @@ export const cmsApi = baseApi.injectEndpoints({
     }),
     getTasks: builder.query({
       query: (token) => ({
-        url: "/api/cms/tasks",
+        url: buildBackendUrl("/api/admin/tasks"),
         headers: authHeaders(token, false),
       }),
       providesTags: ["Task"],
     }),
     saveTask: builder.mutation({
       query: ({ token, ...task }) => ({
-        url: "/api/cms/tasks",
+        url: task.id
+          ? buildBackendUrl(`/api/admin/tasks/${task.id}`)
+          : buildBackendUrl("/api/admin/tasks"),
         method: task.id ? "PATCH" : "POST",
         headers: authHeaders(token),
-        body: task.id ? { id: task.id, ...task } : task,
+        body: task,
       }),
       invalidatesTags: ["Task", "PortalDashboard"],
     }),
     deleteTask: builder.mutation({
       query: ({ token, id }) => ({
-        url: `/api/cms/tasks?id=${encodeURIComponent(id)}`,
+        url: buildBackendUrl(`/api/admin/tasks/${id}`),
         method: "DELETE",
         headers: authHeaders(token, false),
       }),

@@ -141,7 +141,7 @@ nohup java -jar target/VeagleSpaceTech-0.0.1-SNAPSHOT.jar > backend.log 2>&1 &
 
 ### Verify backend is running
 ```bash
-curl http://127.0.0.1:8080/api/v1/categories
+curl http://127.0.0.1:8080/api/public/categories
 # Should get JSON response
 ```
 
@@ -326,7 +326,7 @@ tail -f /var/log/nginx/error.log
 ### Test endpoints
 ```bash
 curl https://veaglespace.com
-curl https://veaglespace.com/api/v1/categories
+curl https://veaglespace.com/api/public/categories
 ```
 
 ---
@@ -410,7 +410,7 @@ bash /home/veagle-app/HOSTINGER_VPS_DEPLOYMENT.sh
 - Backend: http://127.0.0.1:8080
 - Frontend: http://127.0.0.1:3000
 - Domain: https://veaglespace.com
-- API: https://veaglespace.com/api/v1
+- API: https://veaglespace.com/api
 
 ---
 

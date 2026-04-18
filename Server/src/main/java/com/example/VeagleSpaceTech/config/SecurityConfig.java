@@ -28,25 +28,20 @@ public class SecurityConfig {
         http.cors(cors -> {}); // ✅ IMPORTANT
         http.csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(req ->
-                                req.requestMatchers(
-                                        "/auth/**",
-                                        "/api/verify-otp",
-                                        "/api/v1/auth/**",
-                                        "/api/v1/categories/**",
-                                        "/api/v1/clients/**",
-                                        "/api/v1/jobs/**",
-                                        "/api/v1/services/**",
-                                        "/api/v1/portfolio/**",
-                                        "/api/v1/products/**",
-                                        "/api/v1/applications",
-                                        "/api/v1/site-content",
-                                        "/api/v1/contacts",
-                                        "/api/v1/chatbot/**",   // ✅ Chatbot endpoints — public, no auth needed
-                                        "/uploads/**"
-                                ).permitAll()
+                        req   // ✅ PUBLIC
+                        .requestMatchers(
+                                "/api/public/**",
+                                "/api/auth/**",
+                                "/uploads/**"
+                        ).permitAll()
 
-                                .requestMatchers("/api/v1/admin/**").hasAnyRole("ADMIN", "SADMIN")
-                                .requestMatchers("/api/v1/users/**").hasAnyRole("USER", "ADMIN", "SADMIN")
+                        // ✅ USER
+                        .requestMatchers("/api/user/**")
+                        .hasAnyRole("USER","ADMIN","SADMIN")
+
+                        // ✅ ADMIN
+                        .requestMatchers("/api/admin/**")
+                        .hasAnyRole("ADMIN","SADMIN")
                                 .anyRequest().authenticated()
                 )
                 .sessionManagement(session ->

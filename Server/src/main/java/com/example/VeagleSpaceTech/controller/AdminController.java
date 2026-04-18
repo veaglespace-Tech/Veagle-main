@@ -1,13 +1,9 @@
 package com.example.VeagleSpaceTech.controller;
 
-import com.example.VeagleSpaceTech.DTO.request.OtpRequest;
-import com.example.VeagleSpaceTech.DTO.response.UserResponseDTO;
 import com.example.VeagleSpaceTech.DTO.request.UserRequestDTO;
-import com.example.VeagleSpaceTech.DTO.response.AuthResponse;
-import com.example.VeagleSpaceTech.DTO.request.LoginRequest;
+import com.example.VeagleSpaceTech.DTO.response.UserResponseDTO;
 import com.example.VeagleSpaceTech.service.UserService;
-import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -15,77 +11,54 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
+@RequestMapping("/api/admin")
+@RequiredArgsConstructor
 public class AdminController {
 
-    @Autowired
-    private UserService userService;
+    private final UserService userService;
 
-    // Create Admin (with secret key) - Removed due to being commented out
-
-    // Login Admin
-    @PostMapping("/auth/login")
-    public ResponseEntity<String> login(@Valid @RequestBody LoginRequest request) {
-        return ResponseEntity.ok(userService.login(request));
-    }
-
-    // 🔹 Step 2
-    @PostMapping("/api/verify-otp")
-    public ResponseEntity<AuthResponse> verifyOtp(@RequestBody OtpRequest request) {
-        return ResponseEntity.ok(userService.verifyOtpRequest(request));
-    }
-
-    // Users Related Oprations
     @PreAuthorize("hasAnyRole('ADMIN','SADMIN')")
-    @GetMapping("/api/v1/admin/users")
+    @GetMapping("/users")
     public ResponseEntity<List<UserResponseDTO>> getAllUsers() {
         return ResponseEntity.ok().body(userService.getAllUsers());
     }
 
-    // Update Users
     @PreAuthorize("hasAnyRole('ADMIN','SADMIN')")
-    @PutMapping("/api/v1/admin/users/{id}")
+    @PostMapping("/users")
+    public ResponseEntity<UserResponseDTO> addUser(@RequestBody UserRequestDTO userRequestDTO) {
+        return ResponseEntity.status(201).body(userService.addUserByAdmin(userRequestDTO));
+    }
+
+    @PreAuthorize("hasAnyRole('ADMIN','SADMIN')")
+    @PutMapping("/users/{id}")
     public ResponseEntity<UserResponseDTO> updateUser(
             @PathVariable Long id,
             @RequestBody UserRequestDTO request) {
         return ResponseEntity.ok(userService.updateUser(id, request));
     }
 
-    // Delete User
     @PreAuthorize("hasAnyRole('ADMIN','SADMIN')")
-    @DeleteMapping("/api/v1/admin/users/{id}")
+    @DeleteMapping("/users/{id}")
     public ResponseEntity<String> deleteUser(@PathVariable Long id) {
         return ResponseEntity.ok().body(userService.deleteUser(id));
     }
 
-    // Add Users
     @PreAuthorize("hasAnyRole('ADMIN','SADMIN')")
-    @PostMapping("/api/v1/admin/users")
-    public ResponseEntity<UserResponseDTO> addUser(@RequestBody UserRequestDTO userRequestDTO) {
-        return ResponseEntity.status(201).body(userService.addUserByAdmin(userRequestDTO));
-    }
-
-    // Status Updating
-    @PreAuthorize("hasAnyRole('ADMIN','SADMIN')")
-    @PatchMapping("/api/v1/admin/users/{id}/status")
+    @PatchMapping("/users/{id}/status")
     public ResponseEntity<UserResponseDTO> updateUserStatus(@PathVariable Long id) {
         return ResponseEntity.ok(userService.toggleUserStatus(id));
     }
 
-    // Get User Or Admin
     @PreAuthorize("hasRole('SADMIN')")
-    @GetMapping("/api/v1/admin/users/{id}")
+    @GetMapping("/users/{id}")
     public ResponseEntity<UserResponseDTO> getSuperAdmin(@PathVariable Long id) {
         return ResponseEntity.status(200).body(userService.getAdminById(id));
     }
 
-    // Update Super Admin data
     @PreAuthorize("hasRole('SADMIN')")
     @PutMapping("/sadmin/{id}")
     public ResponseEntity<UserResponseDTO> updateSAdmin(@PathVariable Long id,
             @RequestBody UserRequestDTO userRequestDTO) {
         return ResponseEntity.status(200).body(userService.updateAdmin(id, userRequestDTO));
     }
-
-    // Apis
-
 }

@@ -158,14 +158,7 @@ export default function JobApplicationForm({
 
     startTransition(async () => {
       try {
-        if (!isUserSession(session)) {
-          setStatus({
-            type: "error",
-            message: "Authentication required. Please sign in to submit your application.",
-          });
-          return;
-        }
-
+        // Session is now optional as per the new public API
         await submitJobApplication({
           token: session?.token,
           name: form.name.trim(),
@@ -369,23 +362,23 @@ function AccessBanner({ session, loginHref, registerHref, onLogout }) {
   }
 
   return (
-    <div className={cn(accessBannerClass, "border-amber-500/30 bg-amber-500/5")}>
-      <p className="font-semibold text-amber-700 dark:text-amber-200">
-        Registration and Login required
+    <div className={cn(accessBannerClass, "border-blue-500/30 bg-blue-500/5")}>
+      <p className="font-semibold text-blue-700 dark:text-blue-200">
+        Optional: Sign in to auto-fill
       </p>
-      <p className="mt-2 text-xs leading-6 text-amber-800/70 dark:text-amber-100/70">
-        Please sign in or create a profile to submit your job application securely.
+      <p className="mt-2 text-xs leading-6 text-blue-800/70 dark:text-blue-100/70">
+        You can submit as a guest, but creating a profile allows you to track your application and auto-fills your contact details.
       </p>
       <div className="mt-4 flex flex-wrap gap-3">
         <Link
           href={loginHref}
-          className={cn(primaryButtonClass, compactActionButtonClass, "bg-amber-600 hover:bg-amber-500 text-white")}
+          className={cn(primaryButtonClass, compactActionButtonClass)}
         >
           Sign In
         </Link>
         <Link
           href={registerHref}
-          className={cn(secondaryButtonClass, compactActionButtonClass, "border-amber-500/30 text-amber-700 dark:text-amber-200")}
+          className={cn(secondaryButtonClass, compactActionButtonClass)}
         >
           Create Profile
         </Link>

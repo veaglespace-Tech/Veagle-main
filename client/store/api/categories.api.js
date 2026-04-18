@@ -4,17 +4,17 @@ import { baseApi, buildBackendUrl } from "@/store/api/baseApi";
 export const categoriesApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
     getCategories: builder.query({
-      query: () => buildBackendUrl("/api/v1/categories"),
+      query: () => buildBackendUrl("/api/public/categories"),
       providesTags: ["Category"],
     }),
     getCategoryById: builder.query({
-      query: (id) => buildBackendUrl(`/api/v1/categories/${id}`),
+      query: (id) => buildBackendUrl(`/api/public/categories/${id}`),
       providesTags: (_result, _error, id) => [{ type: "Category", id }],
     }),
     saveCategory: builder.mutation({
       query: ({ token, id, ...payload }) => ({
         url: buildBackendUrl(
-          id ? `/api/v1/admin/categories/${id}` : "/api/v1/admin/categories"
+          id ? `/api/admin/categories/${id}` : "/api/admin/categories"
         ),
         method: id ? "PUT" : "POST",
         headers: authHeaders(token),
@@ -27,7 +27,7 @@ export const categoriesApi = baseApi.injectEndpoints({
     }),
     deleteCategory: builder.mutation({
       query: ({ token, id }) => ({
-        url: buildBackendUrl(`/api/v1/admin/categories/${id}`),
+        url: buildBackendUrl(`/api/admin/categories/${id}`),
         method: "DELETE",
         headers: authHeaders(token, false),
       }),

@@ -36,20 +36,20 @@ export const servicesApi = baseApi.injectEndpoints({
     getServices: builder.query({
       query: (keyword = "") =>
         buildBackendUrl(
-          `/api/v1/services${
+          `/api/public/services${
             keyword ? `?keyword=${encodeURIComponent(keyword)}` : ""
           }`
         ),
       providesTags: ["Service"],
     }),
     getServiceById: builder.query({
-      query: (id) => buildBackendUrl(`/api/v1/services/${id}`),
+      query: (id) => buildBackendUrl(`/api/public/services/${id}`),
       providesTags: (_result, _error, id) => [{ type: "Service", id }],
     }),
     saveService: builder.mutation({
       query: ({ token, id, ...payload }) => ({
         url: buildBackendUrl(
-          id ? `/api/v1/admin/services/${id}` : "/api/v1/admin/services"
+          id ? `/api/admin/services/${id}` : "/api/admin/services"
         ),
         method: id ? "PUT" : "POST",
         headers: authHeaders(token, false),
@@ -59,7 +59,7 @@ export const servicesApi = baseApi.injectEndpoints({
     }),
     deleteService: builder.mutation({
       query: ({ token, id }) => ({
-        url: buildBackendUrl(`/api/v1/admin/services/${id}`),
+        url: buildBackendUrl(`/api/admin/services/${id}`),
         method: "DELETE",
         headers: authHeaders(token, false),
       }),

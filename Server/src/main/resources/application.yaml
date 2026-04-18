@@ -21,24 +21,54 @@ spring:
 veagle:
   mail:
     otp:
-      - email: ${MAIL_USER:noreply1@veaglespace.com}
+      - email: ${MAIL_USER:noreply@veaglespace.com}
         password: ${MAIL_PASS:Veagle@123}
+      - email: ${MAIL_USER_1:noreply1@veaglespace.com}
+        password: ${MAIL_PASS_1:Veagle@123}
       - email: ${MAIL_USER_2:noreply2@veaglespace.com}
         password: ${MAIL_PASS_2:Veagle@123}
 
     careers:
       - email: ${MAIL_CAREERS:careers@veaglespace.com}
         password: ${MAIL_CAREERS_PASS:Veagle@123}
+      - email: ${MAIL_CAREERS_1:careers1@veaglespace.com}
+        password: ${MAIL_CAREERS_PASS_1:Veagle@123}
+      - email: ${MAIL_CAREERS_2:careers2@veaglespace.com}
+        password: ${MAIL_CAREERS_PASS_2:Veagle@123}
+      - email: ${MAIL_CAREERS_3:careers3@veaglespace.com}
+        password: ${MAIL_CAREERS_PASS_3:Veagle@123}
 
     support:
       - email: ${MAIL_SUPPORT:support@veaglespace.com}
         password: ${MAIL_SUPPORT_PASS:Veagle@123}
+      - email: ${MAIL_SUPPORT_1:support1@veaglespace.com}
+        password: ${MAIL_SUPPORT_PASS_1:Veagle@123}
+      - email: ${MAIL_SUPPORT_2:support2@veaglespace.com}
+        password: ${MAIL_SUPPORT_PASS_2:Veagle@123}
+      - email: ${MAIL_SUPPORT_3:support3@veaglespace.com}
+        password: ${MAIL_SUPPORT_PASS_3:Veagle@123}
+      - email: ${MAIL_SUPPORT_4:support4@veaglespace.com}
+        password: ${MAIL_SUPPORT_PASS_4:Veagle@123}
+      - email: ${MAIL_SUPPORT_5:support5@veaglespace.com}
+        password: ${MAIL_SUPPORT_PASS_5:Veagle@123}
+      - email: ${MAIL_SUPPORT_6:support6@veaglespace.com}
+        password: ${MAIL_SUPPORT_PASS_6:Veagle@123}
+      - email: ${MAIL_SUPPORT_7:support7@veaglespace.com}
+        password: ${MAIL_SUPPORT_PASS_7:Veagle@123}
+      - email: ${MAIL_SUPPORT_8:support8@veaglespace.com}
+        password: ${MAIL_SUPPORT_PASS_8:Veagle@123}
+      - email: ${MAIL_SUPPORT_9:support9@veaglespace.com}
+        password: ${MAIL_SUPPORT_PASS_9:Veagle@123}
 
 
   servlet:
     multipart:
       max-file-size: 10MB
       max-request-size: 15MB
+
+app:
+  frontend-url: http://localhost:3000  #Local Host APi
+#  frontend-url: https://www.veaglespace.com  # Deployed APi
 
 jwt:
   secret: ${JWT_SECRET:VeagleJwtSecretKey2026UltraSecure123!}

@@ -20,7 +20,7 @@ export const applicationsApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
     submitJobApplication: builder.mutation({
       query: ({ token, ...payload }) => ({
-        url: buildBackendUrl("/api/v1/applications"),
+        url: buildBackendUrl("/api/public/applications"),
         method: "POST",
         headers: token ? authHeaders(token, false) : undefined,
         body: buildApplicationFormData(payload),
@@ -29,14 +29,14 @@ export const applicationsApi = baseApi.injectEndpoints({
     }),
     getApplications: builder.query({
       query: (token) => ({
-        url: buildBackendUrl("/api/v1/admin/applications"),
+        url: buildBackendUrl("/api/admin/applications"),
         headers: authHeaders(token, false),
       }),
       providesTags: ["Application"],
     }),
     getApplicationsByJob: builder.query({
       query: ({ token, jobId }) => ({
-        url: buildBackendUrl(`/api/v1/admin/applications/job/${jobId}`),
+        url: buildBackendUrl(`/api/admin/applications/job/${jobId}`),
         headers: authHeaders(token, false),
       }),
       providesTags: ["Application"],
@@ -44,7 +44,7 @@ export const applicationsApi = baseApi.injectEndpoints({
     updateApplicationStatus: builder.mutation({
       query: ({ token, id, status }) => ({
         url: buildBackendUrl(
-          `/api/v1/admin/applications/${id}/status?status=${encodeURIComponent(status)}`
+          `/api/admin/applications/${id}/status?status=${encodeURIComponent(status)}`
         ),
         method: "PATCH",
         headers: authHeaders(token, false),
