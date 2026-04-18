@@ -1,41 +1,38 @@
 package com.example.VeagleSpaceTech.model;
 
-import java.util.concurrent.atomic.AtomicInteger;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 public class MailAccount {
 
     private String email;
     private String password;
-    private AtomicInteger count; // ✅ thread-safe
+
+    // store timestamps of sent emails
+    private List<Long> sentTimestamps = Collections.synchronizedList(new ArrayList<>());
 
     public MailAccount(String email, String password) {
         this.email = email;
         this.password = password;
-        this.count = new AtomicInteger(0);
     }
 
-    public String getEmail() {
-        return email;
+    public String getEmail() { return email; }
+    public String getPassword() { return password; }
+
+    // ✅ check availability (last 24 hours)
+    public synchronized boolean isAvailable(int limit) {
+
+        long now = System.currentTimeMillis();
+        long window = 24 * 60 * 60 * 1000;
+
+        sentTimestamps.removeIf(t -> now - t > window);
+
+        return sentTimestamps.size() < limit;
     }
 
-    public String getPassword() {
-        return password;
-    }
-
-    public int getCount() {
-        return count.get();
-    }
-
+    // ✅ add new send
     public void incrementCount() {
-        count.incrementAndGet(); // ✅ safe increment
-    }
-
-    public void resetCount() {
-        count.set(0);
-    }
-
-    // ✅ helper method (very useful)
-    public boolean isAvailable(int limit) {
-        return count.get() < limit;
+        sentTimestamps.add(System.currentTimeMillis());
     }
 }

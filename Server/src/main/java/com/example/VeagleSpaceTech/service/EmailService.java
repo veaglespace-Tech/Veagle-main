@@ -28,6 +28,18 @@ public class EmailService {
     @PostConstruct
     public void init() {
 
+        if (mailProperties.getOtp() == null || mailProperties.getOtp().isEmpty()) {
+            throw new RuntimeException("OTP mail config missing");
+        }
+
+        if (mailProperties.getCareers() == null || mailProperties.getCareers().isEmpty()) {
+            throw new RuntimeException("Careers mail config missing");
+        }
+
+        if (mailProperties.getSupport() == null || mailProperties.getSupport().isEmpty()) {
+            throw new RuntimeException("Support mail config missing");
+        }
+
         otpAccounts = mailProperties.getOtp().stream()
                 .map(acc -> new MailAccount(acc.getEmail(), acc.getPassword()))
                 .toList();
@@ -52,6 +64,27 @@ public class EmailService {
         throw new RuntimeException("All email limits reached");
     }
 
+    private void sendWithRetry(JavaMailSender sender, SimpleMailMessage message, MailAccount acc) {
+
+        int attempts = 0;
+
+        while (attempts < 3) {
+            try {
+                sender.send(message);
+                acc.incrementCount();
+                return;
+            } catch (Exception e) {
+                attempts++;
+                System.out.println("Retry " + attempts + " failed for " + acc.getEmail());
+
+                if (attempts == 3) {
+                    throw new RuntimeException("Email failed after retries");
+                }
+            }
+        }
+    }
+
+
     private JavaMailSender createSender(MailAccount acc) {
         JavaMailSenderImpl sender = new JavaMailSenderImpl();
 
@@ -61,8 +94,11 @@ public class EmailService {
         sender.setPassword(acc.getPassword());
 
         Properties props = sender.getJavaMailProperties();
-        props.put("mail.smtp.auth", true);
-        props.put("mail.smtp.ssl.enable", true);
+
+        // 👇 ADD HERE
+        props.put("mail.smtp.auth", "true");
+        props.put("mail.smtp.ssl.enable", "true");
+        props.put("mail.smtp.ssl.trust", "smtp.hostinger.com");
 
         return sender;
     }
@@ -88,8 +124,7 @@ public class EmailService {
                         "Veagle Space Team"
         );
 
-        sender.send(message);
-        acc.incrementCount();
+        sendWithRetry(sender, message, acc);
     }
 
     // ================= JOB EMAILS =================
@@ -114,8 +149,7 @@ public class EmailService {
                         "Veagle Space"
         );
 
-        sender.send(message);
-        acc.incrementCount();
+        sendWithRetry(sender, message, acc);
     }
 
     public void sendSelectedEmail(String to, String name, String jobTitle) {
@@ -138,8 +172,7 @@ public class EmailService {
                         "Veagle Space"
         );
 
-        sender.send(message);
-        acc.incrementCount();
+        sendWithRetry(sender, message, acc);
     }
 
     public void sendRejectedEmail(String to, String name, String jobTitle) {
@@ -162,8 +195,7 @@ public class EmailService {
                         "Veagle Space"
         );
 
-        sender.send(message);
-        acc.incrementCount();
+        sendWithRetry(sender, message, acc);
     }
 
     // Send Mail To support Team
@@ -180,8 +212,7 @@ public class EmailService {
         message.setSubject(subject);
         message.setText(text);
 
-        sender.send(message);
-        acc.incrementCount();
+        sendWithRetry(sender, message, acc);
 
         System.out.println("📩 Support email sent to HR/Admin using: " + acc.getEmail());
     }
@@ -199,8 +230,7 @@ public class EmailService {
         message.setSubject(subject);
         message.setText(text);
 
-        sender.send(message);
-        acc.incrementCount();
+        sendWithRetry(sender, message, acc);
 
         System.out.println("📧 Confirmation email sent to user using: " + acc.getEmail());
     }

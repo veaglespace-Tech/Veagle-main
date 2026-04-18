@@ -17,6 +17,7 @@ public class MailProperties {
         private String email;
         private String password;
 
+
         public String getEmail() { return email; }
         public void setEmail(String email) { this.email = email; }
 
@@ -26,6 +27,8 @@ public class MailProperties {
 
     public List<Account> getOtp() { return otp; }
     public void setOtp(List<Account> otp) { this.otp = otp; }
+
+
 
     public List<Account> getCareers() { return careers; }
     public void setCareers(List<Account> careers) { this.careers = careers; }
