@@ -102,7 +102,10 @@ export default function PortalLoginPage({
   }
 
   async function requestOtp() {
-    const payload = await login(form).unwrap();
+    const payload = await login({
+      ...form,
+      role: selectedRole,
+    }).unwrap();
 
     if (payload.otpRequired) {
       setOtpPendingEmail(form.email.trim());

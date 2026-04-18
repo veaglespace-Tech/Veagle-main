@@ -1,4 +1,7 @@
-import { AUTH_BACKEND_ROUTES } from "@/lib/auth-routes";
+import {
+  AUTH_BACKEND_ROUTES,
+  resolveLoginBackendRoute,
+} from "@/lib/auth-routes";
 import { authHeaders } from "@/lib/portal-api";
 import { normalizeRole } from "@/lib/utils";
 import { baseApi, buildBackendUrl } from "@/store/api/baseApi";
@@ -24,8 +27,8 @@ export const authApi = baseApi.injectEndpoints({
       }),
     }),
     login: builder.mutation({
-      query: (body) => ({
-        url: buildBackendUrl(AUTH_BACKEND_ROUTES.login),
+      query: ({ role, ...body }) => ({
+        url: buildBackendUrl(resolveLoginBackendRoute(role)),
         method: "POST",
         body,
       }),

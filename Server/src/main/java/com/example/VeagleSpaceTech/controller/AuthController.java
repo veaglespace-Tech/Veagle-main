@@ -26,13 +26,20 @@ public class AuthController {
         return ResponseEntity.status(201).body(response);
     }
 
+    // User
     @PostMapping("/login")
     public ResponseEntity<AuthResponse> login(@Valid @RequestBody LoginRequest request) {
         return ResponseEntity.ok(authService.userLogin(request));
     }
 
+    // Admin
     @PostMapping("/admin-login")
     public ResponseEntity<String> adminLogin(@Valid @RequestBody LoginRequest request) {
+        return ResponseEntity.ok(authService.adminLogin(request));
+    }
+    //Super Admin
+    @PostMapping("/super-admin-login")
+    public ResponseEntity<String> superadminLogin(@Valid @RequestBody LoginRequest request) {
         return ResponseEntity.ok(authService.adminLogin(request));
     }
 
