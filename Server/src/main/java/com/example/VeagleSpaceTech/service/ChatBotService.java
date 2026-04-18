@@ -257,7 +257,7 @@ public class ChatBotService {
                     + "Email: " + ticket.getEmail() + "\n"
                     + "Subject: " + ticket.getSubject() + "\n\n"
                     + "Message:\n" + ticket.getMessage();
-                emailService.sendEmail(supportEmail, subject, body);
+                emailService.sendEmailToHrAndAdmin(supportEmail, subject, body);
             }
         } catch (Exception e) {
             System.err.println("[VeagleBot] Support notification email failed: " + e.getMessage());
@@ -277,7 +277,7 @@ public class ChatBotService {
                 + "Veagle Space Team\n"
                 + "www.veaglespace.com\n"
                 + "info@veaglespace.com | +91 82379 99101";
-            emailService.sendEmail(ticket.getEmail(), confirmSubject, confirmBody);
+            emailService.sendSupportConfirmation(ticket.getEmail(), confirmSubject, confirmBody);
         } catch (Exception e) {
             System.err.println("[VeagleBot] Confirmation email failed: " + e.getMessage());
         }

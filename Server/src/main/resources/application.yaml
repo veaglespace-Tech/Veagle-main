@@ -7,7 +7,7 @@ spring:
     # Local dev: jdbc:mysql://localhost:3306/veagledb
     url: ${DB_URL:jdbc:mysql://127.0.0.1:3306/veagledb?createDatabaseIfNotExist=true&useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Kolkata}
     username: ${DB_USERNAME:root}
-    password: ${DB_PASSWORD:Veagle@12345}
+    password: ${DB_PASSWORD:root}
     driver-class-name: com.mysql.cj.jdbc.Driver
 
   jpa:
@@ -18,19 +18,28 @@ spring:
       hibernate:
         dialect: org.hibernate.dialect.MySQLDialect
 
+veagle:
   mail:
-    host: smtp.gmail.com
-    port: 587
-    username: ${MAIL_USER:singareakshay2004@gmail.com}
-    password: ${MAIL_PASS:rcckpmkrnkopufmv}
-    properties:
-      mail:
-        smtp:
-          auth: true
-          starttls:
-            enable: true
-          ssl:
-            trust: smtp.gmail.com
+    otp:
+      - email: noreply1@veaglespace.com
+        password: Veagle@123
+      - email: noreply2@veaglespace.com
+        password: Veagle@123
+
+    careers:
+      - email: careers@veaglespace.com
+        password: Veagle@123
+      - email: careers1@veaglespace.com
+        password: Veagle@123
+      - email: careers2@veaglespace.com
+        password: Veagle@123
+
+    support:
+      - email: support@veaglespace.com
+        password: Veagle@123
+      - email: support1@veaglespace.com
+        password: Veagle@123
+
 
   servlet:
     multipart:

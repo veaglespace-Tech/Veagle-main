@@ -1,7 +1,11 @@
 export const SITE_URL =
-  process.env.NEXT_PUBLIC_SITE_URL || "https://veaglespace.com";
+  process.env.NEXT_PUBLIC_SITE_URL ||
+  // "https://veaglespace.com";
+  "http://localhost:3000";
 export const API_BASE_URL =
-  process.env.NEXT_PUBLIC_API_BASE_URL || "https://veaglespace.com"; // Hostinger VPS: 82.112.237.155
+  process.env.NEXT_PUBLIC_API_BASE_URL ||
+  // "https://veaglespace.com"; // Hostinger VPS: 82.112.237.155
+  "http://localhost:8080";
 export const CLOUDINARY_CLOUD_NAME =
   process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME || "dbehhnhhi";
 

@@ -82,7 +82,7 @@ public class UserService {
             return "OTP sent successfully";
         } catch (Exception exception) {
             System.out.println("\n\nFailed to send OTP email: " + exception);
-            return "OTP generated. Email service unavailable right now. DEV OTP: " + otp;
+            return "OTP generated. Email service unavailable right now. DEV OTP: ";
         }
     }
 
@@ -293,7 +293,10 @@ public class UserService {
                 + "Regards,\n"
                 + "VeagleSpace Team";
 
-        emailService.sendEmail(email, "OTP Verification - VeagleSpace", message);
+//        emailService.sendEmail(email, "OTP Verification - VeagleSpace", message);
+        emailService.sendOtp(email, otp);
+
+
     }
 
     public void verifyOtp(String inputOtp) {

@@ -11,7 +11,7 @@ public class OtpService {
     private Map<String, OtpData> otpStorage = new ConcurrentHashMap<>();
 
     public void saveOtp(String email, String otp) {
-        otpStorage.put(email, new OtpData(otp, System.currentTimeMillis() + 5 * 60 * 1000));
+        otpStorage.put(email, new OtpData(otp, System.currentTimeMillis() + 5 * 60 * 1000)); // 5 min
     }
 
     public boolean verifyOtp(String email, String otp) {
