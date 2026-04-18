@@ -1,13 +1,14 @@
 spring:
+  config:
+    import: optional:file:.env[.properties]
+
   application:
     name: VeagleSpaceTech
 
   datasource:
-    # HOSTINGER VPS: Update these with your Hostinger MySQL credentials
-    # Local dev: jdbc:mysql://localhost:3306/veagledb
-    url: ${DB_URL:jdbc:mysql://localhost:3306/veagledb?createDatabaseIfNotExist=true&useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Kolkata}
-    username: ${DB_USERNAME:root}
-    password: ${DB_PASSWORD:Veagle@123}
+    url: ${DB_URL}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
     driver-class-name: com.mysql.cj.jdbc.Driver
 
   jpa:
@@ -20,45 +21,50 @@ spring:
 
 veagle:
   mail:
+    smtp:
+      host: ${MAIL_HOST}
+      port: ${MAIL_PORT}
+      ssl-trust: ${MAIL_SSL_TRUST:${MAIL_HOST}}
+
     otp:
-      - email: ${MAIL_USER:noreply@veaglespace.com}
-        password: ${MAIL_PASS:Veagle@123}
-      - email: ${MAIL_USER_1:noreply1@veaglespace.com}
-        password: ${MAIL_PASS_1:Veagle@123}
-      - email: ${MAIL_USER_2:noreply2@veaglespace.com}
-        password: ${MAIL_PASS_2:Veagle@123}
+      - email: ${OTP_MAIL_1_EMAIL}
+        password: ${OTP_MAIL_1_PASSWORD}
+      - email: ${OTP_MAIL_2_EMAIL}
+        password: ${OTP_MAIL_2_PASSWORD}
+      - email: ${OTP_MAIL_3_EMAIL}
+        password: ${OTP_MAIL_3_PASSWORD}
 
     careers:
-      - email: ${MAIL_CAREERS:careers@veaglespace.com}
-        password: ${MAIL_CAREERS_PASS:Veagle@123}
-      - email: ${MAIL_CAREERS_1:careers1@veaglespace.com}
-        password: ${MAIL_CAREERS_PASS_1:Veagle@123}
-      - email: ${MAIL_CAREERS_2:careers2@veaglespace.com}
-        password: ${MAIL_CAREERS_PASS_2:Veagle@123}
-      - email: ${MAIL_CAREERS_3:careers3@veaglespace.com}
-        password: ${MAIL_CAREERS_PASS_3:Veagle@123}
+      - email: ${CAREERS_MAIL_1_EMAIL}
+        password: ${CAREERS_MAIL_1_PASSWORD}
+      - email: ${CAREERS_MAIL_2_EMAIL}
+        password: ${CAREERS_MAIL_2_PASSWORD}
+      - email: ${CAREERS_MAIL_3_EMAIL}
+        password: ${CAREERS_MAIL_3_PASSWORD}
+      - email: ${CAREERS_MAIL_4_EMAIL}
+        password: ${CAREERS_MAIL_4_PASSWORD}
 
     support:
-      - email: ${MAIL_SUPPORT:support@veaglespace.com}
-        password: ${MAIL_SUPPORT_PASS:Veagle@123}
-      - email: ${MAIL_SUPPORT_1:support1@veaglespace.com}
-        password: ${MAIL_SUPPORT_PASS_1:Veagle@123}
-      - email: ${MAIL_SUPPORT_2:support2@veaglespace.com}
-        password: ${MAIL_SUPPORT_PASS_2:Veagle@123}
-      - email: ${MAIL_SUPPORT_3:support3@veaglespace.com}
-        password: ${MAIL_SUPPORT_PASS_3:Veagle@123}
-      - email: ${MAIL_SUPPORT_4:support4@veaglespace.com}
-        password: ${MAIL_SUPPORT_PASS_4:Veagle@123}
-      - email: ${MAIL_SUPPORT_5:support5@veaglespace.com}
-        password: ${MAIL_SUPPORT_PASS_5:Veagle@123}
-      - email: ${MAIL_SUPPORT_6:support6@veaglespace.com}
-        password: ${MAIL_SUPPORT_PASS_6:Veagle@123}
-      - email: ${MAIL_SUPPORT_7:support7@veaglespace.com}
-        password: ${MAIL_SUPPORT_PASS_7:Veagle@123}
-      - email: ${MAIL_SUPPORT_8:support8@veaglespace.com}
-        password: ${MAIL_SUPPORT_PASS_8:Veagle@123}
-      - email: ${MAIL_SUPPORT_9:support9@veaglespace.com}
-        password: ${MAIL_SUPPORT_PASS_9:Veagle@123}
+      - email: ${SUPPORT_MAIL_1_EMAIL}
+        password: ${SUPPORT_MAIL_1_PASSWORD}
+      - email: ${SUPPORT_MAIL_2_EMAIL}
+        password: ${SUPPORT_MAIL_2_PASSWORD}
+      - email: ${SUPPORT_MAIL_3_EMAIL}
+        password: ${SUPPORT_MAIL_3_PASSWORD}
+      - email: ${SUPPORT_MAIL_4_EMAIL}
+        password: ${SUPPORT_MAIL_4_PASSWORD}
+      - email: ${SUPPORT_MAIL_5_EMAIL}
+        password: ${SUPPORT_MAIL_5_PASSWORD}
+      - email: ${SUPPORT_MAIL_6_EMAIL}
+        password: ${SUPPORT_MAIL_6_PASSWORD}
+      - email: ${SUPPORT_MAIL_7_EMAIL}
+        password: ${SUPPORT_MAIL_7_PASSWORD}
+      - email: ${SUPPORT_MAIL_8_EMAIL}
+        password: ${SUPPORT_MAIL_8_PASSWORD}
+      - email: ${SUPPORT_MAIL_9_EMAIL}
+        password: ${SUPPORT_MAIL_9_PASSWORD}
+      - email: ${SUPPORT_MAIL_10_EMAIL}
+        password: ${SUPPORT_MAIL_10_PASSWORD}
 
 
   servlet:
@@ -71,16 +77,16 @@ app:
 #  frontend-url: https://www.veaglespace.com  # Deployed APi
 
 jwt:
-  secret: ${JWT_SECRET:VeagleJwtSecretKey2026UltraSecure123!}
+  secret: ${JWT_SECRET}
+  expiration: ${JWT_EXPIRATION}
 
 admin:
-  secret: ${ADMIN_SECRET:admin123}
+  secret: ${ADMIN_SECRET}
 
 cloudinary:
-  cloud-name: ${CLOUDINARY_CLOUD_NAME:dbehhnhhi}
-  api-key: ${CLOUDINARY_API_KEY:266323574446942}
-  api-secret: ${CLOUDINARY_API_SECRET:jiEAtmhR144qAZFvZLIWDwsRrKA}
+  cloud-name: ${CLOUDINARY_CLOUD_NAME}
+  api-key: ${CLOUDINARY_API_KEY}
+  api-secret: ${CLOUDINARY_API_SECRET}
 
 server:
   port: 8080
-

@@ -26,6 +26,15 @@ public class EmailService {
     @Autowired
     private MailProperties mailProperties;
 
+    @Value("${veagle.mail.smtp.host}")
+    private String mailHost;
+
+    @Value("${veagle.mail.smtp.port}")
+    private int mailPort;
+
+    @Value("${veagle.mail.smtp.ssl-trust}")
+    private String mailSslTrust;
+
     @PostConstruct
     public void init() {
 
@@ -92,8 +101,8 @@ public class EmailService {
     private JavaMailSender createSender(MailAccount acc) {
         JavaMailSenderImpl sender = new JavaMailSenderImpl();
 
-        sender.setHost("smtp.hostinger.com");
-        sender.setPort(465);
+        sender.setHost(mailHost);
+        sender.setPort(mailPort);
         sender.setUsername(acc.getEmail());
         sender.setPassword(acc.getPassword());
 
@@ -102,7 +111,7 @@ public class EmailService {
         // 👇 ADD HERE
         props.put("mail.smtp.auth", "true");
         props.put("mail.smtp.ssl.enable", "true");
-        props.put("mail.smtp.ssl.trust", "smtp.hostinger.com");
+        props.put("mail.smtp.ssl.trust", mailSslTrust);
 
         return sender;
     }

@@ -22,8 +22,8 @@ public class JwtService {
     @Value("${jwt.secret}")
     private String SECRET_KEY;
 
-    // 🔥 Token validity (1 hour)
-    private static final long EXPIRATION_TIME = 1000 * 60 * 60 *24; // 1 Day
+    @Value("${jwt.expiration}")
+    private long expirationTime;
 
     // ================= GENERATE TOKEN =================
 
@@ -33,7 +33,7 @@ public String generateToken(String email, String role) {
             .setSubject(email)   // ✅ THIS IS IMPORTANT (email goes here)
             .claim("role", role)
             .setIssuedAt(new Date())
-            .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 24)) // 1 Day
+            .setExpiration(new Date(System.currentTimeMillis() + expirationTime))
             .signWith(getSignKey(), SignatureAlgorithm.HS256)
             .compact();
 }
