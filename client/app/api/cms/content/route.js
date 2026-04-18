@@ -14,7 +14,7 @@ export async function GET(request) {
     return access.response;
   }
 
-  const response = await fetch(`${API_BASE_URL}/api/v1/site-content`, {
+  const response = await fetch(`${API_BASE_URL}/api/public/site-content`, {
     cache: "no-store",
   });
   const payload = await readPayload(response);
@@ -29,7 +29,7 @@ export async function PUT(request) {
   }
 
   const body = await request.json();
-  const response = await fetch(`${API_BASE_URL}/api/v1/admin/site-content`, {
+  const response = await fetch(`${API_BASE_URL}/api/admin/site-content`, {
     method: "PUT",
     headers: {
       Authorization: `Bearer ${access.token}`,

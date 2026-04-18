@@ -4,7 +4,7 @@ import com.example.VeagleSpaceTech.DTO.request.ProductRequestDTO;
 import com.example.VeagleSpaceTech.DTO.response.ProductResponseDTO;
 import com.example.VeagleSpaceTech.service.ProductsService;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -15,20 +15,20 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
+@RequiredArgsConstructor
 public class ProductController {
 
-    @Autowired
-    private ProductsService productsService;
+    private final ProductsService productsService;
 
     // Fetch All Products
-    @GetMapping("/api/v1/products")
+    @GetMapping("/api/public/products")
     public ResponseEntity<List<ProductResponseDTO>> getProducts() {
         return ResponseEntity.status(200).body(productsService.getAllProducts());
     }
 
     //Add Product
     @PreAuthorize("hasAnyRole('ADMIN','SADMIN')")
-    @PostMapping(value = "/api/v1/admin/products", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PostMapping(value = "/api/admin/products", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<ProductResponseDTO> addProduct(
             @RequestPart("request") String requestJson,
             @RequestPart("file") MultipartFile file
@@ -47,7 +47,7 @@ public class ProductController {
 
     // Update Product
     @PreAuthorize("hasAnyRole('ADMIN','SADMIN')")
-    @PutMapping(value = "/api/v1/admin/products/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PutMapping(value = "/api/admin/products/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<ProductResponseDTO> updateProduct(
             @PathVariable Long id,
             @RequestPart("request") String requestJson,
@@ -69,7 +69,7 @@ public class ProductController {
 
     // For only Status Updation
     @PreAuthorize("hasAnyRole('ADMIN','SADMIN')")
-    @PatchMapping("/api/v1/admin/products/{id}/status")
+    @PatchMapping("/api/admin/products/{id}/status")
     public ResponseEntity<String> updateProductStatus(
             @PathVariable Long id,
             @RequestBody Map<String, Boolean> request
@@ -81,7 +81,7 @@ public class ProductController {
 
     // Delete Product
     @PreAuthorize("hasAnyRole('ADMIN','SADMIN')")
-    @DeleteMapping("/api/v1/admin/products/{id}")
+    @DeleteMapping("/api/admin/products/{id}")
     public ResponseEntity<String> deleteProduct(@PathVariable("id") Long id){
 //        System.out.println("\n ID: "+id);
         return ResponseEntity.ok(productsService.deleteProduct(id));

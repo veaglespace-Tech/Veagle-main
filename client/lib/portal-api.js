@@ -35,7 +35,7 @@ export async function fetchPortalDashboard(session) {
     requestJson("/api/cms/content", {
       headers: authHeaders(session.token, false),
     }),
-    requestJson(`${API_BASE_URL}/api/v1/admin/contacts`, {
+    requestJson(`${API_BASE_URL}/api/admin/contacts`, {
       headers: authHeaders(session.token, false),
     }),
     requestJson("/api/cms/tasks", {
@@ -53,17 +53,17 @@ export async function fetchPortalDashboard(session) {
   const leads = Array.isArray(rawLeads) ? rawLeads.map((item) => mapLeadRecord(item)) : [];
 
   const results = await Promise.allSettled([
-    requestJson(`${API_BASE_URL}/api/v1/services`),
-    requestJson(`${API_BASE_URL}/api/v1/products`),
-    requestJson(`${API_BASE_URL}/api/v1/categories`),
-    requestJson(`${API_BASE_URL}/api/v1/jobs`),
-    requestJson(`${API_BASE_URL}/api/v1/clients`),
-    requestJson(`${API_BASE_URL}/api/v1/portfolio`),
-    requestJson(`${API_BASE_URL}/api/v1/admin/applications`, {
+    requestJson(`${API_BASE_URL}/api/public/services`),
+    requestJson(`${API_BASE_URL}/api/public/products`),
+    requestJson(`${API_BASE_URL}/api/public/categories`),
+    requestJson(`${API_BASE_URL}/api/public/jobs`),
+    requestJson(`${API_BASE_URL}/api/public/clients`),
+    requestJson(`${API_BASE_URL}/api/public/portfolio`),
+    requestJson(`${API_BASE_URL}/api/admin/applications`, {
       headers: authHeaders(session.token, false),
     }),
     session.role === "SADMIN"
-      ? requestJson(`${API_BASE_URL}/api/v1/admin/users`, {
+      ? requestJson(`${API_BASE_URL}/api/admin/users`, {
           headers: authHeaders(session.token, false),
         })
       : Promise.resolve([]),

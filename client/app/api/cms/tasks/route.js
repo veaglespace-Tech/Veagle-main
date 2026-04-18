@@ -25,7 +25,7 @@ export async function GET(request) {
     return access.response;
   }
 
-  const response = await fetch(`${API_BASE_URL}/api/v1/admin/tasks`, {
+  const response = await fetch(`${API_BASE_URL}/api/admin/tasks`, {
     headers: {
       Authorization: `Bearer ${access.token}`,
     },
@@ -53,7 +53,7 @@ export async function POST(request) {
     return Response.json({ error: "Task title is required" }, { status: 422 });
   }
 
-  const response = await fetch(`${API_BASE_URL}/api/v1/admin/tasks`, {
+  const response = await fetch(`${API_BASE_URL}/api/admin/tasks`, {
     method: "POST",
     headers: {
       Authorization: `Bearer ${access.token}`,
@@ -86,7 +86,7 @@ export async function PATCH(request) {
     return Response.json({ error: "Task id is required" }, { status: 400 });
   }
 
-  const response = await fetch(`${API_BASE_URL}/api/v1/admin/tasks/${id}`, {
+  const response = await fetch(`${API_BASE_URL}/api/admin/tasks/${id}`, {
     method: "PATCH",
     headers: {
       Authorization: `Bearer ${access.token}`,
@@ -118,7 +118,7 @@ export async function DELETE(request) {
     return Response.json({ error: "Task id is required" }, { status: 400 });
   }
 
-  const response = await fetch(`${API_BASE_URL}/api/v1/admin/tasks/${id}`, {
+  const response = await fetch(`${API_BASE_URL}/api/admin/tasks/${id}`, {
     method: "DELETE",
     headers: {
       Authorization: `Bearer ${access.token}`,

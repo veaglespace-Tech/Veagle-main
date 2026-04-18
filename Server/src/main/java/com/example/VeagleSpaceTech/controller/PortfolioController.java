@@ -2,12 +2,11 @@ package com.example.VeagleSpaceTech.controller;
 
 import com.example.VeagleSpaceTech.DTO.request.PortfolioRequestDTO;
 import com.example.VeagleSpaceTech.DTO.response.PortfolioResponseDTO;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.RestController;
 import com.example.VeagleSpaceTech.service.PortfolioService;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -15,27 +14,26 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.List;
 
 @RestController
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class PortfolioController {
 
-		@Autowired
-    private PortfolioService portfolioService;
+    private final PortfolioService portfolioService;
 
 
     // ✅ GET ALL
-    @GetMapping("/api/v1/portfolio")
+    @GetMapping("/api/public/portfolio")
     public ResponseEntity<List<PortfolioResponseDTO>> getAllPortfolios() {
         return ResponseEntity.ok(portfolioService.getAllPortfolios());
     }
     // ✅ GET BY ID
-    @GetMapping("/api/v1/portfolio/{id}")
+    @GetMapping("/api/public/portfolio/{id}")
     public ResponseEntity<PortfolioResponseDTO> getPortfolioById(@PathVariable Long id) {
         return ResponseEntity.ok(portfolioService.getPortfolioById(id));
     }
 
     //  CREATE
     @PreAuthorize("hasAnyRole('ADMIN','SADMIN')")
-    @PostMapping("/api/v1/admin/portfolio")
+    @PostMapping("/api/admin/portfolio")
     public ResponseEntity<PortfolioResponseDTO> createPortfolio(
             @ModelAttribute PortfolioRequestDTO dto,
             @RequestPart("image") MultipartFile image
@@ -45,7 +43,7 @@ public class PortfolioController {
 
     // ✅ UPDATE
     @PreAuthorize("hasAnyRole('ADMIN','SADMIN')")
-    @PutMapping("/api/v1/admin/portfolio/{id}")
+    @PutMapping("/api/admin/portfolio/{id}")
     public ResponseEntity<PortfolioResponseDTO> updatePortfolio(
             @PathVariable Long id,
             @ModelAttribute PortfolioRequestDTO dto,
@@ -56,7 +54,7 @@ public class PortfolioController {
 
     // ✅ DELETE
     @PreAuthorize("hasAnyRole('ADMIN','SADMIN')")
-    @DeleteMapping("/api/v1/admin/portfolio/{id}")
+    @DeleteMapping("/api/admin/portfolio/{id}")
     public ResponseEntity<String> deletePortfolio(@PathVariable Long id) {
         portfolioService.deletePortfolio(id);
         return ResponseEntity.ok("Portfolio deleted successfully");

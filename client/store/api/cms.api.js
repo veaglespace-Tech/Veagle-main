@@ -22,7 +22,7 @@ export const cmsApi = baseApi.injectEndpoints({
     }),
     getLeads: builder.query({
       query: (token) => ({
-        url: buildBackendUrl("/api/v1/admin/contacts"),
+        url: buildBackendUrl("/api/admin/contacts"),
         headers: authHeaders(token, false),
       }),
       transformResponse: (response) =>
@@ -31,7 +31,7 @@ export const cmsApi = baseApi.injectEndpoints({
     }),
     submitLead: builder.mutation({
       query: (body) => ({
-        url: buildBackendUrl("/api/v1/contacts"),
+        url: buildBackendUrl("/api/public/contacts"),
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -57,7 +57,7 @@ export const cmsApi = baseApi.injectEndpoints({
         }
 
         const result = await baseQuery({
-          url: buildBackendUrl(`/api/v1/admin/contacts/${encodeURIComponent(id)}/read`),
+          url: buildBackendUrl(`/api/admin/contacts/${encodeURIComponent(id)}/read`),
           method: "PATCH",
           headers: authHeaders(token, false),
         });

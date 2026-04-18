@@ -21,6 +21,8 @@ spring:
 veagle:
   mail:
     otp:
+      - email: noreply@veaglespace.com
+        password: Veagle@123
       - email: noreply1@veaglespace.com
         password: Veagle@123
       - email: noreply2@veaglespace.com
@@ -33,11 +35,29 @@ veagle:
         password: Veagle@123
       - email: careers2@veaglespace.com
         password: Veagle@123
+      - email: careers3@veaglespace.com
+        password: Veagle@123
 
     support:
       - email: support@veaglespace.com
         password: Veagle@123
       - email: support1@veaglespace.com
+        password: Veagle@123
+      - email: support2@veaglespace.com
+        password: Veagle@123
+      - email: support3@veaglespace.com
+        password: Veagle@123
+      - email: support4@veaglespace.com
+        password: Veagle@123
+      - email: support5@veaglespace.com
+        password: Veagle@123
+      - email: support6@veaglespace.com
+        password: Veagle@123
+      - email: support7@veaglespace.com
+        password: Veagle@123
+      - email: support8@veaglespace.com
+        password: Veagle@123
+      - email: support9@veaglespace.com
         password: Veagle@123
 
 
@@ -45,6 +65,10 @@ veagle:
     multipart:
       max-file-size: 10MB
       max-request-size: 15MB
+
+app:
+  frontend-url: http://localhost:3000  #Local Host APi
+#  frontend-url: https://www.veaglespace.com  # Deployed APi
 
 jwt:
   secret: ${JWT_SECRET:VeagleJwtSecretKey2026UltraSecure123!}

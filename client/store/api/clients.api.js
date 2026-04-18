@@ -22,17 +22,17 @@ function buildClientFormData(payload) {
 export const clientsApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
     getClients: builder.query({
-      query: () => buildBackendUrl("/api/v1/clients"),
+      query: () => buildBackendUrl("/api/public/clients"),
       providesTags: ["Client"],
     }),
     getClientById: builder.query({
-      query: (id) => buildBackendUrl(`/api/v1/clients/${id}`),
+      query: (id) => buildBackendUrl(`/api/public/clients/${id}`),
       providesTags: (_result, _error, id) => [{ type: "Client", id }],
     }),
     saveClient: builder.mutation({
       query: ({ token, id, ...payload }) => ({
         url: buildBackendUrl(
-          id ? `/api/v1/admin/clients/${id}` : "/api/v1/admin/clients"
+          id ? `/api/admin/clients/${id}` : "/api/admin/clients"
         ),
         method: id ? "PUT" : "POST",
         headers: authHeaders(token, false),
@@ -42,7 +42,7 @@ export const clientsApi = baseApi.injectEndpoints({
     }),
     deleteClient: builder.mutation({
       query: ({ token, id }) => ({
-        url: buildBackendUrl(`/api/v1/admin/clients/${id}`),
+        url: buildBackendUrl(`/api/admin/clients/${id}`),
         method: "DELETE",
         headers: authHeaders(token, false),
       }),

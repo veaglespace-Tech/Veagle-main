@@ -92,15 +92,15 @@ systemctl restart veagle-frontend
 
 ### API Endpoints
 ```
-GET  https://veaglespace.com/api/v1/categories
-GET  https://veaglespace.com/api/v1/services
-GET  https://veaglespace.com/api/v1/products
-GET  https://veaglespace.com/api/v1/clients
-GET  https://veaglespace.com/api/v1/jobs
-GET  https://veaglespace.com/api/v1/portfolio
-POST https://veaglespace.com/api/v1/contacts
-POST https://veaglespace.com/api/v1/auth/login
-POST https://veaglespace.com/api/v1/auth/register
+GET  https://veaglespace.com/api/public/categories
+GET  https://veaglespace.com/api/public/services
+GET  https://veaglespace.com/api/public/products
+GET  https://veaglespace.com/api/public/clients
+GET  https://veaglespace.com/api/public/jobs
+GET  https://veaglespace.com/api/public/portfolio
+POST https://veaglespace.com/api/public/contacts
+POST https://veaglespace.com/api/auth/login
+POST https://veaglespace.com/api/auth/register
 ```
 
 ### File Upload

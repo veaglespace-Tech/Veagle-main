@@ -38,7 +38,7 @@ export async function GET(request) {
     return access.response;
   }
 
-  const response = await fetch(`${API_BASE_URL}/api/v1/admin/contacts`, {
+  const response = await fetch(`${API_BASE_URL}/api/admin/contacts`, {
     headers: {
       Authorization: `Bearer ${access.token}`,
     },
@@ -84,7 +84,7 @@ export async function POST(request) {
     .filter((item) => item !== null)
     .join("\n");
 
-  const response = await fetch(`${API_BASE_URL}/api/v1/contacts`, {
+  const response = await fetch(`${API_BASE_URL}/api/public/contacts`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -115,7 +115,7 @@ export async function PATCH(request) {
   }
 
   if (updates.status && updates.status !== "new") {
-    const response = await fetch(`${API_BASE_URL}/api/v1/admin/contacts/${id}/read`, {
+    const response = await fetch(`${API_BASE_URL}/api/admin/contacts/${id}/read`, {
       method: "PATCH",
       headers: {
         Authorization: `Bearer ${access.token}`,

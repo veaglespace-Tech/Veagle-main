@@ -6,13 +6,13 @@ export const jobsApi = baseApi.injectEndpoints({
     getJobs: builder.query({
       query: (keyword = "") =>
         buildBackendUrl(
-          `/api/v1/jobs${keyword ? `?keyword=${encodeURIComponent(keyword)}` : ""}`
+          `/api/public/jobs${keyword ? `?keyword=${encodeURIComponent(keyword)}` : ""}`
         ),
       providesTags: ["Job"],
     }),
     saveJob: builder.mutation({
       query: ({ token, id, ...payload }) => ({
-        url: buildBackendUrl(id ? `/api/v1/admin/jobs/${id}` : "/api/v1/admin/jobs"),
+        url: buildBackendUrl(id ? `/api/admin/jobs/${id}` : "/api/admin/jobs"),
         method: id ? "PUT" : "POST",
         headers: authHeaders(token),
         body: {
@@ -27,7 +27,7 @@ export const jobsApi = baseApi.injectEndpoints({
     updateJobStatus: builder.mutation({
       query: ({ token, id, status }) => ({
         url: buildBackendUrl(
-          `/api/v1/admin/jobs/${id}/status?status=${encodeURIComponent(status)}`
+          `/api/admin/jobs/${id}/status?status=${encodeURIComponent(status)}`
         ),
         method: "PATCH",
         headers: authHeaders(token, false),
@@ -36,7 +36,7 @@ export const jobsApi = baseApi.injectEndpoints({
     }),
     deleteJob: builder.mutation({
       query: ({ token, id }) => ({
-        url: buildBackendUrl(`/api/v1/admin/jobs/${id}`),
+        url: buildBackendUrl(`/api/admin/jobs/${id}`),
         method: "DELETE",
         headers: authHeaders(token, false),
       }),

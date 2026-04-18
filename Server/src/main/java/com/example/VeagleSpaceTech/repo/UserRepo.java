@@ -20,4 +20,6 @@ public interface UserRepo extends JpaRepository<User,Long> {
 
     boolean existsByContact(@NotBlank(message = "Contact is required") @Pattern(regexp = "\\d{10}", message = "Contact must be 10 digits") String contact);
 
+    Optional<User> findByVerificationToken(String token);
+
 }

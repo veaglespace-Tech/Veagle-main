@@ -4,6 +4,7 @@ import com.example.VeagleSpaceTech.config.MailProperties;
 import com.example.VeagleSpaceTech.model.MailAccount;
 import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
@@ -52,6 +53,9 @@ public class EmailService {
                 .map(acc -> new MailAccount(acc.getEmail(), acc.getPassword()))
                 .toList();
     }
+
+
+
 
     // ================= COMMON METHODS =================
 
@@ -103,6 +107,30 @@ public class EmailService {
         return sender;
     }
 
+    // =================  Send Set Password Link  =================
+    @Value("${app.frontend-url}")
+    private String frontendUrl;
+
+    public void sendSetPasswordLink(String email, String token) {
+
+        String link = frontendUrl+"/set-password?token=" + token;
+
+        MailAccount acc = getAvailableAccount(otpAccounts);
+        JavaMailSender sender = createSender(acc);
+
+        SimpleMailMessage message = new SimpleMailMessage();
+        message.setFrom("Veagle Security <" + acc.getEmail() + ">");
+        message.setTo(email);
+        message.setSubject("Set your password");
+        message.setText(
+                "Click this link to set your password:\n" + link + "\n\n" +
+                        "This link is valid for 30 minutes.\n\n" +
+                        "If you did not request this, please ignore.\n\n" +
+                        "Veagle Space Team"
+        );
+
+        sendWithRetry(sender, message, acc);
+    }
     // ================= OTP =================
 
     public void sendOtp(String toEmail, String otp) {

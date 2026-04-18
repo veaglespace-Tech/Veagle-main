@@ -3,7 +3,7 @@ package com.example.VeagleSpaceTech.controller;
 import com.example.VeagleSpaceTech.DTO.request.ServiceRequestDTO;
 import com.example.VeagleSpaceTech.DTO.response.ServicesResponseDTO;
 import com.example.VeagleSpaceTech.service.ORG_ServicesService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -15,10 +15,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.List;
 
 @RestController
+@RequiredArgsConstructor
 public class ORG_ServicesController {
 
-    @Autowired
-    private ORG_ServicesService orgServicesService;
+    private final ORG_ServicesService orgServicesService;
 
     // Add Service In DB
 //    @PreAuthorize("hasRole('ADMIN')")
@@ -36,20 +36,20 @@ public class ORG_ServicesController {
 
 
     // fetch Services
-    @GetMapping("/api/v1/services")
+    @GetMapping("/api/public/services")
     public ResponseEntity<List<ServicesResponseDTO>> getServices(
             @RequestParam(required = false) String keyword
     ) {
         return ResponseEntity.ok(orgServicesService.getAllServices(keyword));
     }
 
-    @GetMapping("/api/v1/services/{id}")
+    @GetMapping("/api/public/services/{id}")
     public ResponseEntity<ServicesResponseDTO> getSingleService(@PathVariable("id") Long id ){
 
         return ResponseEntity.ok(orgServicesService.getServiceById(id));
     }
 
-    @PostMapping(value = "/api/v1/admin/services", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PostMapping(value = "/api/admin/services", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<ServicesResponseDTO> addService(
             @RequestPart("file") MultipartFile file,
             @RequestParam("data") String request
@@ -69,7 +69,7 @@ public class ORG_ServicesController {
 
    //  Update Service From DB
    @PreAuthorize("hasAnyRole('ADMIN','SADMIN')")
-   @PutMapping(value = "/api/v1/admin/services/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+   @PutMapping(value = "/api/admin/services/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
    public ResponseEntity<ServicesResponseDTO> updateService(
            @PathVariable Long id,
            @RequestPart(value = "file", required = false) MultipartFile file,
@@ -88,7 +88,7 @@ public class ORG_ServicesController {
 
     // Delete Service From DB
     @PreAuthorize("hasAnyRole('ADMIN','SADMIN')")
-    @DeleteMapping("/api/v1/admin/services/{id}")
+    @DeleteMapping("/api/admin/services/{id}")
     public ResponseEntity<String> deletService(@PathVariable Long id){
         orgServicesService.deleted(id);
         return ResponseEntity.ok().body("Deleted...");

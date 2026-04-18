@@ -4,7 +4,7 @@ import com.example.VeagleSpaceTech.DTO.request.JobApplicationRequestDTO;
 import com.example.VeagleSpaceTech.DTO.response.JobApplicationResponseDTO;
 import com.example.VeagleSpaceTech.enums.ApplicationStatus;
 import com.example.VeagleSpaceTech.service.JobApplicationService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -13,13 +13,13 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.List;
 
 @RestController
+@RequiredArgsConstructor
 public class JobApplicationController {
 
-    @Autowired
-    private JobApplicationService jobApplicationService;
+    private final JobApplicationService jobApplicationService;
 
     // Apply to job (Guest + Logged-in both allowed)
-    @PostMapping(value = "/api/v1/applications", consumes = "multipart/form-data")
+    @PostMapping(value = "/api/public/applications", consumes = "multipart/form-data")
     public ResponseEntity<JobApplicationResponseDTO> apply(
 
             @RequestParam String name,
@@ -39,21 +39,21 @@ public class JobApplicationController {
     // Admin apis
     // Get All Job Applications
     @PreAuthorize("hasAnyRole('ADMIN','SADMIN')")
-    @GetMapping("/api/v1/admin/applications")
+    @GetMapping("/api/admin/applications")
     public ResponseEntity<List<JobApplicationResponseDTO>> getAllApplications() {
         return ResponseEntity.status(200).body(jobApplicationService.getAll());
     }
 
     // Get Job Application By Id
     @PreAuthorize("hasAnyRole('ADMIN','SADMIN')")
-    @GetMapping("/api/v1/admin/applications/job/{jobId}")
+    @GetMapping("/api/admin/applications/job/{jobId}")
     public ResponseEntity<List<JobApplicationResponseDTO>> getByJob(@PathVariable Long jobId) {
         return ResponseEntity.status(200).body(jobApplicationService.getByJob(jobId));
     }
 
     // Update Job Application Status
     @PreAuthorize("hasAnyRole('ADMIN','SADMIN')")
-    @PatchMapping("/api/v1/admin/applications/{id}/status")
+    @PatchMapping("/api/admin/applications/{id}/status")
     public ResponseEntity<JobApplicationResponseDTO> updateStatus(
             @PathVariable Long id,
             @RequestParam ApplicationStatus status

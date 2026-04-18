@@ -1,6 +1,6 @@
 import { API_BASE_URL } from "@/lib/site";
 
-const CHATBOT_BASE = `${API_BASE_URL}/api/v1/chatbot`;
+const CHATBOT_BASE = `${API_BASE_URL}/api/public/chatbot`;
 
 /**
  * Send a chat message to the Veagle assistant.

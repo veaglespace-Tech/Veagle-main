@@ -19,17 +19,17 @@ function buildPortfolioFormData(payload) {
 export const portfolioApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
     getPortfolio: builder.query({
-      query: () => buildBackendUrl("/api/v1/portfolio"),
+      query: () => buildBackendUrl("/api/public/portfolio"),
       providesTags: ["Portfolio"],
     }),
     getPortfolioById: builder.query({
-      query: (id) => buildBackendUrl(`/api/v1/portfolio/${id}`),
+      query: (id) => buildBackendUrl(`/api/public/portfolio/${id}`),
       providesTags: (_result, _error, id) => [{ type: "Portfolio", id }],
     }),
     savePortfolio: builder.mutation({
       query: ({ token, id, ...payload }) => ({
         url: buildBackendUrl(
-          id ? `/api/v1/admin/portfolio/${id}` : "/api/v1/admin/portfolio"
+          id ? `/api/admin/portfolio/${id}` : "/api/admin/portfolio"
         ),
         method: id ? "PUT" : "POST",
         headers: authHeaders(token, false),
@@ -39,7 +39,7 @@ export const portfolioApi = baseApi.injectEndpoints({
     }),
     deletePortfolio: builder.mutation({
       query: ({ token, id }) => ({
-        url: buildBackendUrl(`/api/v1/admin/portfolio/${id}`),
+        url: buildBackendUrl(`/api/admin/portfolio/${id}`),
         method: "DELETE",
         headers: authHeaders(token, false),
       }),

@@ -4,9 +4,8 @@ package com.example.VeagleSpaceTech.controller;
 import com.example.VeagleSpaceTech.DTO.request.ContactRequestDTO;
 import com.example.VeagleSpaceTech.DTO.response.ContactResponseDTO;
 import com.example.VeagleSpaceTech.service.ContactMessageService;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -14,15 +13,14 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class ContactMessageController {
 
-		@Autowired
-    private  ContactMessageService service;
+    private final ContactMessageService service;
 
 
     // Add Messages By Users
-    @PostMapping("/api/v1/contacts")
+    @PostMapping("/api/public/contacts")
     public ResponseEntity<String> contact(@RequestBody ContactRequestDTO request){
         service.addContactMessage(request);
         return ResponseEntity.ok("Saved...");
@@ -30,19 +28,19 @@ public class ContactMessageController {
 
     // Get All Messages
     @PreAuthorize("hasAnyRole('ADMIN','SADMIN')")
-    @GetMapping("/api/v1/admin/contacts")
+    @GetMapping("/api/admin/contacts")
     public ResponseEntity<List<ContactResponseDTO>> getContactMessages(){
         return ResponseEntity.status(200).body(service.getContactMessages());
     }
     // Fetch Only for Read or Not Read
     @PreAuthorize("hasAnyRole('ADMIN','SADMIN')")
-    @GetMapping("/api/v1/admin/contacts/unread")
+    @GetMapping("/api/admin/contacts/unread")
     public ResponseEntity<List<ContactResponseDTO>> getUnreadContactMessages(){
         return ResponseEntity.status(200).body(service.getUnreadContactMessages());
     }
 
     @PreAuthorize("hasAnyRole('ADMIN','SADMIN')")
-    @PatchMapping("/api/v1/admin/contacts/{id}/read")
+    @PatchMapping("/api/admin/contacts/{id}/read")
     public ResponseEntity<String> markAsRead(@PathVariable Long id){
 
         service.markAsRead(id);
@@ -52,7 +50,7 @@ public class ContactMessageController {
 
     // Delete Messages
     @PreAuthorize("hasAnyRole('ADMIN','SADMIN')")
-    @DeleteMapping("/api/v1/admin/contacts/{id}")
+    @DeleteMapping("/api/admin/contacts/{id}")
     public ResponseEntity<String> deleteContactMessages(@PathVariable Long id){
         service.deleteContactMessage(id);
         return ResponseEntity.ok("Deleted...");

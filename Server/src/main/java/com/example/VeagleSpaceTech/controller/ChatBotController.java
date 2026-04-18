@@ -5,19 +5,19 @@ import com.example.VeagleSpaceTech.DTO.request.ChatSupportRequestDTO;
 import com.example.VeagleSpaceTech.DTO.response.ChatResponseDTO;
 import com.example.VeagleSpaceTech.DTO.response.ChatSupportResponseDTO;
 import com.example.VeagleSpaceTech.service.ChatBotService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/v1/chatbot")
+@RequestMapping("/api/public/chatbot")
+@RequiredArgsConstructor
 public class ChatBotController {
 
-    @Autowired
-    private ChatBotService chatBotService;
+    private final ChatBotService chatBotService;
 
     /**
-     * POST /api/v1/chatbot/chat
+     * POST /api/public/chatbot/chat
      * Public — no auth required.
      * Body: { "message": "..." }
      */
@@ -31,7 +31,7 @@ public class ChatBotController {
     }
 
     /**
-     * POST /api/v1/chatbot/support
+     * POST /api/public/chatbot/support
      * Public — no auth required.
      * Body: { "name": "...", "email": "...", "subject": "...", "message": "..." }
      */
@@ -44,4 +44,5 @@ public class ChatBotController {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
+
 }

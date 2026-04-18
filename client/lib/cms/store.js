@@ -25,7 +25,7 @@ function mergeWithDefaults(baseValue, overrideValue) {
 
 export async function getSiteContent() {
   try {
-    const response = await fetch(`${API_BASE_URL}/api/v1/site-content`, {
+    const response = await fetch(`${API_BASE_URL}/api/public/site-content`, {
       cache: "no-store",
     });
 
