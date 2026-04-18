@@ -288,46 +288,43 @@ export default function ProductsPageContent({ products, categories, content }) {
               <Link
                 key={product.id || `${product.title}-${index}`}
                 href={`/products/${productSlug}`}
-                className="group veagle-premium-card flex h-full flex-col overflow-hidden rounded-[1rem] border border-white/6 bg-[color:var(--surface)] backdrop-blur-[12px] transition duration-300"
+                className="group veagle-premium-card relative flex h-full flex-col overflow-hidden rounded-[2rem] border border-white/10 bg-[#0c0e18] min-h-[420px] transition-all duration-300 hover:border-[color:var(--accent)]/50"
               >
-                {/* Product image */}
-                {hasImage ? (
-                  <div className="relative h-44 w-full shrink-0 overflow-hidden">
-                    <Image
-                      src={product.imageUrl}
-                      alt={product.title}
-                      fill
-                      className="object-cover transition duration-500 group-hover:scale-105"
-                      unoptimized
-                    />
-                    <div className="absolute inset-0 bg-[linear-gradient(180deg,transparent_50%,color-mix(in srgb,var(--page-bg) 70%,transparent))]" />
-                  </div>
-                ) : null}
+                {/* Background Image & Overlay */}
+                <div className="absolute inset-0 z-0">
+                  <Image
+                    src={product.imageUrl}
+                    alt={product.title}
+                    fill
+                    className="object-cover opacity-40 transition-all duration-700 group-hover:scale-110 group-hover:opacity-60 group-hover:brightness-75"
+                    unoptimized
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-[#0c0e18] via-[#0c0e18]/70 to-[#0c0e18]/20" />
+                </div>
 
-                <div className="flex flex-1 flex-col p-6">
-                  <div className="mb-7 flex items-start justify-between gap-4">
-                    <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-[color:var(--accent)]/10 text-[color:var(--accent)] transition duration-300 group-hover:bg-white group-hover:text-black">
-                      <Icon className="veagle-icon-animate h-6 w-6" />
+                <div className="relative z-10 flex flex-1 flex-col p-8 justify-between">
+                  <div>
+                    <div className="mb-6 flex items-start justify-between gap-4">
+                      <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-white/10 text-white backdrop-blur-md transition duration-300 group-hover:bg-[color:var(--accent)]">
+                        <Icon className="veagle-icon-animate h-6 w-6" />
+                      </div>
                     </div>
-                    <span
-                      className={`rounded px-2 py-1 text-[9px] font-black uppercase tracking-[0.16em] ${status.className}`}
-                    >
-                      {status.label}
-                    </span>
+
+                    <h3 className="font-headline text-2xl font-black tracking-tight text-white leading-tight drop-shadow-md">
+                      {product.title}
+                    </h3>
+                    <p className="mt-4 line-clamp-3 text-sm leading-relaxed text-blue-100/70 transition-colors group-hover:text-white">
+                      {product.description}
+                    </p>
                   </div>
 
-                  <h3 className="font-headline text-xl font-black tracking-tight text-[color:var(--text-primary)] leading-tight">
-                    {product.title}
-                  </h3>
-                  <p className="mt-4 flex-grow line-clamp-3 text-sm leading-7 text-[color:var(--text-secondary)]">
-                    {product.description}
-                  </p>
-
-                  <div className="mt-7 flex items-center justify-between border-t border-white/5 pt-5">
-                    <span className="text-[10px] font-black uppercase tracking-[0.2em] text-[color:var(--text-muted)]">
-                      {categoryName}
+                  <div className="mt-8 flex items-center justify-between border-t border-white/10 pt-6">
+                    <span className="text-[10px] font-black uppercase tracking-[0.25em] text-blue-100/40">
+                      SHOW IN DETAIL
                     </span>
-                    <ArrowRight className="veagle-icon-animate h-4.5 w-4.5 text-[color:var(--text-muted)] group-hover:text-white" />
+                    <div className="flex h-10 w-10 items-center justify-center rounded-full bg-white/5 text-white transition-all group-hover:bg-[color:var(--accent)] group-hover:translate-x-1">
+                      <ArrowRight className="h-4.5 w-4.5" />
+                    </div>
                   </div>
                 </div>
               </Link>

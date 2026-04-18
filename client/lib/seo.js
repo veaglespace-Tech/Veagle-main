@@ -7,6 +7,8 @@ import {
   COMPANY_ADDRESS,
   COMPANY_INSTAGRAM,
   COMPANY_LINKEDIN,
+  COMPANY_FACEBOOK,
+  COMPANY_WHATSAPP,
   LOGO_PATH,
   SITE_URL,
 } from "@/lib/site";
@@ -92,8 +94,10 @@ export function buildOrganizationSchema() {
       addressCountry: "IN",
     },
     sameAs: [
+      COMPANY_FACEBOOK,
       COMPANY_INSTAGRAM,
       COMPANY_LINKEDIN,
+      COMPANY_WHATSAPP,
     ],
   };
 }

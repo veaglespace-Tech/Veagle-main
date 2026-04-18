@@ -20,8 +20,10 @@ export const portalLayoutClass =
   "relative z-10 grid min-h-screen lg:grid-cols-[280px_minmax(0,1fr)] xl:grid-cols-[300px_minmax(0,1fr)]";
 export const portalSidebarClass =
   "border-b border-[color:var(--border)] bg-[color:var(--page-bg-soft)] p-4 shadow-[color:var(--shadow-soft)] backdrop-blur-xl lg:sticky lg:top-0 lg:h-screen lg:overflow-y-auto lg:border-b-0 lg:border-r lg:p-5";
+export const portalCardBaseClass =
+  "rounded-[1.2rem] border border-[color:var(--border)] bg-[color:var(--surface)] shadow-[color:var(--shadow-card)] backdrop-blur-sm";
 export const portalCardClass =
-  "rounded-[1.2rem] border border-[color:var(--border)] bg-[color:var(--surface)] p-3 shadow-[color:var(--shadow-card)] backdrop-blur-sm sm:p-3.5";
+  cn(portalCardBaseClass, "p-3 sm:p-3.5");
 export const portalSubcardClass =
   "rounded-[1rem] border border-[color:var(--border)] bg-[color:var(--surface-strong)] p-2.5 shadow-[color:var(--shadow-soft)]";
 export const portalTabListClass = "grid gap-1.5 sm:grid-cols-2 lg:grid-cols-1";
@@ -67,7 +69,7 @@ export function DashboardIntro({ title, description }) {
 
 export function MetricTile({ label, value }) {
   return (
-    <div className={`${portalCardClass} relative overflow-hidden`}>
+    <div className={`${portalCardBaseClass} relative overflow-hidden p-3 sm:p-3.5`}>
       <div className="absolute right-0 top-0 h-14 w-14 rounded-full bg-[color:var(--accent-soft)] blur-xl" />
       <p className="relative z-10 text-[9px] font-bold uppercase tracking-[0.24em] text-[color:var(--text-muted)]">
         {label}
@@ -81,13 +83,13 @@ export function MetricTile({ label, value }) {
 
 export function Card({ title, children }) {
   return (
-    <section className={`${portalCardClass} overflow-hidden`}>
-      <div className="border-b border-[color:var(--border)] pb-2.5">
+    <section className={`${portalCardBaseClass} overflow-hidden`}>
+      <div className="border-b border-[color:var(--border)] p-3 sm:p-3.5 pb-2.5 sm:pb-3">
         <h2 className="font-headline text-base font-black tracking-tight text-[color:var(--text-primary)] sm:text-lg">
           {title}
         </h2>
       </div>
-      <div className="pt-3.5">{children}</div>
+      <div className="p-3 sm:p-3.5 pt-3.5 sm:pt-4">{children}</div>
     </section>
   );
 }
@@ -114,6 +116,7 @@ export function ItemCard({
   title,
   subtitle,
   description,
+  imageUrl,
   tags = [],
   extraActionLabel,
   onExtraAction,
@@ -122,8 +125,17 @@ export function ItemCard({
   busyDelete,
 }) {
   return (
-    <article className={`${portalCardClass} h-full`}>
-      <div className="flex h-full flex-col justify-between gap-4">
+    <article className={`${portalCardBaseClass} group flex h-full flex-col overflow-hidden`}>
+      {imageUrl ? (
+        <div className="relative h-44 w-full border-b border-[color:var(--border)]">
+          <img
+            src={imageUrl}
+            alt={title}
+            className="h-full w-full object-cover transition duration-500 hover:scale-105"
+          />
+        </div>
+      ) : null}
+      <div className="flex h-full flex-col justify-between gap-4 p-3 sm:p-3.5">
         <div className="space-y-3">
           <div>
             <h3 className="font-headline text-base font-black tracking-tight text-[color:var(--text-primary)]">

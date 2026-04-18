@@ -122,7 +122,7 @@ function createShowcaseItems({ services, products, jobs, clientProof, clientCoun
       title: "Services",
       description: "Choose the right stream for websites, software delivery and digital growth support.",
       href: "/services",
-      image: serviceImage,
+      image: backendAssetUrl(serviceImage),
       icon: showcaseIcons[0],
       previewTitle: "Clarify the work before you commit to it",
       previewDescription:
@@ -140,7 +140,7 @@ function createShowcaseItems({ services, products, jobs, clientProof, clientCoun
       title: "Products",
       description: "Browse packaged solutions that help teams launch systems with less guesswork.",
       href: "/products",
-      image: productImage,
+      image: backendAssetUrl(productImage),
       icon: showcaseIcons[1],
       previewTitle: "See packaged solutions before planning custom work",
       previewDescription:
@@ -601,31 +601,35 @@ export default function HomePage({ content, services = [], products = [], jobs =
             {featuredProducts.map((product) => (
               <article
                 key={product.id || product.title}
-                className="group veagle-premium-card flex h-full flex-col overflow-hidden rounded-[1.2rem] border border-[color:var(--border)] bg-[color:var(--surface)] p-1 transition duration-300"
+                className="group veagle-premium-card relative flex h-[480px] flex-col overflow-hidden rounded-[2rem] border border-white/10 bg-[#0c0e18] transition duration-300"
               >
-                <div className="relative h-56 shrink-0 overflow-hidden rounded-[0.95rem]">
+                {/* Background Image & Overlay */}
+                <div className="absolute inset-0 z-0">
                   <Image
-                    src={product.imageUrl}
+                    src={backendAssetUrl(product.imageUrl)}
                     alt={product.title}
                     fill
-                    className="object-cover transition duration-500 group-hover:scale-105"
+                    className="object-cover opacity-40 transition-all duration-700 group-hover:scale-110 group-hover:opacity-60 group-hover:brightness-75"
                     unoptimized
                   />
+                  <div className="absolute inset-0 bg-gradient-to-t from-[#0c0e18] via-[#0c0e18]/70 to-[#0c0e18]/20" />
                 </div>
-                <div className="flex flex-1 flex-col p-6">
-                  <h3 className="font-headline text-xl font-black tracking-tight text-[color:var(--text-primary)]">
-                    {product.title}
-                  </h3>
-                  <p className="mt-3 line-clamp-3 text-sm leading-7 text-[color:var(--text-secondary)]">
-                    {product.description}
-                  </p>
-                  <Link
-                    href="/products"
-                    className="mt-auto inline-flex items-center gap-2 text-sm font-bold uppercase tracking-[0.16em] text-[color:var(--accent)] pb-2 transition hover:gap-3"
-                  >
-                    View Details
-                    <ArrowRight className="veagle-icon-animate h-4 w-4" />
-                  </Link>
+
+                <div className="relative z-10 flex flex-1 flex-col p-8 justify-end">
+                  <div className="space-y-4">
+                    <h3 className="font-headline text-3xl font-black tracking-tight text-white leading-tight drop-shadow-md">
+                      {product.title}
+                    </h3>
+                    <p className="mt-2 line-clamp-3 text-sm leading-relaxed text-blue-100/70 transition-colors group-hover:text-white">
+                      {product.description}
+                    </p>
+                    <Link
+                      href="/products"
+                      className="mt-6 inline-flex items-center gap-2.5 text-[10px] font-black uppercase tracking-[0.25em] text-[color:var(--accent)] transition-all hover:gap-4 hover:text-white"
+                    >
+                      SHOW IN DETAIL <ArrowRight className="veagle-icon-animate h-4 w-4" />
+                    </Link>
+                  </div>
                 </div>
               </article>
             ))}

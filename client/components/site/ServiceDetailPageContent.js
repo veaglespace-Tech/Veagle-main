@@ -87,9 +87,9 @@ export default function ServiceDetailPageContent({ service, relatedServices }) {
         return (
           <section key={block.id || index} className={sectionClass}>
             <div className={containerClass}>
-              <div className="mx-auto max-w-5xl">
-                <div className="relative overflow-hidden rounded-[2.5rem] border border-[color:var(--border)] bg-[color:var(--surface-muted)] p-5 shadow-[color:var(--shadow-card)]">
-                  <div className="relative aspect-[16/9] overflow-hidden rounded-[1.8rem] border border-[color:var(--border-strong)]/20">
+              <div className="w-full">
+                <div className="relative overflow-hidden rounded-[2.5rem] border border-[color:var(--border)] bg-[color:var(--surface-muted)] p-2 shadow-[color:var(--shadow-card)] sm:p-4">
+                  <div className="relative aspect-[21/9] overflow-hidden rounded-[1.8rem] border border-[color:var(--border-strong)]/20 sm:aspect-[21/9] lg:aspect-[21/7]">
                     <Image 
                       src={block.content.imageUrl} 
                       alt={block.content.caption || "Service visual"}
@@ -250,7 +250,7 @@ export default function ServiceDetailPageContent({ service, relatedServices }) {
                     <div className="relative flex min-h-[320px] items-center justify-center overflow-hidden rounded-[1.5rem] bg-[color:var(--surface-muted)] sm:min-h-[440px]">
                       <Image
                         alt={service.title}
-                        className="object-contain p-10 drop-shadow-[0_20px_50px_rgba(0,0,0,0.5)] transition duration-700 group-hover:scale-105"
+                        className="object-cover transition duration-700 group-hover:scale-105"
                         fill
                         sizes="(max-width: 1280px) 100vw, 52vw"
                         src={service.imageUrl}

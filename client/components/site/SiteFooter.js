@@ -10,6 +10,7 @@ import {
   COMPANY_ADDRESS_QUERY,
   COMPANY_EMAIL,
   COMPANY_EMAIL_LINK,
+  COMPANY_LEGAL_NAME,
   COMPANY_NAME,
   COMPANY_PHONE,
   COMPANY_PHONE_LINK,
@@ -71,141 +72,30 @@ export default function SiteFooter({ content, services }) {
     : COMPANY_ADDRESS_QUERY;
 
   return (
-    <footer className="w-full border-t border-[color:var(--border)] bg-[color:var(--page-bg)] pb-12 pt-24">
-      <div className="mx-auto grid max-w-7xl grid-cols-1 gap-16 px-8 pb-24 md:grid-cols-4 md:px-12">
-        <div className="space-y-8">
-          <div className="font-headline text-2xl font-bold tracking-tighter text-[color:var(--text-primary)]">
-            <BrandMark variant="footer" tone="auto" />
-          </div>
-          <p className="max-w-xs text-sm leading-relaxed text-[color:var(--text-secondary)]">{COMPANY_TAGLINE}</p>
-          <div className="flex space-x-4">
-            {socialLinksData.map((social) => {
-              const Icon = social.icon;
-              return (
-                <a
-                  key={social.label}
-                  href={social.href}
-                  target="_blank"
-                  rel="noreferrer"
-                  aria-label={social.label}
-                  className="flex h-10 w-10 items-center justify-center rounded-full bg-[color:var(--surface-container-high)] text-[color:var(--accent)] transition-all hover:bg-[color:var(--accent)] hover:text-[color:var(--button-ink)]"
-                >
-                  <Icon className="h-5 w-5" />
-                </a>
-              );
-            })}
-          </div>
-        </div>
-
-        <div className="space-y-8">
-          <h3 className="font-headline text-sm font-black uppercase tracking-[0.2em] text-[color:var(--accent)]">
-            Services
-          </h3>
-          <ul className="space-y-4">
-            <li>
-              <FooterLink href="/services" label="Explore services" />
-            </li>
-            <li className="pt-4 text-[10px] font-black uppercase tracking-[0.24em] text-[color:var(--text-muted)] opacity-60">
-              Capabilities
-            </li>
-            {(serviceLinks.length ? serviceLinks : [{ href: "/services", label: "Dynamic Websites" }])
-              .slice(0, 3)
-              .map((link) => (
-                <li key={link.label} className="text-sm font-medium text-[color:var(--text-muted)]">
-                  {link.label}
-                </li>
-              ))}
-          </ul>
-        </div>
-
-        <div className="space-y-8">
-          <h3 className="font-headline text-sm font-black uppercase tracking-[0.2em] text-[color:var(--text-primary)]">
-            Quick Links
-          </h3>
-          <nav className="flex flex-col space-y-4">
-            {quickLinks.map((link) => (
-              <Link
-                key={link.label}
-                href={link.href}
-                className="text-sm font-medium text-[color:var(--text-secondary)] transition-colors duration-300 hover:text-[color:var(--text-primary)]"
-              >
-                {link.label}
-              </Link>
-            ))}
-          </nav>
-        </div>
-
-        <div className="space-y-8">
-          <h3 className="font-headline text-sm font-black uppercase tracking-[0.2em] text-[color:var(--text-primary)]">
-            Contact
-          </h3>
-          <div className="space-y-6">
-            <div className="flex items-start space-x-4">
-              <div className="mt-1 flex h-8 w-8 items-center justify-center rounded-lg bg-[color:var(--accent)]/10 text-[color:var(--accent)]">
-                <Mail className="h-4 w-4" />
-              </div>
-              <div className="space-y-1">
-                <p className="text-[10px] font-black uppercase tracking-widest text-[color:var(--text-muted)] opacity-60">
-                  Email
-                </p>
-                <a
-                  href={footerEmailLink}
-                  className="text-sm font-medium text-[color:var(--text-secondary)] transition-colors hover:text-[color:var(--text-primary)]"
-                >
-                  {footerEmail}
-                </a>
-              </div>
-            </div>
-            <div className="flex items-start space-x-4">
-              <div className="mt-1 flex h-8 w-8 items-center justify-center rounded-lg bg-[color:var(--accent)]/10 text-[color:var(--accent)]">
-                <Phone className="h-4 w-4" />
-              </div>
-              <div className="space-y-1">
-                <p className="text-[10px] font-black uppercase tracking-widest text-[color:var(--text-muted)] opacity-60">
-                  Phone
-                </p>
-                <a
-                  href={footerPhoneLink}
-                  className="text-sm font-medium text-[color:var(--text-secondary)] transition-colors hover:text-[color:var(--text-primary)]"
-                >
-                  {footerPhone}
-                </a>
-              </div>
-            </div>
-            <div className="flex items-start space-x-4">
-              <div className="mt-1 flex h-8 w-8 items-center justify-center rounded-lg bg-[color:var(--accent)]/10 text-[color:var(--accent)]">
-                <MapPin className="h-4 w-4" />
-              </div>
-              <div className="space-y-1">
-                <p className="text-[10px] font-black uppercase tracking-widest text-[color:var(--text-muted)] opacity-60">
-                  Address
-                </p>
-                <a
-                  href={footerAddressQuery}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="text-sm font-medium leading-relaxed text-[color:var(--text-secondary)] transition-colors hover:text-[color:var(--text-primary)]"
-                >
-                  {footerAddress}
-                </a>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div className="mx-auto max-w-7xl border-t border-[color:var(--border)] px-8 pt-10 md:px-12">
-        <div className="flex flex-col items-center justify-center gap-6 text-center">
-          <div className="text-[11px] font-black uppercase tracking-[0.2em] text-[color:var(--text-muted)] opacity-60">
-            Copyright {new Date().getFullYear()} {COMPANY_NAME}. All rights reserved.
-          </div>
-          <div className="flex flex-wrap justify-center gap-x-10 gap-y-4 text-[10px] font-black uppercase tracking-[0.25em] text-[color:var(--text-muted)]">
-            <Link href="/contact" className="transition-colors hover:text-[color:var(--accent-soft)]">
-              Terms of Service
+    <footer className="w-full border-t border-[color:var(--border)] bg-[color:var(--page-bg)] pb-2 pt-6">
+      <div className="mx-auto max-w-7xl px-8 md:px-12">
+        <div className="flex flex-col items-center justify-center gap-4 text-center">
+          <div className="flex flex-wrap justify-center gap-x-4 gap-y-2 text-[11px] font-bold uppercase tracking-[0.1em] text-[color:var(--text-muted)]">
+            <Link href="/about" className="transition-colors hover:text-[color:var(--accent)]">
+              About US
             </Link>
-            <Link href="/contact" className="transition-colors hover:text-[color:var(--accent-soft)]">
-              Privacy Policy
+            <span className="opacity-30">|</span>
+            <Link href="/contact" className="transition-colors hover:text-[color:var(--accent)]">
+              Contact US
             </Link>
+            <span className="opacity-30">|</span>
+            <Link href="/contact" className="transition-colors hover:text-[color:var(--accent)]">
+              Privacy & Policy
+            </Link>
+          </div>
+
+          <div className="space-y-1">
+            <div className="text-[11px] font-medium tracking-wide text-[color:var(--text-muted)] opacity-80">
+              All Right Reserved © {new Date().getFullYear()} {COMPANY_LEGAL_NAME}
+            </div>
+            <div className="text-[10px] font-medium tracking-wide text-[color:var(--text-muted)] opacity-60">
+              Designed & Developed By {COMPANY_LEGAL_NAME}
+            </div>
           </div>
         </div>
       </div>

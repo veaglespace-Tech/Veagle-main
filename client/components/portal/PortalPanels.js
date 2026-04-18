@@ -860,7 +860,7 @@ export function ServicesPanel({
                       {cardImage ? (
                         <Image
                           alt={item.title}
-                          className="object-contain p-2.5"
+                          className="object-cover transition duration-700 hover:scale-105"
                           fill
                           sizes="(max-width: 1280px) 100vw, 33vw"
                           src={cardImage}
@@ -995,6 +995,7 @@ export function ProductsPanel({
         renderItem={(item) => (
           <ItemCard
             title={item.title}
+            imageUrl={backendAssetUrl(item.imageUrl)}
             subtitle={item.categoryName}
             description={item.description}
             tags={[item.isActive ? "Active" : "Inactive"]}
@@ -1445,6 +1446,7 @@ export function PortfolioPanel({
         renderItem={(item) => (
           <ItemCard
             title={item.title}
+            imageUrl={backendAssetUrl(item.imageUrl)}
             subtitle={item.projectUrl || item.githubUrl || "No target"}
             description={item.description}
             tags={[

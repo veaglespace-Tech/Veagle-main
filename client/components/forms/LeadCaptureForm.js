@@ -266,9 +266,14 @@ export default function LeadCaptureForm({
               <div
                 className={
                   status.type === "success"
-                    ? "rounded-xl border border-emerald-500/20 bg-emerald-500/10 px-4 py-3 text-sm text-emerald-200"
-                    : "rounded-xl border border-rose-500/20 bg-rose-500/10 px-4 py-3 text-sm text-rose-200"
+                    ? "rounded-xl border px-4 py-3 text-sm font-bold"
+                    : "rounded-xl border px-4 py-3 text-sm font-bold"
                 }
+                style={{
+                  backgroundColor: status.type === "success" ? "var(--status-success-bg)" : "var(--status-error-bg)",
+                  color: status.type === "success" ? "var(--status-success-text)" : "var(--status-error-text)",
+                  borderColor: status.type === "success" ? "var(--status-success-border)" : "var(--status-error-border)",
+                }}
               >
                 {status.message}
               </div>
@@ -441,11 +446,12 @@ export default function LeadCaptureForm({
 
           {status.message ? (
             <div
-              className={`md:col-span-2 rounded-[0.9rem] px-4 py-3 text-sm ${
-                status.type === "success"
-                  ? "border border-emerald-500/25 bg-emerald-500/10 text-emerald-200"
-                  : "border border-rose-500/25 bg-rose-500/10 text-rose-200"
-              }`}
+              className="md:col-span-2 rounded-[0.9rem] px-4 py-3 text-sm font-bold border"
+              style={{
+                backgroundColor: status.type === "success" ? "var(--status-success-bg)" : "var(--status-error-bg)",
+                color: status.type === "success" ? "var(--status-success-text)" : "var(--status-error-text)",
+                borderColor: status.type === "success" ? "var(--status-success-border)" : "var(--status-error-border)",
+              }}
             >
               {status.message}
             </div>
@@ -576,11 +582,12 @@ export default function LeadCaptureForm({
 
         {status.message ? (
           <div
-            className={
-              status.type === "success"
-                ? "rounded-xl border border-emerald-500/20 bg-emerald-500/10 px-4 py-3 text-xs text-emerald-600 dark:text-emerald-200"
-                : "rounded-xl border border-rose-500/20 bg-rose-500/10 px-4 py-3 text-xs text-rose-600 dark:text-rose-200"
-            }
+            className="rounded-xl border px-4 py-3 text-xs font-bold"
+            style={{
+              backgroundColor: status.type === "success" ? "var(--status-success-bg)" : "var(--status-error-bg)",
+              color: status.type === "success" ? "var(--status-success-text)" : "var(--status-error-text)",
+              borderColor: status.type === "success" ? "var(--status-success-border)" : "var(--status-error-border)",
+            }}
           >
             {status.message}
           </div>

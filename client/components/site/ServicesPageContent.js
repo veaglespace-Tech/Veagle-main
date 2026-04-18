@@ -119,31 +119,44 @@ export default function ServicesPageContent({ services, content }) {
               return (
                 <article
                   key={service.id || `service-${index}`}
-                  className="group veagle-premium-card relative flex flex-col overflow-hidden rounded-[1.25rem]"
+                  className="group veagle-premium-card relative flex flex-col overflow-hidden rounded-[2rem] border border-[color:var(--border)] bg-[#0c0e18] min-h-[400px]"
                 >
-                  <div className="relative z-10 flex h-full flex-col p-8">
-                    <div className="mb-8 flex items-center justify-between">
-                      <div className="h-[2px] w-12 bg-[color:var(--accent)] transition-all duration-500 group-hover:w-20" />
-                      <span className="text-[10px] font-black uppercase tracking-[0.2em] text-[color:var(--text-muted)]">
-                        0{index + 1}
-                      </span>
+                  <div className="absolute inset-0 z-0">
+                    <Image
+                      src={service.imageUrl}
+                      alt={service.title}
+                      fill
+                      className="object-cover opacity-50 transition-all duration-700 group-hover:scale-110 group-hover:opacity-70 group-hover:brightness-75"
+                      unoptimized
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-[#0c0e18] via-[#0c0e18]/60 to-transparent" />
+                  </div>
+
+                  <div className="relative z-10 flex h-full flex-col p-8 sm:p-10 justify-end">
+                    <div className="space-y-4">
+                      <div className="flex items-center gap-4">
+                        <div className="h-[2px] w-8 bg-[color:var(--accent)] transition-all duration-500 group-hover:w-16" />
+                        <span className="text-[10px] font-black uppercase tracking-[0.3em] text-white/50">
+                          0{index + 1}
+                        </span>
+                      </div>
+
+                      <h3 className="font-headline text-3xl font-black tracking-tight text-white sm:text-4xl drop-shadow-md">
+                        {service.title}
+                      </h3>
+                      
+                      <p className="line-clamp-3 text-sm leading-relaxed text-blue-100/70 transition-colors group-hover:text-white">
+                        {service.description ||
+                          "Full-cycle development from discovery to deployment, ensuring a project that is easier for you to manage and scale."}
+                      </p>
+
+                      <Link
+                        href={`/services/${serviceSlug}`}
+                        className="inline-flex items-center gap-2.5 text-[10px] font-black uppercase tracking-[0.25em] text-[color:var(--accent)] transition-all hover:gap-4 hover:text-white"
+                      >
+                        Discovery Details <ArrowRight className="h-4 w-4" />
+                      </Link>
                     </div>
-
-                    <h3 className="font-headline text-3xl font-black tracking-tight text-white sm:text-4xl">
-                      {service.title}
-                    </h3>
-                    
-                    <p className="mt-6 flex-grow text-sm leading-8 text-[color:var(--text-muted)] group-hover:text-white/90 transition-colors">
-                      {service.content ||
-                        "Full-cycle development from discovery to deployment, ensuring a project that is easier for you to manage and scale."}
-                    </p>
-
-                    <Link
-                      href={`/services/${serviceSlug}`}
-                      className="mt-10 inline-flex items-center gap-2.5 text-[10px] font-black uppercase tracking-[0.25em] text-[color:var(--accent)] transition-all hover:gap-4"
-                    >
-                      Discovery Details <ArrowRight className="h-4 w-4" />
-                    </Link>
                   </div>
                 </article>
               );

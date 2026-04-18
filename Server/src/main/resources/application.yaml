@@ -5,9 +5,9 @@ spring:
   datasource:
     # HOSTINGER VPS: Update these with your Hostinger MySQL credentials
     # Local dev: jdbc:mysql://localhost:3306/veagledb
-    url: ${DB_URL:jdbc:mysql://127.0.0.1:3306/veagledb?createDatabaseIfNotExist=true&useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Kolkata}
+    url: ${DB_URL:jdbc:mysql://localhost:3306/veagledb?createDatabaseIfNotExist=true&useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Kolkata}
     username: ${DB_USERNAME:root}
-    password: ${DB_PASSWORD:root}
+    password: ${DB_PASSWORD:Veagle@123}
     driver-class-name: com.mysql.cj.jdbc.Driver
 
   jpa:
@@ -21,24 +21,18 @@ spring:
 veagle:
   mail:
     otp:
-      - email: noreply1@veaglespace.com
-        password: Veagle@123
-      - email: noreply2@veaglespace.com
-        password: Veagle@123
+      - email: ${MAIL_USER:noreply1@veaglespace.com}
+        password: ${MAIL_PASS:Veagle@123}
+      - email: ${MAIL_USER_2:noreply2@veaglespace.com}
+        password: ${MAIL_PASS_2:Veagle@123}
 
     careers:
-      - email: careers@veaglespace.com
-        password: Veagle@123
-      - email: careers1@veaglespace.com
-        password: Veagle@123
-      - email: careers2@veaglespace.com
-        password: Veagle@123
+      - email: ${MAIL_CAREERS:careers@veaglespace.com}
+        password: ${MAIL_CAREERS_PASS:Veagle@123}
 
     support:
-      - email: support@veaglespace.com
-        password: Veagle@123
-      - email: support1@veaglespace.com
-        password: Veagle@123
+      - email: ${MAIL_SUPPORT:support@veaglespace.com}
+        password: ${MAIL_SUPPORT_PASS:Veagle@123}
 
 
   servlet:
@@ -53,9 +47,9 @@ admin:
   secret: ${ADMIN_SECRET:admin123}
 
 cloudinary:
-  cloud-name: dbehhnhhi
-  api-key: 266323574446942
-  api-secret: jiEAtmhR144qAZFvZLIWDwsRrKA
+  cloud-name: ${CLOUDINARY_CLOUD_NAME:dbehhnhhi}
+  api-key: ${CLOUDINARY_API_KEY:266323574446942}
+  api-secret: ${CLOUDINARY_API_SECRET:jiEAtmhR144qAZFvZLIWDwsRrKA}
 
 server:
   port: 8080
