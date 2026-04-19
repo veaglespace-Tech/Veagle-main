@@ -1,5 +1,6 @@
 package com.example.VeagleSpaceTech.controller;
 
+import com.example.VeagleSpaceTech.DTO.PasswordSetRequest;
 import com.example.VeagleSpaceTech.DTO.request.LoginRequest;
 import com.example.VeagleSpaceTech.DTO.request.OtpRequest;
 import com.example.VeagleSpaceTech.DTO.request.RegisterRequest;
@@ -37,25 +38,48 @@ public class AuthController {
     public ResponseEntity<String> adminLogin(@Valid @RequestBody LoginRequest request) {
         return ResponseEntity.ok(authService.adminLogin(request));
     }
-    //Super Admin
+    // Super Admin
     @PostMapping("/super-admin-login")
     public ResponseEntity<String> superadminLogin(@Valid @RequestBody LoginRequest request) {
         return ResponseEntity.ok(authService.adminLogin(request));
     }
 
+    // Otp Verification
     @PostMapping("/verify-otp")
     public ResponseEntity<AuthResponse> verifyOtp(@RequestBody OtpRequest request) {
         return ResponseEntity.ok(authService.verifyOtpRequest(request));
     }
 
-    @PostMapping("/set-password")
-    public ResponseEntity<String> setPassword(
+    // Set Password
+//    @PostMapping("/set-password")
+//    public ResponseEntity<String> setPassword(
+//            @RequestParam String token,
+//            @Valid @RequestBody PasswordSetRequest request
+//    ) {
+//        authService.setPassword(token, request.password());
+//        return ResponseEntity.ok("Password set successfully");
+//    }
+
+    // ReSet Password Link Send To email
+    @PostMapping("/reset-password-link-send")
+    public ResponseEntity<String> resetPassword(@RequestBody String email){
+
+        return ResponseEntity.ok(authService.reSetPasswordLink(email));
+
+    }
+
+    // Reset Password
+    @PostMapping("/reset-password")
+    public ResponseEntity<String> resetPassword(
             @RequestParam String token,
-            @RequestBody String password) {
-        authService.setPassword(token, password);
+            @RequestBody PasswordSetRequest request
+    ) {
+        System.out.println("\n "+request.password());
+        authService.reSetPassword(token, request.password());
         return ResponseEntity.ok("Password set successfully");
     }
 
+    // Send Otp
     @PostMapping("/send-otp")
     public ResponseEntity<String> sendOtp() {
         authService.sendOtp();

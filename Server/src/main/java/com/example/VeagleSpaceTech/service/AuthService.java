@@ -37,6 +37,7 @@ public class AuthService {
     private final Map<String, OtpData> otpStore = new HashMap<>();
 
     public UserResponseDTO registerUser(RegisterRequest request) {
+
         validateUniqueUserFields(request.email(), request.contact(), null);
 
         User user = new User();
@@ -65,7 +66,7 @@ public class AuthService {
 
         return toUserResponse(savedUser);
     }
-
+    // Set Password
     public void setPassword(String token, String newPassword) {
 
         User user = repo.findByVerificationToken(token)
@@ -84,6 +85,49 @@ public class AuthService {
 
         repo.save(user);
     }
+
+    // Send Reset Link To Email
+    public String reSetPasswordLink(String email) {
+
+        User user = repo.findByEmail(email).orElseThrow(()->new RuntimeException("Email Not Found..."));
+
+        String token = UUID.randomUUID().toString();
+        user.setVerificationToken(token);
+        user.setTokenExpiry(LocalDateTime.now().plusMinutes(30));
+
+        User savedUser = repo.save(user);
+
+        // send email with link
+        try {
+            emailService.sendSetPasswordLink(email, token);
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to send verification email  " + e);
+        }
+        return "ReSetPassword Link Send To Email";
+
+    }
+
+    // ReSet Password
+    public void reSetPassword(String token, String newPassword) {
+
+        User user = repo.findByVerificationToken(token)
+                .orElseThrow(() -> new RuntimeException("Invalid token"));
+
+        if (user.getTokenExpiry().isBefore(LocalDateTime.now())) {
+            throw new RuntimeException("Token expired. Please request a new link.");
+        }
+
+        user.setPassword(passwordEncoder.encode(newPassword));
+        user.setStatus(UserStatus.ACTIVE);
+
+        // remove token
+        user.setVerificationToken(null);
+        user.setTokenExpiry(null);
+
+        repo.save(user);
+
+    }
+
 
     public String adminLogin(LoginRequest request) {
 
@@ -283,4 +327,6 @@ public class AuthService {
 
         return role.replaceFirst("^ROLE_", "").toUpperCase();
     }
+
+
 }

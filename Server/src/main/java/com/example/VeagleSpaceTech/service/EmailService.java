@@ -1,5 +1,6 @@
 package com.example.VeagleSpaceTech.service;
 
+import com.example.VeagleSpaceTech.config.AppProperties;
 import com.example.VeagleSpaceTech.config.MailProperties;
 import com.example.VeagleSpaceTech.model.MailAccount;
 import jakarta.annotation.PostConstruct;
@@ -8,6 +9,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -117,12 +119,12 @@ public class EmailService {
     }
 
     // =================  Send Set Password Link  =================
-    @Value("${app.frontend-url}")
-    private String frontendUrl;
+    @Autowired
+    private AppProperties appProperties;
 
     public void sendSetPasswordLink(String email, String token) {
 
-        String link = frontendUrl+"/set-password?token=" + token;
+        String link = appProperties.getFrontendUrl()+"/set-password?token=" + token;
 
         MailAccount acc = getAvailableAccount(otpAccounts);
         JavaMailSender sender = createSender(acc);
@@ -212,6 +214,7 @@ public class EmailService {
         sendWithRetry(sender, message, acc);
     }
 
+
     public void sendRejectedEmail(String to, String name, String jobTitle) {
 
         MailAccount acc = getAvailableAccount(careerAccounts);
@@ -236,7 +239,7 @@ public class EmailService {
     }
 
     // Send Mail To support Team
-
+    @Async
     public void sendEmailToHrAndAdmin(String to, String subject, String text) {
 
         MailAccount acc = getAvailableAccount(supportAccounts); // ✅ use support emails

@@ -21,7 +21,7 @@ import {
   textareaClass,
 } from "@/components/site/UiBits";
 import { cn } from "@/lib/utils";
-import { useSubmitLeadMutation } from "@/store/api/cms.api";
+import { API_BASE_URL } from "@/lib/site";
 import { getErrorMessage } from "@/store/api/baseApi";
 
 const initialState = {
@@ -69,7 +69,9 @@ function validate(values) {
     errors.email = "Please enter a valid email";
   }
 
-  if (values.phone && !/^\+?[0-9\s-]{10,15}$/.test(values.phone)) {
+  if (!values.phone.trim()) {
+    errors.phone = "Please enter your phone number";
+  } else if (!/^\+?[0-9\s-]{10,15}$/.test(values.phone)) {
     errors.phone = "Please enter a valid contact number";
   }
 
@@ -92,7 +94,6 @@ export default function LeadCaptureForm({
   const [status, setStatus] = useState({ type: "", message: "" });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [session, setSession] = useState(null);
-  const [submitLead] = useSubmitLeadMutation();
 
   const normalizedServiceOptions = useMemo(() => {
     const options = serviceOptions.map((option) =>
@@ -166,17 +167,32 @@ export default function LeadCaptureForm({
 
     startTransition(async () => {
       try {
-        await submitLead({
-          ...form,
+        // Build JSON object with separate fields
+        const data = {
           name: form.name.trim(),
           email: form.email.trim(),
-          phone: form.phone?.trim() || "",
+          phone: form.phone.trim(),
           company: form.company?.trim() || "",
-          serviceInterest: form.serviceInterest?.trim() || "",
+          service: form.serviceInterest?.trim() || "",
           budget: form.budget?.trim() || "",
           timeline: form.timeline?.trim() || "",
           message: form.message.trim(),
-        }).unwrap();
+        };
+
+        // Send request using fetch API
+        const response = await fetch(`${API_BASE_URL}/api/public/contacts`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(data),
+        });
+
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const result = await response.text();
 
         setForm({
           ...initialState,

@@ -123,8 +123,6 @@ public class JobApplicationService {
             throw new RuntimeException("You already applied for this job");
         }
 
-
-
         JobApplication app = new JobApplication();
         app.setName(request.name());
         app.setEmail(request.email());
@@ -135,9 +133,11 @@ public class JobApplicationService {
         app.setUser(user);
 
         // Save Image in cloudinary
-        Map result = cloudinaryService.upload(file);
+        Map result = cloudinaryService.uploadPdf(file);
 
-        app.setResumeUrl(result.get("secure_url").toString());
+        String url = result.get("secure_url").toString();
+
+        app.setResumeUrl(url);
         app.setPublicId(result.get("public_id").toString());
 
         JobApplication saved = repo.save(app);
@@ -150,6 +150,8 @@ public class JobApplicationService {
 
         return mapToDTO(saved);
     }
+
+
     private User resolveUser(String requestEmail) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 

@@ -16,6 +16,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ContactMessage {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -26,7 +27,15 @@ public class ContactMessage {
 
     private String subject;
 
-    private String contact;
+    private String phone;      // ✅ renamed (instead of contact)
+
+    private String company;    // ✅ new
+
+    private String service;    // ✅ new
+
+    private String budget;     // ✅ new
+
+    private String timeline;   // ✅ new
 
     @Column(length = 2000)
     private String message;
@@ -36,69 +45,4 @@ public class ContactMessage {
     @CreationTimestamp
     private LocalDateTime createdAt = LocalDateTime.now();
 
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	public String getEmail() {
-		return email;
-	}
-
-	public void setEmail(String email) {
-		this.email = email;
-	}
-
-	public String getSubject() {
-		return subject;
-	}
-
-	public void setSubject(String subject) {
-		this.subject = subject;
-	}
-
-	public String getContact() {
-		return contact;
-	}
-
-	public void setContact(String contact) {
-		this.contact = contact;
-	}
-
-	public String getMessage() {
-		return message;
-	}
-
-	public void setMessage(String message) {
-		this.message = message;
-	}
-
-	public boolean isRead() {
-		return isRead;
-	}
-
-	public void setRead(boolean isRead) {
-		this.isRead = isRead;
-	}
-
-	public LocalDateTime getCreatedAt() {
-		return createdAt;
-	}
-
-	public void setCreatedAt(LocalDateTime createdAt) {
-		this.createdAt = createdAt;
-	}
-    
-    
 }

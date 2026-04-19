@@ -26,6 +26,21 @@ public class CloudinaryService {
         }
     }
 
+    // Save PDF
+    public Map uploadPdf(MultipartFile file) {
+        try {
+            return cloudinary.uploader().upload(
+                    file.getBytes(),
+                    ObjectUtils.asMap(
+                            "folder", "uploads",
+                            "resource_type", "raw"   // IMPORTANT for PDF
+                    )
+            );
+        } catch (Exception e) {
+            throw new RuntimeException("Upload failed: " + e.getMessage());
+        }
+    }
+
     // Delete Image
     public void delete(String publicId) {
         try {

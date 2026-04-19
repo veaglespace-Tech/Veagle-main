@@ -6,6 +6,8 @@ export const AUTH_BACKEND_ROUTES = Object.freeze({
   adminLogin: "/api/auth/admin-login",
   superAdminLogin: "/api/auth/super-admin-login",
   verifyOtp: "/api/auth/verify-otp",
+  resetPasswordLinkSend: "/api/auth/reset-password-link-send",
+  resetPassword: "/api/auth/reset-password",
   profile: "/api/user/profile",
   sendOtp: "/api/auth/send-otp",
   changePassword: "/api/auth/change-password",

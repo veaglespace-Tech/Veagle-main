@@ -51,6 +51,22 @@ export const authApi = baseApi.injectEndpoints({
       }),
       transformResponse: (payload) => normalizeAuthResponse(payload),
     }),
+    resetPassword: builder.mutation({
+      query: ({ token, password }) => ({
+        url: buildBackendUrl(`${AUTH_BACKEND_ROUTES.resetPassword}?token=${encodeURIComponent(token || "")}`),
+        method: "POST",
+        body: {
+          password: password || "",
+        },
+      }),
+    }),
+    resetPasswordLinkSend: builder.mutation({
+      query: (email) => ({
+        url: buildBackendUrl(AUTH_BACKEND_ROUTES.resetPasswordLinkSend),
+        method: "POST",
+        body: email,
+      }),
+    }),
     getProfile: builder.query({
       query: (token) => ({
         url: buildBackendUrl(AUTH_BACKEND_ROUTES.profile),
@@ -90,6 +106,8 @@ export const {
   useGetProfileQuery,
   useLoginMutation,
   useRegisterMutation,
+  useResetPasswordLinkSendMutation,
+  useResetPasswordMutation,
   useSendOtpMutation,
   useUpdateProfileMutation,
   useVerifyOtpMutation,

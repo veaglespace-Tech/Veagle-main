@@ -1542,14 +1542,19 @@ export function ApplicationsPanel({
                   </td>
                   <td>
                     {application.resumeUrl ? (
-                      <a
-                        href={backendAssetUrl(application.resumeUrl) || application.resumeUrl}
-                        target="_blank"
-                        rel="noreferrer"
-                        className="text-[12px] font-bold text-[color:var(--accent)] hover:underline"
-                      >
-                        Launch Resume
-                      </a>
+                      <div className="space-y-1">
+                        <a
+                          href={backendAssetUrl(application.resumeUrl) || application.resumeUrl}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="text-[12px] font-bold text-[color:var(--accent)] hover:underline"
+                        >
+                          Launch Resume
+                        </a>
+                        <p className="text-[10px] break-all text-[color:var(--text-muted)]">
+                          {backendAssetUrl(application.resumeUrl) || application.resumeUrl}
+                        </p>
+                      </div>
                     ) : (
                       <span className="text-[11px] font-bold text-[color:var(--text-muted)] opacity-50 uppercase tracking-widest">Missing</span>
                     )}

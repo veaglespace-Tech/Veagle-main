@@ -2,13 +2,11 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import { useState } from "react";
 import {
   ArrowRight,
   BarChart3,
-  Eye,
-  EyeOff,
   Rocket,
   ShieldCheck,
 } from "lucide-react";
@@ -24,12 +22,14 @@ import { getErrorMessage } from "@/store/api/baseApi";
 const leftPanelItems = [
   {
     title: "Keep everything tracked",
-    description: "Registration is optional, but it keeps contact requests and job applications attached to one account.",
+    description:
+      "Registration is optional, but it keeps contact requests and job applications attached to one account.",
     icon: ShieldCheck,
   },
   {
-    title: "Faster next steps",
-    description: "Returning clients and applicants can reuse the same email flow with OTP-based sign-in.",
+    title: "Activate from your email",
+    description:
+      "We send a secure set-password link to your inbox so you can activate the account from one verified email step.",
     icon: BarChart3,
   },
 ];
@@ -51,14 +51,6 @@ function validate(form, agreed) {
     return "Contact number must be exactly 10 digits.";
   }
 
-  if (!form.password.trim()) {
-    return "Password is required.";
-  }
-
-  if (form.password.trim().length < 6) {
-    return "Password must be at least 6 characters.";
-  }
-
   if (!agreed) {
     return "Please accept the website terms to continue.";
   }
@@ -67,7 +59,6 @@ function validate(form, agreed) {
 }
 
 export default function PortalRegisterPage() {
-  const router = useRouter();
   const searchParams = useSearchParams();
   const nextPath = getSafeNextPath(searchParams.get("next"));
   const loginHref = buildLoginHref(nextPath);
@@ -75,10 +66,8 @@ export default function PortalRegisterPage() {
     username: "",
     email: "",
     contact: "",
-    password: "",
   });
   const [agreed, setAgreed] = useState(false);
-  const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -111,9 +100,8 @@ export default function PortalRegisterPage() {
     try {
       await registerAccount(form).unwrap();
 
-      setSuccess("Account created successfully. Redirecting you to OTP sign-in...");
-      router.replace(
-        `${loginHref}&email=${encodeURIComponent(form.email.trim())}&registered=1`
+      setSuccess(
+        `Account created successfully. We sent a set-password link to ${form.email.trim()}.`
       );
     } catch (submitError) {
       setError(getErrorMessage(submitError, "Registration is unavailable right now."));
@@ -194,7 +182,7 @@ export default function PortalRegisterPage() {
             <div className="relative mb-12 flex justify-between">
               <div className="absolute left-0 top-1/2 h-[2px] w-full -translate-y-1/2 bg-white/5" />
 
-              {["Basic Info", "Contact", "Access"].map((step, index) => (
+              {["Basic Info", "Contact", "Activation"].map((step, index) => (
                 <div key={step} className="relative z-10 flex flex-col items-center gap-2">
                   <div
                     className={
@@ -223,12 +211,12 @@ export default function PortalRegisterPage() {
                 Register to continue
               </h3>
               <p className="mt-1 text-sm text-[#c3c6d7]">
-                Create an account if you want your future enquiries and applications tracked under one identity.
+                Create an account if you want your future enquiries and applications tracked under one identity. We will email you a secure link to set your password.
               </p>
             </div>
 
             <form className="space-y-6" onSubmit={handleSubmit}>
-              <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+              <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
                 <Field
                   label="Full Name"
                   name="username"
@@ -256,34 +244,6 @@ export default function PortalRegisterPage() {
                   inputMode="numeric"
                   maxLength={10}
                 />
-                <div className="space-y-2">
-                  <label className="ml-1 block text-xs font-medium uppercase tracking-wider text-[#c3c6d7]">
-                    Password
-                  </label>
-                  <div className="relative">
-                    <input
-                      className="w-full rounded-2xl border-none bg-[#292a2a] px-4 py-3 text-[color:var(--text-secondary)] outline-none transition placeholder:text-[#8d90a0] focus:ring-2 focus:ring-[color:var(--accent)]"
-                      name="password"
-                      type={showPassword ? "text" : "password"}
-                      value={form.password}
-                      onChange={handleChange}
-                      autoComplete="new-password"
-                      placeholder="************"
-                    />
-                    <button
-                      type="button"
-                      onClick={() => setShowPassword((current) => !current)}
-                      className="absolute right-4 top-1/2 -translate-y-1/2 text-[#8d90a0] transition-colors hover:text-white"
-                      aria-label={showPassword ? "Hide password" : "Show password"}
-                    >
-                      {showPassword ? (
-                        <EyeOff className="h-5 w-5" />
-                      ) : (
-                        <Eye className="h-5 w-5" />
-                      )}
-                    </button>
-                  </div>
-                </div>
               </div>
 
               <div className="flex items-start gap-3 py-2">

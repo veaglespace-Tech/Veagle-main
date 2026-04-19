@@ -48,6 +48,8 @@ export default function PortalLoginPage({
   const nextPath = getSafeNextPath(searchParams.get("next"));
   const prefilledEmail = searchParams.get("email") || "";
   const showRegistrationNotice = searchParams.get("registered") === "1";
+  const showPasswordSetNotice = searchParams.get("passwordSet") === "1";
+  const showResetRequestedNotice = searchParams.get("resetRequested") === "1";
   const availableRoles = useMemo(
     () => allowedRoles.map((role) => roleMeta[role]).filter(Boolean),
     [allowedRoles]
@@ -354,18 +356,40 @@ export default function PortalLoginPage({
                   Use another account
                 </button>
               ) : (
-                <Link
-                  href="/contact"
-                  className="text-[color:var(--accent-soft)] transition-colors hover:text-[#dbe1ff]"
-                >
-                  Need help?
-                </Link>
+                <div className="flex items-center gap-4">
+                  {allowedRoles.includes("USER") ? (
+                    <Link
+                      href="/reset-password"
+                      className="text-[color:var(--accent-soft)] transition-colors hover:text-[#dbe1ff]"
+                    >
+                      Reset password
+                    </Link>
+                  ) : null}
+                  <Link
+                    href="/contact"
+                    className="text-[color:var(--accent-soft)] transition-colors hover:text-[#dbe1ff]"
+                  >
+                    Need help?
+                  </Link>
+                </div>
               )}
             </div>
 
             {showRegistrationNotice && !otpMessage ? (
               <div className="rounded-2xl border border-emerald-500/20 bg-emerald-500/10 px-4 py-3 text-sm text-emerald-200">
-                Account created successfully. Sign in once to receive your OTP.
+                Account created successfully. Check your email for the set-password link before signing in.
+              </div>
+            ) : null}
+
+            {showPasswordSetNotice && !otpMessage ? (
+              <div className="rounded-2xl border border-emerald-500/20 bg-emerald-500/10 px-4 py-3 text-sm text-emerald-200">
+                Password set successfully. You can sign in now.
+              </div>
+            ) : null}
+
+            {showResetRequestedNotice && !otpMessage ? (
+              <div className="rounded-2xl border border-emerald-500/20 bg-emerald-500/10 px-4 py-3 text-sm text-emerald-200">
+                Password reset link sent. Check your email for instructions.
               </div>
             ) : null}
 

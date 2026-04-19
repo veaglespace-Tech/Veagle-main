@@ -14,7 +14,9 @@ function validateLead(body) {
     errors.email = "Enter a valid email address";
   }
 
-  if (body.phone && !/^\+?[0-9\s-]{10,15}$/.test(body.phone)) {
+  if (!body.phone?.trim()) {
+    errors.phone = "Phone is required";
+  } else if (!/^\+?[0-9\s-]{10,15}$/.test(body.phone)) {
     errors.phone = "Enter a valid phone number";
   }
 
@@ -69,21 +71,6 @@ export async function POST(request) {
     return Response.json({ errors }, { status: 422 });
   }
 
-  const subject = body.serviceInterest?.trim() || "General enquiry";
-  const details = [
-    body.company?.trim() ? `Company: ${body.company.trim()}` : null,
-    body.budget?.trim() ? `Budget: ${body.budget.trim()}` : null,
-    body.timeline?.trim() ? `Timeline: ${body.timeline.trim()}` : null,
-    body.phone?.trim() ? `Phone: ${body.phone.trim()}` : null,
-  ].filter(Boolean);
-  const message = [
-    body.message.trim(),
-    details.length ? "" : null,
-    ...details,
-  ]
-    .filter((item) => item !== null)
-    .join("\n");
-
   const response = await fetch(`${API_BASE_URL}/api/public/contacts`, {
     method: "POST",
     headers: {
@@ -92,9 +79,12 @@ export async function POST(request) {
     body: JSON.stringify({
       name: body.name.trim(),
       email: body.email.trim(),
-      contact: body.phone?.trim() || "",
-      subject,
-      message,
+      phone: body.phone.trim(),
+      company: body.company?.trim() || "",
+      service: body.serviceInterest?.trim() || "",
+      budget: body.budget?.trim() || "",
+      timeline: body.timeline?.trim() || "",
+      message: body.message.trim(),
     }),
     cache: "no-store",
   });

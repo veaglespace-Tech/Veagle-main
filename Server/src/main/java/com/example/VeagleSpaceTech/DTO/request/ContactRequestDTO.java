@@ -5,18 +5,25 @@ import jakarta.validation.constraints.NotBlank;
 
 public record ContactRequestDTO (
 
-    @NotBlank(message = "Name is required")
-     String name,
+        @NotBlank(message = "Name is required")
+        String name,
 
-    @Email(message = "Invalid email")
-    @NotBlank(message = "Email is required")
-     String email,
+        @Email(message = "Invalid email")
+        @NotBlank(message = "Email is required")
+        String email,
 
-     String contact,
+        @NotBlank(message = "Phone is required")
+        String phone,
 
-     String subject,
+        String company,
 
-    @NotBlank(message = "Message cannot be empty")
-    String message
+        String service,
 
-){}
+        String budget,
+
+        String timeline,
+
+        @NotBlank(message = "Message cannot be empty")
+        String message
+
+) {}

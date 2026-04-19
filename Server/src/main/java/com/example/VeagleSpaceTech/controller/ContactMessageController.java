@@ -18,11 +18,13 @@ public class ContactMessageController {
 
     private final ContactMessageService service;
 
-
     // Add Messages By Users
     @PostMapping("/api/public/contacts")
     public ResponseEntity<String> contact(@RequestBody ContactRequestDTO request){
+        System.out.println("\n\n");
+        System.out.println(request);
         service.addContactMessage(request);
+
         return ResponseEntity.ok("Saved...");
     }
 
