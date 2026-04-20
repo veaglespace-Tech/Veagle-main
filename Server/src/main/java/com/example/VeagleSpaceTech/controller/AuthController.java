@@ -37,16 +37,16 @@ public class AuthController {
     // Admin
     @PostMapping("/admin-login")
     public ResponseEntity<String> adminLogin(@Valid @RequestBody LoginRequest request) {
-               ResponseEntity.ok(" Admin login successful");
+            //    ResponseEntity.ok(" Admin login successful");
 
-        // return ResponseEntity.ok(authService.adminLogin(request));
+         return ResponseEntity.ok(authService.adminLogin(request));
     }
     // Super Admin
     @PostMapping("/super-admin-login")
     public ResponseEntity<String> superadminLogin(@Valid @RequestBody LoginRequest request) {
        
-       ResponseEntity.ok("Super Admin login successful");
-        // return ResponseEntity.ok(authService.adminLogin(request));
+    //    ResponseEntity.ok("Super Admin login successful");
+        return ResponseEntity.ok(authService.adminLogin(request));
     }
 
     // Otp Verification
@@ -68,8 +68,8 @@ public class AuthController {
     // ReSet Password Link Send To email
     @PostMapping("/reset-password-link-send")
     public ResponseEntity<String> resetPassword(@RequestBody String email){
-        return ResponseEntity.ok("Uncomments The AuthService..!!");
-        // return ResponseEntity.ok(authService.reSetPasswordLink(email));
+        // return ResponseEntity.ok("Uncomments The AuthService..!!");
+        return ResponseEntity.ok(authService.reSetPasswordLink(email));
 
     }
 
