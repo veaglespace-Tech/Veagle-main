@@ -30,13 +30,16 @@ public class AuthController {
     // User
     @PostMapping("/login")
     public ResponseEntity<AuthResponse> login(@Valid @RequestBody LoginRequest request) {
+        
         return ResponseEntity.ok(authService.userLogin(request));
     }
 
     // Admin
     @PostMapping("/admin-login")
     public ResponseEntity<String> adminLogin(@Valid @RequestBody LoginRequest request) {
-        return ResponseEntity.ok(authService.adminLogin(request));
+               ResponseEntity.ok(" Admin login successful");
+
+        // return ResponseEntity.ok(authService.adminLogin(request));
     }
     // Super Admin
     @PostMapping("/super-admin-login")
