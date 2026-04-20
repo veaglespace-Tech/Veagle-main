@@ -19,7 +19,7 @@ public class JobApplicationController {
     private final JobApplicationService jobApplicationService;
 
     // Apply to job (Guest + Logged-in both allowed)
-    @PostMapping(value = "/api/public/applications", consumes = "multipart/form-data")
+    @PostMapping(value = "/api/user/applications", consumes = "multipart/form-data")
     public ResponseEntity<JobApplicationResponseDTO> apply(
 
             @RequestParam String name,

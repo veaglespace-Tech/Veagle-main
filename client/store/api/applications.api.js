@@ -20,7 +20,7 @@ export const applicationsApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
     submitJobApplication: builder.mutation({
       query: ({ token, ...payload }) => ({
-        url: buildBackendUrl("/api/public/applications"),
+        url: buildBackendUrl("/api/user/applications"),
         method: "POST",
         headers: token ? authHeaders(token, false) : undefined,
         body: buildApplicationFormData(payload),
