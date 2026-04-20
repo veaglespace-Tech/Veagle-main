@@ -1,11 +1,8 @@
-export const SITE_URL =
-  process.env.NEXT_PUBLIC_SITE_URL || "https://veaglespace.com"; // Hostinger VPS
-// Local URL: "http://localhost:3000"
-export const API_BASE_URL =
-  process.env.NEXT_PUBLIC_API_BASE_URL || "https://veaglespace.com"; // Hostinger VPS
-// Local URL: "http://localhost:8080"
-export const CLOUDINARY_CLOUD_NAME =
-  process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME || "dbehhnhhi";
+import config from "@/store/index";
+
+export const SITE_URL = config.SITE_URL;
+export const API_BASE_URL = config.API_BASE_URL;
+export const CLOUDINARY_CLOUD_NAME = config.CLOUDINARY_CLOUD_NAME;
 
 export const COMPANY_NAME = "Veagle Space";
 export const COMPANY_LEGAL_NAME = "Veagle Space Technology Pvt. Ltd.";
