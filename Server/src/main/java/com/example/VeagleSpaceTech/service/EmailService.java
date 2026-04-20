@@ -18,6 +18,9 @@ import java.util.Properties;
 @Service
 public class EmailService {
 
+    @Autowired
+    private AppProperties appProperties;
+
     private List<MailAccount> otpAccounts;
     private List<MailAccount> careerAccounts;
     private List<MailAccount> supportAccounts;
@@ -100,6 +103,7 @@ public class EmailService {
     }
 
 
+
     private JavaMailSender createSender(MailAccount acc) {
         JavaMailSenderImpl sender = new JavaMailSenderImpl();
 
@@ -119,8 +123,7 @@ public class EmailService {
     }
 
     // =================  Send Set Password Link  =================
-    @Autowired
-    private AppProperties appProperties;
+
 
     public void sendSetPasswordLink(String email, String token) {
 
@@ -143,6 +146,7 @@ public class EmailService {
         sendWithRetry(sender, message, acc);
     }
     // ================= OTP =================
+
 
     public void sendOtp(String toEmail, String otp) {
 
@@ -168,6 +172,7 @@ public class EmailService {
 
     // ================= JOB EMAILS =================
 
+    @Async
     public void sendApplicationEmail(String to, String name, String jobTitle) {
 
         MailAccount acc = getAvailableAccount(careerAccounts);
@@ -191,6 +196,7 @@ public class EmailService {
         sendWithRetry(sender, message, acc);
     }
 
+    @Async
     public void sendSelectedEmail(String to, String name, String jobTitle) {
 
         MailAccount acc = getAvailableAccount(careerAccounts);
@@ -215,6 +221,7 @@ public class EmailService {
     }
 
 
+    @Async
     public void sendRejectedEmail(String to, String name, String jobTitle) {
 
         MailAccount acc = getAvailableAccount(careerAccounts);
@@ -258,6 +265,7 @@ public class EmailService {
     }
 
 
+    @Async
     public void sendSupportConfirmation(String to, String subject, String text) {
 
         MailAccount acc = getAvailableAccount(supportAccounts); // ✅ same support pool

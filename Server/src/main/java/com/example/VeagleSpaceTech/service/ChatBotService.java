@@ -7,6 +7,7 @@ import com.example.VeagleSpaceTech.entity.ChatSupportTicket;
 import com.example.VeagleSpaceTech.repo.ChatSupportTicketRepository;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.jspecify.annotations.Nullable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -284,4 +285,10 @@ public class ChatBotService {
 
         return new ChatSupportResponseDTO(true, ticketId, "Query submitted. We will reply within 24 hours.");
     }
+
+//    public List<ChatSupportTicket> getAllChats() {
+//        return ticketRepository.findAll();
+//    }
+
+
 }
