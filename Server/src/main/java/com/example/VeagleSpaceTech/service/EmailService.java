@@ -25,7 +25,7 @@ public class EmailService {
     private List<MailAccount> careerAccounts;
     private List<MailAccount> supportAccounts;
 
-    private final int LIMIT = 97;
+    private final int LIMIT = 98;
 
     // ================= INIT =================
     @Autowired
