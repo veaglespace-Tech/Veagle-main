@@ -125,6 +125,7 @@ public class EmailService {
     // =================  Send Set Password Link  =================
 
 
+    @Async
     public void sendSetPasswordLink(String email, String token) {
 
         String link = appProperties.getFrontendUrl()+"/set-password?token=" + token;
@@ -148,6 +149,7 @@ public class EmailService {
     // ================= OTP =================
 
 
+    @Async
     public void sendOtp(String toEmail, String otp) {
 
         MailAccount acc = getAvailableAccount(otpAccounts);
