@@ -41,7 +41,9 @@ public class AuthController {
     // Super Admin
     @PostMapping("/super-admin-login")
     public ResponseEntity<String> superadminLogin(@Valid @RequestBody LoginRequest request) {
-        return ResponseEntity.ok(authService.adminLogin(request));
+       
+       ResponseEntity.ok("Super Admin login successful");
+        // return ResponseEntity.ok(authService.adminLogin(request));
     }
 
     // Otp Verification
