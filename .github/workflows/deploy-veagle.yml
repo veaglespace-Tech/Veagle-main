@@ -1,0 +1,43 @@
+name: Deploy VeagleSpace
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Deploy to VPS via SSH
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USER }}
+          key: ${{ secrets.SSH_KEY }}
+          script: |
+            echo "===== GO TO PROJECT ====="
+            cd /root/Veagle || exit
+
+            echo "===== UPDATE CODE ====="
+            git fetch origin
+            git reset --hard origin/main
+
+            echo "===== BACKEND ====="
+            cd Server || exit
+            mvn clean package -DskipTests
+
+            pm2 restart veagle-backend --update-env || pm2 start "java -jar target/*.jar" --name veagle-backend
+
+            echo "===== FRONTEND ====="
+            cd ../client || exit
+
+            npm install
+            rm -rf .next
+            npm run build
+
+            pm2 delete veagle-frontend || true
+            pm2 start "npm run start -- -p 3001" --name veagle-frontend
+
+            pm2 save
