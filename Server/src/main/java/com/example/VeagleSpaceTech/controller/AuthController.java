@@ -68,8 +68,8 @@ public class AuthController {
     // ReSet Password Link Send To email
     @PostMapping("/reset-password-link-send")
     public ResponseEntity<String> resetPassword(@RequestBody String email){
-
-        return ResponseEntity.ok(authService.reSetPasswordLink(email));
+        return ResponseEntity.ok("Uncomments The AuthService..!!");
+        // return ResponseEntity.ok(authService.reSetPasswordLink(email));
 
     }
 
