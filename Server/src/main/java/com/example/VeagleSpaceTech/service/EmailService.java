@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Properties;
+import java.util.function.Predicate;
 
 @Service
 public class EmailService {
@@ -43,29 +44,40 @@ public class EmailService {
     @PostConstruct
     public void init() {
 
-        if (mailProperties.getOtp() == null || mailProperties.getOtp().isEmpty()) {
+        otpAccounts = resolveAccounts(mailProperties.getOtp());
+        careerAccounts = resolveAccounts(mailProperties.getCareers());
+        supportAccounts = resolveAccounts(mailProperties.getSupport());
+
+        if (otpAccounts.isEmpty()) {
             throw new RuntimeException("OTP mail config missing");
         }
 
-        if (mailProperties.getCareers() == null || mailProperties.getCareers().isEmpty()) {
+        if (careerAccounts.isEmpty()) {
             throw new RuntimeException("Careers mail config missing");
         }
 
-        if (mailProperties.getSupport() == null || mailProperties.getSupport().isEmpty()) {
+        if (supportAccounts.isEmpty()) {
             throw new RuntimeException("Support mail config missing");
         }
+    }
 
-        otpAccounts = mailProperties.getOtp().stream()
-                .map(acc -> new MailAccount(acc.getEmail(), acc.getPassword()))
-                .toList();
+    private List<MailAccount> resolveAccounts(List<MailProperties.Account> configuredAccounts) {
+        if (configuredAccounts == null) {
+            return List.of();
+        }
 
-        careerAccounts = mailProperties.getCareers().stream()
-                .map(acc -> new MailAccount(acc.getEmail(), acc.getPassword()))
+        return configuredAccounts.stream()
+                .filter(isConfiguredAccount())
+                .map(acc -> new MailAccount(acc.getEmail().trim(), acc.getPassword().trim()))
                 .toList();
+    }
 
-        supportAccounts = mailProperties.getSupport().stream()
-                .map(acc -> new MailAccount(acc.getEmail(), acc.getPassword()))
-                .toList();
+    private Predicate<MailProperties.Account> isConfiguredAccount() {
+        return acc -> acc != null
+                && acc.getEmail() != null
+                && !acc.getEmail().isBlank()
+                && acc.getPassword() != null
+                && !acc.getPassword().isBlank();
     }
 
 

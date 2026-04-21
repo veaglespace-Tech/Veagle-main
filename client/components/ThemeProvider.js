@@ -1,6 +1,14 @@
 "use client";
 
-import { createContext, useContext, useEffect, useMemo, useState } from "react";
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+  useSyncExternalStore,
+} from "react";
 
 const ThemeContext = createContext(null);
 
@@ -28,6 +36,20 @@ function applyTheme(theme) {
   document.documentElement.style.colorScheme = theme === DARK_THEME ? "dark" : "light";
 }
 
+function getInitialTheme() {
+  if (typeof window === "undefined") {
+    return DARK_THEME;
+  }
+
+  try {
+    return localStorage.getItem(THEME_STORAGE_KEY) === LIGHT_THEME
+      ? LIGHT_THEME
+      : DARK_THEME;
+  } catch {
+    return DARK_THEME;
+  }
+}
+
 export function useTheme() {
   const context = useContext(ThemeContext);
 
@@ -39,32 +61,36 @@ export function useTheme() {
 }
 
 export default function ThemeProvider({ children }) {
-  const [theme, setTheme] = useState(DARK_THEME);
-  const [mounted, setMounted] = useState(false);
+  const [theme, setThemeState] = useState(getInitialTheme);
+  const mounted = useSyncExternalStore(
+    () => () => {},
+    () => true,
+    () => false
+  );
 
   useEffect(() => {
-    const stored = localStorage.getItem(THEME_STORAGE_KEY);
-    if (stored === LIGHT_THEME) {
-      setTheme(LIGHT_THEME);
-      applyTheme(LIGHT_THEME);
-    } else {
-      applyTheme(DARK_THEME);
-    }
-    setMounted(true);
+    applyTheme(theme);
+  }, [theme]);
+
+  const setTheme = useCallback((nextTheme) => {
+    setThemeState(nextTheme);
+
+    try {
+      localStorage.setItem(THEME_STORAGE_KEY, nextTheme);
+    } catch {}
   }, []);
 
-  const toggleTheme = () => {
-    const nextTheme = theme === DARK_THEME ? LIGHT_THEME : DARK_THEME;
-    setTheme(nextTheme);
-    applyTheme(nextTheme);
-    localStorage.setItem(THEME_STORAGE_KEY, nextTheme);
-  };
+  const toggleTheme = useCallback(() => {
+    setTheme(theme === DARK_THEME ? LIGHT_THEME : DARK_THEME);
+  }, [setTheme, theme]);
 
   const value = useMemo(
     () => ({
       theme,
       isDark: theme === DARK_THEME,
       isLight: theme === LIGHT_THEME,
+      isDarkMode: theme === DARK_THEME,
+      isLightMode: theme === LIGHT_THEME,
       setTheme: (t) => {
         setTheme(t);
         applyTheme(t);
@@ -73,7 +99,7 @@ export default function ThemeProvider({ children }) {
       toggleTheme,
       mounted,
     }),
-    [theme, mounted]
+    [mounted, setTheme, theme, toggleTheme]
   );
 
   return <ThemeContext.Provider value={value}>{children}</ThemeContext.Provider>;
