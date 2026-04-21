@@ -1,6 +1,6 @@
 spring:
   config:
-    import: optional:file:.env[.properties],optional:file:.env.${spring.profiles.active:development}[.properties]
+    import: optional:file:.env[.properties]
 
   application:
     name: VeagleSpaceTech
@@ -22,49 +22,49 @@ spring:
 veagle:
   mail:
     smtp:
-      host: ${MAIL_HOST:smtp.gmail.com}
-      port: ${MAIL_PORT:465}
-      ssl-trust: ${MAIL_SSL_TRUST:${MAIL_HOST:smtp.gmail.com}}
+      host: ${MAIL_HOST}
+      port: ${MAIL_PORT}
+      ssl-trust: ${MAIL_SSL_TRUST:${MAIL_HOST}}
 
     otp:
-      - email: ${OTP_MAIL_1_EMAIL:${MAIL_USER:}}
-        password: ${OTP_MAIL_1_PASSWORD:${MAIL_PASS:}}
-      - email: ${OTP_MAIL_2_EMAIL:}
-        password: ${OTP_MAIL_2_PASSWORD:}
-      - email: ${OTP_MAIL_3_EMAIL:}
-        password: ${OTP_MAIL_3_PASSWORD:}
+      - email: ${OTP_MAIL_1_EMAIL}
+        password: ${OTP_MAIL_1_PASSWORD}
+      - email: ${OTP_MAIL_2_EMAIL}
+        password: ${OTP_MAIL_2_PASSWORD}
+      - email: ${OTP_MAIL_3_EMAIL}
+        password: ${OTP_MAIL_3_PASSWORD}
 
     careers:
-      - email: ${CAREERS_MAIL_1_EMAIL:${MAIL_USER:}}
-        password: ${CAREERS_MAIL_1_PASSWORD:${MAIL_PASS:}}
-      - email: ${CAREERS_MAIL_2_EMAIL:}
-        password: ${CAREERS_MAIL_2_PASSWORD:}
-      - email: ${CAREERS_MAIL_3_EMAIL:}
-        password: ${CAREERS_MAIL_3_PASSWORD:}
-      - email: ${CAREERS_MAIL_4_EMAIL:}
-        password: ${CAREERS_MAIL_4_PASSWORD:}
+      - email: ${CAREERS_MAIL_1_EMAIL}
+        password: ${CAREERS_MAIL_1_PASSWORD}
+      - email: ${CAREERS_MAIL_2_EMAIL}
+        password: ${CAREERS_MAIL_2_PASSWORD}
+      - email: ${CAREERS_MAIL_3_EMAIL}
+        password: ${CAREERS_MAIL_3_PASSWORD}
+      - email: ${CAREERS_MAIL_4_EMAIL}
+        password: ${CAREERS_MAIL_4_PASSWORD}
 
     support:
-      - email: ${SUPPORT_MAIL_1_EMAIL:${MAIL_USER:}}
-        password: ${SUPPORT_MAIL_1_PASSWORD:${MAIL_PASS:}}
-      - email: ${SUPPORT_MAIL_2_EMAIL:}
-        password: ${SUPPORT_MAIL_2_PASSWORD:}
-      - email: ${SUPPORT_MAIL_3_EMAIL:}
-        password: ${SUPPORT_MAIL_3_PASSWORD:}
-      - email: ${SUPPORT_MAIL_4_EMAIL:}
-        password: ${SUPPORT_MAIL_4_PASSWORD:}
-      - email: ${SUPPORT_MAIL_5_EMAIL:}
-        password: ${SUPPORT_MAIL_5_PASSWORD:}
-      - email: ${SUPPORT_MAIL_6_EMAIL:}
-        password: ${SUPPORT_MAIL_6_PASSWORD:}
-      - email: ${SUPPORT_MAIL_7_EMAIL:}
-        password: ${SUPPORT_MAIL_7_PASSWORD:}
-      - email: ${SUPPORT_MAIL_8_EMAIL:}
-        password: ${SUPPORT_MAIL_8_PASSWORD:}
-      - email: ${SUPPORT_MAIL_9_EMAIL:}
-        password: ${SUPPORT_MAIL_9_PASSWORD:}
-      - email: ${SUPPORT_MAIL_10_EMAIL:}
-        password: ${SUPPORT_MAIL_10_PASSWORD:}
+      - email: ${SUPPORT_MAIL_1_EMAIL}
+        password: ${SUPPORT_MAIL_1_PASSWORD}
+      - email: ${SUPPORT_MAIL_2_EMAIL}
+        password: ${SUPPORT_MAIL_2_PASSWORD}
+      - email: ${SUPPORT_MAIL_3_EMAIL}
+        password: ${SUPPORT_MAIL_3_PASSWORD}
+      - email: ${SUPPORT_MAIL_4_EMAIL}
+        password: ${SUPPORT_MAIL_4_PASSWORD}
+      - email: ${SUPPORT_MAIL_5_EMAIL}
+        password: ${SUPPORT_MAIL_5_PASSWORD}
+      - email: ${SUPPORT_MAIL_6_EMAIL}
+        password: ${SUPPORT_MAIL_6_PASSWORD}
+      - email: ${SUPPORT_MAIL_7_EMAIL}
+        password: ${SUPPORT_MAIL_7_PASSWORD}
+      - email: ${SUPPORT_MAIL_8_EMAIL}
+        password: ${SUPPORT_MAIL_8_PASSWORD}
+      - email: ${SUPPORT_MAIL_9_EMAIL}
+        password: ${SUPPORT_MAIL_9_PASSWORD}
+      - email: ${SUPPORT_MAIL_10_EMAIL}
+        password: ${SUPPORT_MAIL_10_PASSWORD}
 
 
 
@@ -83,7 +83,7 @@ app:
 
 jwt:
   secret: ${JWT_SECRET}
-  expiration: ${JWT_EXPIRATION:86400000}
+  expiration: ${JWT_EXPIRATION}
 
 admin:
   secret: ${ADMIN_SECRET}

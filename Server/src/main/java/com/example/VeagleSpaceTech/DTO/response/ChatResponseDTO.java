@@ -11,5 +11,4 @@ public class ChatResponseDTO {
     private String answer;
     private String confidence;
     private boolean showForm;
-    private boolean unrelated;
 }

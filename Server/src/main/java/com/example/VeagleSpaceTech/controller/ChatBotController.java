@@ -4,11 +4,13 @@ import com.example.VeagleSpaceTech.DTO.request.ChatRequestDTO;
 import com.example.VeagleSpaceTech.DTO.request.ChatSupportRequestDTO;
 import com.example.VeagleSpaceTech.DTO.response.ChatResponseDTO;
 import com.example.VeagleSpaceTech.DTO.response.ChatSupportResponseDTO;
+import com.example.VeagleSpaceTech.entity.ChatSupportTicket;
 import com.example.VeagleSpaceTech.service.ChatBotService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/public/chatbot")
@@ -23,21 +25,11 @@ public class ChatBotController {
      * Body: { "message": "..." }
      */
     @PostMapping("/chat")
-    public ResponseEntity<ChatResponseDTO> chat(
-            @RequestBody ChatRequestDTO request,
-            @RequestHeader(name = "X-Chatbot-Logged-In", required = false) String loggedInHeader,
-            Authentication authentication
-    ) {
+    public ResponseEntity<ChatResponseDTO> chat(@RequestBody ChatRequestDTO request) {
         if (request.getMessage() == null || request.getMessage().isBlank()) {
             return ResponseEntity.badRequest().build();
         }
-        boolean authenticatedUser = authentication != null
-            && authentication.isAuthenticated()
-            && authentication.getName() != null
-            && !"anonymousUser".equalsIgnoreCase(authentication.getName());
-        boolean loggedIn = authenticatedUser || Boolean.parseBoolean(loggedInHeader);
-
-        ChatResponseDTO response = chatBotService.chat(request.getMessage().trim(), loggedIn);
+        ChatResponseDTO response = chatBotService.chat(request.getMessage().trim());
         return ResponseEntity.ok(response);
     }
 

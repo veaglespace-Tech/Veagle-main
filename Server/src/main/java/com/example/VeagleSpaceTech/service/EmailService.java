@@ -14,7 +14,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Properties;
-import java.util.function.Predicate;
 
 @Service
 public class EmailService {
@@ -44,40 +43,29 @@ public class EmailService {
     @PostConstruct
     public void init() {
 
-        otpAccounts = resolveAccounts(mailProperties.getOtp());
-        careerAccounts = resolveAccounts(mailProperties.getCareers());
-        supportAccounts = resolveAccounts(mailProperties.getSupport());
-
-        if (otpAccounts.isEmpty()) {
+        if (mailProperties.getOtp() == null || mailProperties.getOtp().isEmpty()) {
             throw new RuntimeException("OTP mail config missing");
         }
 
-        if (careerAccounts.isEmpty()) {
+        if (mailProperties.getCareers() == null || mailProperties.getCareers().isEmpty()) {
             throw new RuntimeException("Careers mail config missing");
         }
 
-        if (supportAccounts.isEmpty()) {
+        if (mailProperties.getSupport() == null || mailProperties.getSupport().isEmpty()) {
             throw new RuntimeException("Support mail config missing");
         }
-    }
 
-    private List<MailAccount> resolveAccounts(List<MailProperties.Account> configuredAccounts) {
-        if (configuredAccounts == null) {
-            return List.of();
-        }
-
-        return configuredAccounts.stream()
-                .filter(isConfiguredAccount())
-                .map(acc -> new MailAccount(acc.getEmail().trim(), acc.getPassword().trim()))
+        otpAccounts = mailProperties.getOtp().stream()
+                .map(acc -> new MailAccount(acc.getEmail(), acc.getPassword()))
                 .toList();
-    }
 
-    private Predicate<MailProperties.Account> isConfiguredAccount() {
-        return acc -> acc != null
-                && acc.getEmail() != null
-                && !acc.getEmail().isBlank()
-                && acc.getPassword() != null
-                && !acc.getPassword().isBlank();
+        careerAccounts = mailProperties.getCareers().stream()
+                .map(acc -> new MailAccount(acc.getEmail(), acc.getPassword()))
+                .toList();
+
+        supportAccounts = mailProperties.getSupport().stream()
+                .map(acc -> new MailAccount(acc.getEmail(), acc.getPassword()))
+                .toList();
     }
 
 

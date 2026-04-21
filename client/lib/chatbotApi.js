@@ -1,27 +1,16 @@
-import { readStoredSession } from "@/lib/auth-session";
+import { API_BASE_URL } from "@/lib/site";
 
-const CHATBOT_BASE = "/api/chatbot";
+const CHATBOT_BASE = `${API_BASE_URL}/api/public/chatbot`;
 
 /**
  * Send a chat message to the Veagle assistant.
  * Returns: { answer, confidence, showForm }
  */
 export async function askVeagleBot(message) {
-  const session = readStoredSession();
-  const headers = {
-    "Content-Type": "application/json",
-    "X-Chatbot-Logged-In": session?.token ? "true" : "false",
-  };
-
-  if (session?.token) {
-    headers.Authorization = `Bearer ${session.token}`;
-  }
-
   const res = await fetch(`${CHATBOT_BASE}/chat`, {
     method: "POST",
-    headers,
+    headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ message }),
-    credentials: "same-origin",
   });
 
   if (!res.ok) {
@@ -41,7 +30,6 @@ export async function submitVeagleBotSupport({ name, email, subject, message }) 
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ name, email, subject, message }),
-    credentials: "same-origin",
   });
 
   if (!res.ok) {
