@@ -4,13 +4,10 @@ import com.example.VeagleSpaceTech.DTO.request.ChatRequestDTO;
 import com.example.VeagleSpaceTech.DTO.request.ChatSupportRequestDTO;
 import com.example.VeagleSpaceTech.DTO.response.ChatResponseDTO;
 import com.example.VeagleSpaceTech.DTO.response.ChatSupportResponseDTO;
-import com.example.VeagleSpaceTech.entity.ChatSupportTicket;
 import com.example.VeagleSpaceTech.service.ChatBotService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/public/chatbot")
@@ -29,7 +26,10 @@ public class ChatBotController {
         if (request.getMessage() == null || request.getMessage().isBlank()) {
             return ResponseEntity.badRequest().build();
         }
-        ChatResponseDTO response = chatBotService.chat(request.getMessage().trim());
+        ChatResponseDTO response = chatBotService.chat(
+            request.getMessage().trim(),
+            Boolean.TRUE.equals(request.getLoggedIn())
+        );
         return ResponseEntity.ok(response);
     }
 

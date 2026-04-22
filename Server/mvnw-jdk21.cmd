@@ -35,6 +35,7 @@ if not exist "%JAVA_HOME%\bin\java.exe" (
 )
 
 set "PATH=%JAVA_HOME%\bin;%PATH%"
+set "MVN_LOCAL_REPO=%~dp0.m2\repository"
 
-call "%~dp0mvnw.cmd" %*
+call "%~dp0mvnw.cmd" -Dmaven.repo.local=%MVN_LOCAL_REPO% %*
 exit /b %ERRORLEVEL%

@@ -5,8 +5,12 @@ import Image from "next/image";
 import { MessageSquareText, SendHorizontal, X } from "lucide-react";
 import { useTheme } from "@/components/ThemeProvider";
 import { askVeagleBot, submitVeagleBotSupport } from "@/lib/chatbotApi";
+import {
+  PORTAL_SESSION_EVENT,
+  readStoredSession,
+} from "@/lib/auth-session";
 
-// ─── Quick questions shown before any conversation ───────────────────────────
+// ─── Quick questions available inside the chatbot ────────────────────────────
 const QUICK_QUESTIONS = [
   "What services do you offer?",
   "How can I get a project quote?",
@@ -18,7 +22,7 @@ const QUICK_QUESTIONS = [
 
 // ─── Layout constants ─────────────────────────────────────────────────────────
 const PANEL_VIEWPORT_CLASS =
-  "[--vb-top-gap:5.5rem] [--vb-bottom-gap:5rem] bottom-[calc(env(safe-area-inset-bottom)+var(--vb-bottom-gap))] max-h-[calc(100dvh-env(safe-area-inset-top)-env(safe-area-inset-bottom)-var(--vb-top-gap)-var(--vb-bottom-gap))] sm:[--vb-bottom-gap:6rem] sm:max-h-[min(720px,calc(100dvh-env(safe-area-inset-top)-env(safe-area-inset-bottom)-var(--vb-top-gap)-var(--vb-bottom-gap)))]";
+  "[--vb-top-gap:5.25rem] [--vb-bottom-gap:0.85rem] bottom-[calc(env(safe-area-inset-bottom)+var(--vb-bottom-gap))] max-h-[min(30rem,calc(100dvh-env(safe-area-inset-top)-env(safe-area-inset-bottom)-var(--vb-top-gap)-var(--vb-bottom-gap)))] sm:[--vb-top-gap:5.75rem] sm:[--vb-bottom-gap:1rem] sm:max-h-[min(38rem,calc(100dvh-env(safe-area-inset-top)-env(safe-area-inset-bottom)-var(--vb-top-gap)-var(--vb-bottom-gap)))]";
 
 const FAB_POSITION_CLASS =
   "bottom-[calc(env(safe-area-inset-bottom)+1rem)] sm:bottom-[calc(env(safe-area-inset-bottom)+1.25rem)]";
@@ -30,7 +34,7 @@ const SUPPORT_MESSAGE_MAX = 500;
 const CHAT_THEME = {
   light: {
     panel:
-      "border border-white/80 bg-white/95 text-slate-900 shadow-[0_28px_80px_rgba(30,112,209,0.18)] backdrop-blur-2xl",
+      "border border-blue-200/90 bg-[linear-gradient(180deg,rgba(244,248,255,0.98),rgba(231,239,253,0.98))] text-slate-900 shadow-[0_28px_80px_rgba(15,61,145,0.2),0_0_0_1px_rgba(147,197,253,0.35)] backdrop-blur-2xl",
     header: "bg-[linear-gradient(135deg,#0c447c,#1e70d1,#5cd1e5)]",
     headerSubtle: "text-white/80",
     statusText: "text-white/72",
@@ -44,12 +48,12 @@ const CHAT_THEME = {
     section: "border-white/70 bg-white/80 backdrop-blur-xl",
     sectionText: "text-slate-500",
     quickButton:
-      "rounded-full border border-blue-200 bg-white px-3 py-1.5 text-[11px] font-semibold text-blue-700 shadow-sm transition hover:bg-blue-50 w-full justify-center text-center sm:w-auto",
+      "flex min-h-[44px] w-full items-center justify-center rounded-[1.05rem] border border-blue-200 bg-white px-2.5 py-2 text-center text-[11px] font-semibold leading-snug text-blue-700 shadow-sm transition hover:bg-blue-50",
     inputWrap: "border-white/70 bg-white/80 backdrop-blur-xl",
     input:
       "border border-blue-200 bg-white text-slate-800 placeholder:text-slate-400 shadow-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-200",
     sendButton:
-      "flex h-11 w-full flex-shrink-0 items-center justify-center rounded-[1.1rem] bg-blue-600 p-0 text-white transition hover:bg-blue-700 disabled:opacity-40 sm:h-10 sm:w-10 sm:rounded-2xl",
+      "flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-[1.05rem] bg-blue-600 p-0 text-white transition hover:bg-blue-700 disabled:opacity-40 sm:h-10 sm:w-10 sm:rounded-2xl",
     supportCard: "border border-blue-100 bg-white text-slate-800 shadow-sm",
     supportTitle: "text-slate-900",
     supportLabel: "text-slate-500",
@@ -85,12 +89,12 @@ const CHAT_THEME = {
     section: "border-slate-700/80 bg-slate-950/50 backdrop-blur-xl",
     sectionText: "text-slate-400",
     quickButton:
-      "rounded-full border border-slate-600 bg-slate-800 px-3 py-1.5 text-[11px] font-semibold text-slate-200 shadow-sm transition hover:bg-slate-700 w-full justify-center text-center sm:w-auto",
+      "flex min-h-[44px] w-full items-center justify-center rounded-[1.05rem] border border-slate-600 bg-slate-800 px-2.5 py-2 text-center text-[11px] font-semibold leading-snug text-slate-200 shadow-sm transition hover:bg-slate-700",
     inputWrap: "border-slate-700/80 bg-slate-950/50 backdrop-blur-xl",
     input:
       "border border-slate-600 bg-slate-800 text-slate-100 placeholder:text-slate-500 shadow-sm focus:border-blue-400 focus:ring-1 focus:ring-blue-500/30",
     sendButton:
-      "flex h-11 w-full flex-shrink-0 items-center justify-center rounded-[1.1rem] bg-blue-500 p-0 text-white transition hover:bg-blue-600 disabled:opacity-40 sm:h-10 sm:w-10 sm:rounded-2xl",
+      "flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-[1.05rem] bg-blue-500 p-0 text-white transition hover:bg-blue-600 disabled:opacity-40 sm:h-10 sm:w-10 sm:rounded-2xl",
     supportCard:
       "border border-slate-700 bg-slate-800/80 text-slate-100 shadow-sm",
     supportTitle: "text-slate-100",
@@ -285,18 +289,50 @@ export default function VeagleWidget() {
   const { isDarkMode, mounted } = useTheme();
   const [open, setOpen] = useState(false);
   const [messages, setMessages] = useState([]);
+  const [usedQuickQuestions, setUsedQuickQuestions] = useState([]);
   const [input, setInput] = useState("");
   const [chatLoading, setChatLoading] = useState(false);
   const [formLoading, setFormLoading] = useState(false);
   const [showForm, setShowForm] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const bottomRef = useRef(null);
 
   const resolvedTheme = mounted && isDarkMode ? "dark" : "light";
   const theme = CHAT_THEME[resolvedTheme];
+  const isWelcomeState = messages.length === 0;
+  const availableQuickQuestions = QUICK_QUESTIONS.filter(
+    (question) => !usedQuickQuestions.includes(question),
+  );
+  const latestBotMessageId =
+    [...messages].reverse().find((message) => message.role === "bot")?.id ??
+    null;
+  const shouldShowInlineSuggestions =
+    usedQuickQuestions.length > 0 && availableQuickQuestions.length > 0;
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages, chatLoading, showForm]);
+
+  useEffect(() => {
+    const syncSessionState = () => {
+      setIsLoggedIn(Boolean(readStoredSession()?.token));
+    };
+
+    syncSessionState();
+    window.addEventListener("storage", syncSessionState);
+    window.addEventListener(PORTAL_SESSION_EVENT, syncSessionState);
+
+    return () => {
+      window.removeEventListener("storage", syncSessionState);
+      window.removeEventListener(PORTAL_SESSION_EVENT, syncSessionState);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (!isLoggedIn) {
+      setShowForm(false);
+    }
+  }, [isLoggedIn]);
 
   const addMsg = (role, content) =>
     setMessages((prev) => [
@@ -307,13 +343,20 @@ export default function VeagleWidget() {
   const closeChat = () => {
     setOpen(false);
     setMessages([]);
+    setUsedQuickQuestions([]);
     setInput("");
     setShowForm(false);
   };
 
-  const handleAsk = async (question) => {
+  const handleAsk = async (question, options = {}) => {
     const q = typeof question === "string" ? question : input;
     if (!q.trim() || chatLoading) return;
+
+    if (options.fromQuickQuestion) {
+      setUsedQuickQuestions((prev) =>
+        prev.includes(q) ? prev : [...prev, q],
+      );
+    }
 
     setInput("");
     setShowForm(false);
@@ -321,15 +364,14 @@ export default function VeagleWidget() {
     setChatLoading(true);
 
     try {
-      const data = await askVeagleBot(q.trim());
+      const data = await askVeagleBot(q.trim(), isLoggedIn);
       addMsg("bot", data.answer);
-      if (data.showForm) setShowForm(true);
+      if (data.showForm && isLoggedIn) setShowForm(true);
     } catch {
       addMsg(
         "bot",
         "I'm having a bit of trouble right now. Feel free to reach us at info@veaglespace.com or call +91 82379 99101!",
       );
-      setShowForm(true);
     } finally {
       setChatLoading(false);
     }
@@ -355,16 +397,44 @@ export default function VeagleWidget() {
     }
   };
 
+  const renderQuickQuestionButtons = () => (
+    <div className="grid grid-cols-2 gap-1.5 sm:gap-2">
+      {availableQuickQuestions.map((q) => (
+        <button
+          key={q}
+          onClick={() => handleAsk(q, { fromQuickQuestion: true })}
+          className={theme.quickButton}
+        >
+          {q}
+        </button>
+      ))}
+    </div>
+  );
+
+  const renderSuggestedQuestionButtons = () => (
+    <div className="grid grid-cols-1 gap-1.5 sm:gap-2">
+      {availableQuickQuestions.slice(0, 3).map((q) => (
+        <button
+          key={q}
+          onClick={() => handleAsk(q, { fromQuickQuestion: true })}
+          className={theme.quickButton}
+        >
+          {q}
+        </button>
+      ))}
+    </div>
+  );
+
   return (
     <>
       {/* ── Chat panel ── */}
       {open && (
         <div
-          className={`fixed left-3 right-3 z-50 flex w-auto min-w-0 max-w-none flex-col overflow-hidden rounded-[1.75rem] border shadow-xl overscroll-contain sm:left-auto sm:right-4 sm:w-[24rem] sm:max-w-[calc(100vw-2rem)] sm:rounded-[2rem] md:w-[26rem] lg:w-[28rem] ${PANEL_VIEWPORT_CLASS} ${theme.panel}`}
+          className={`fixed left-3 right-3 z-50 flex min-w-0 flex-col overflow-hidden rounded-[1.75rem] border shadow-xl overscroll-contain sm:left-auto sm:right-4 sm:w-[min(21rem,calc(100vw-2rem))] sm:rounded-[2rem] md:w-[min(22.5rem,calc(100vw-2rem))] lg:w-[min(24rem,calc(100vw-2rem))] ${PANEL_VIEWPORT_CLASS} ${theme.panel}`}
         >
           {/* Header */}
           <div
-            className={`relative flex flex-shrink-0 items-start gap-2.5 overflow-hidden px-3.5 py-3.5 sm:items-center sm:gap-3 sm:px-4 sm:py-4 ${theme.header}`}
+            className={`relative flex flex-shrink-0 items-start gap-2.5 overflow-hidden px-3 py-3 sm:items-center sm:gap-3 sm:px-4 sm:py-4 ${theme.header}`}
           >
             <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(255,255,255,0.22),transparent_30%),radial-gradient(circle_at_bottom_right,rgba(255,255,255,0.14),transparent_28%)]" />
 
@@ -408,13 +478,13 @@ export default function VeagleWidget() {
 
           {/* Messages */}
           <div
-            className={`flex min-h-0 flex-1 flex-col gap-2.5 overflow-y-auto p-3 sm:gap-3 sm:p-4 ${theme.messages}`}
+            className={`flex min-h-0 flex-1 flex-col overflow-y-auto ${isWelcomeState ? "gap-2 p-2.5 sm:gap-2.5 sm:p-3" : "gap-2.5 p-3 sm:gap-3 sm:p-4"} ${theme.messages}`}
           >
-            {messages.length === 0 && (
+            {isWelcomeState && (
               <div className="flex items-start gap-2">
                 <BotAvatar avatarBorder={theme.avatarBorder} />
                 <div
-                  className={`max-w-[88%] rounded-2xl rounded-tl-sm px-3 py-2 text-sm leading-relaxed sm:max-w-[84%] ${theme.introBubble}`}
+                  className={`max-w-[88%] rounded-2xl rounded-tl-sm px-3 py-2 text-[13px] leading-[1.45] sm:max-w-[84%] sm:text-sm ${theme.introBubble}`}
                 >
                   Hi! I&apos;m the Veagle Assistant. Ask me anything about our
                   services, career openings, or how to get in touch.
@@ -431,13 +501,25 @@ export default function VeagleWidget() {
                   <BotAvatar avatarBorder={theme.avatarBorder} />
                 )}
                 <div
-                  className={`max-w-[88%] rounded-2xl px-3 py-2 text-sm leading-relaxed sm:max-w-[84%] ${
-                    msg.role === "user"
-                      ? `rounded-tr-sm ${theme.userBubble}`
-                      : `rounded-tl-sm ${theme.botBubble}`
+                  className={`${
+                    msg.role === "bot"
+                      ? "flex max-w-[88%] flex-col gap-2 sm:max-w-[84%]"
+                      : "max-w-[88%] sm:max-w-[84%]"
                   }`}
                 >
-                  {msg.content}
+                  <div
+                    className={`rounded-2xl px-3 py-2 text-sm leading-relaxed ${
+                      msg.role === "user"
+                        ? `rounded-tr-sm ${theme.userBubble}`
+                        : `rounded-tl-sm ${theme.botBubble}`
+                    }`}
+                  >
+                    {msg.content}
+                  </div>
+                  {msg.role === "bot" &&
+                    msg.id === latestBotMessageId &&
+                    shouldShowInlineSuggestions &&
+                    renderSuggestedQuestionButtons()}
                 </div>
               </div>
             ))}
@@ -461,7 +543,7 @@ export default function VeagleWidget() {
               </div>
             )}
 
-            {showForm && (
+            {showForm && isLoggedIn && (
               <div className="flex flex-col gap-2 sm:flex-row sm:items-start">
                 <BotAvatar avatarBorder={theme.avatarBorder} />
                 <SupportForm
@@ -475,31 +557,21 @@ export default function VeagleWidget() {
             <div ref={bottomRef} />
           </div>
 
-          {/* Quick questions (shown only before any message) */}
-          {messages.length === 0 && (
+          {/* Quick questions */}
+          {isWelcomeState && availableQuickQuestions.length > 0 && (
             <div
-              className={`flex-shrink-0 border-t px-3 pb-3 ${theme.section} sm:px-4`}
+              className={`flex-shrink-0 border-t px-3 pb-2.5 pt-2 ${theme.section} sm:px-3.5 sm:pb-3 sm:pt-2.5`}
             >
-              <p className={`mb-1.5 mt-2 text-[11px] ${theme.sectionText}`}>
+              <p className={`mb-2 text-[11px] ${theme.sectionText}`}>
                 Quick questions
               </p>
-              <div className="grid gap-2 sm:flex sm:flex-wrap sm:gap-1.5">
-                {QUICK_QUESTIONS.map((q) => (
-                  <button
-                    key={q}
-                    onClick={() => handleAsk(q)}
-                    className={theme.quickButton}
-                  >
-                    {q}
-                  </button>
-                ))}
-              </div>
+              {renderQuickQuestionButtons()}
             </div>
           )}
 
           {/* Input bar */}
           <div
-            className={`flex flex-shrink-0 flex-col gap-2 border-t px-3 py-3 sm:flex-row sm:items-end sm:gap-2 sm:px-3 sm:py-2.5 ${theme.inputWrap}`}
+            className={`flex flex-shrink-0 items-end gap-2 border-t px-3 py-2.5 sm:px-3 sm:py-2.5 ${theme.inputWrap}`}
           >
             <textarea
               rows={1}
@@ -507,7 +579,7 @@ export default function VeagleWidget() {
               onChange={(e) => setInput(e.target.value)}
               onKeyDown={handleKey}
               placeholder="Ask Veagle anything..."
-              className={`min-h-[48px] max-h-24 flex-1 resize-none overflow-y-auto rounded-[1.1rem] border px-3 py-2 text-sm focus:outline-none sm:min-h-0 sm:max-h-20 sm:rounded-2xl ${theme.input}`}
+              className={`min-h-[44px] max-h-24 flex-1 resize-none overflow-y-auto rounded-[1.05rem] border px-3 py-2 text-sm focus:outline-none sm:min-h-0 sm:max-h-20 sm:rounded-2xl ${theme.input}`}
             />
             <button
               onClick={() => handleAsk(input)}
@@ -521,20 +593,18 @@ export default function VeagleWidget() {
       )}
 
       {/* ── Floating action button ── */}
-      <button
-        onClick={() => (open ? closeChat() : setOpen(true))}
-        className={`fixed right-4 z-50 flex items-center justify-center transition-all hover:scale-105 active:scale-95 sm:right-5 ${FAB_POSITION_CLASS} ${open ? theme.fabActive : theme.fab}`}
-        aria-label="Open Veagle Assistant"
-      >
-        {open ? (
-          <X className="h-5 w-5" />
-        ) : (
+      {!open && (
+        <button
+          onClick={() => setOpen(true)}
+          className={`fixed right-4 z-50 flex items-center justify-center transition-all hover:scale-105 active:scale-95 sm:right-5 ${FAB_POSITION_CLASS} ${theme.fab}`}
+          aria-label="Open Veagle Assistant"
+        >
           <div className="relative flex items-center justify-center">
             <MessageSquareText className="h-5 w-5" />
             <span className="absolute -right-1.5 -top-1.5 h-2.5 w-2.5 rounded-full bg-emerald-400 ring-2 ring-white/70 dark:ring-slate-950/70" />
           </div>
-        )}
-      </button>
+        </button>
+      )}
     </>
   );
 }
